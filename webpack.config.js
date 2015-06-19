@@ -7,7 +7,7 @@ module.exports = {
   entry: './src/index.js',
 
   output: {
-    filename: 'datepicker.js',
+    filename: 'grid.js',
     path: path.resolve('./dist'),
     libraryTarget: 'umd'
   },
@@ -15,7 +15,8 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.js[x]?$/, loader: 'babel-loader', exclude: /node_modules/ },
-      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?module&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader') }
+      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?module&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader') },
+      { test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$/, loader: "url-loader" }
     ]
   },
 
@@ -29,6 +30,6 @@ module.exports = {
   },
 
   plugins: [
-    new ExtractTextPlugin('datepicker.css', { allChunks: true })
+    new ExtractTextPlugin('grid.css', { allChunks: true })
   ]
 };

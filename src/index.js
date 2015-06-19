@@ -21,10 +21,10 @@ try {
 	window.CustomEvent = CustomEvent;
 }
 
-import DatePicker from './datepicker.jsx';
+import DatePicker from './grid.jsx';
 
 if (typeof document !== 'undefined') {
-	var renderToElements = document.getElementsByTagName('react-datepicker');
+	var renderToElements = document.getElementsByTagName('react-grid');
 
 	Array.prototype.forEach.call(renderToElements, (el) => {
 	    React.render(<DatePicker element={el}/>, el);

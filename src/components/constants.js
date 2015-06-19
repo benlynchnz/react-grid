@@ -1,12 +1,10 @@
 'use strict';
 
 const constants = {
-	FOCUS: "FOCUS",
-	BLUR: "BLUR",
-	OK: "OK",
-	DATE_SELECTED: "DATE_SELECTED",
-	DATE_RANGE_CHANGE: "DATE_RANGE_CHANGE",
-	CALENDAR_HIDE: "CALENDAR_HIDE"
+	CHANGE: "CHANGE",
+	FETCH_COLUMNS: "FETCH_COLUMNS",
+	FETCH_ROWS: "FETCH_ROWS",
+	COL_SORT: "COL_SORT"
 };
 
 export default constants;

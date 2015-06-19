@@ -2,14 +2,14 @@
 
 	<head>
 
-		<title>React | Date Picker</title>
+		<title>React | Grid</title>
 
 		<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700italic,700,900,900italic' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" type="text/css" href="datepicker.css" />
+		<link rel="stylesheet" type="text/css" href="grid.css" />
 
 		<style>
 			body {
-				background-color: #fcfcfc;
+				background-color: #f9f9f9;
 				padding: 20px;
 				font-family: 'Roboto', sans-serif;
 			}
@@ -38,57 +38,26 @@
 	<body>
 
 		<div class="component">
-			<h1>Single Date</h1>
-			<react-datepicker
-				id="myDatePicker"
-				selected-date="Wed Jun 24 07:00:00 NZST 2015"
-				selected-date-format="ddd MMM DD HH:mm:ss YYYY"
-				display-format="DD MMMM, YYYY"
-				min-date="2015-05-01T00:00:00.000Z">
-			</react-datepicker>
+			<react-grid
+				id="myGrid"
+				config="./data.json"
+				data="./rows.json"/>
+			</react-grid>
 		</div>
 
-		<div class="component">
-			<h1>Single Date with no defaults</h1>
-			<react-datepicker
-				id="myDatePicker2">
-			</react-datepicker>
-		</div>
-
-		<div class="component">
-			<h1>Date range</h1>
-			<react-datepicker
-				id="myDateRangePicker"
-				range="true"
-				default-range="This month">
-			</react-datepicker>
-		</div>
-
-		<script src="datepicker.js"></script>
+		<script src="grid.js"></script>
 
 		<script>
 			'use strict';
 
-			let datePicker = document.getElementById('myDatePicker');
+			let grid = document.getElementById('myGrid');
 
-			let datePickerHandler = function(e) {
-				console.log('ACTION:: ' + e.detail.action);
-				console.log('PAYLOAD:: ' + e.detail.payload);
-				var test = moment(JSON.parse(e.detail.payload).date).format('ddd DD MMM');
-				console.log(test);
-			}
-
-			datePicker.addEventListener('event', datePickerHandler);
-
-
-			let dateRangePicker = document.getElementById('myDateRangePicker');
-
-			let dateRangePickerHandler = function(e) {
+			let gridHandler = function(e) {
 				console.log('ACTION:: ' + e.detail.action);
 				console.log('PAYLOAD:: ' + e.detail.payload);
 			}
 
-			dateRangePicker.addEventListener('event', dateRangePickerHandler);
+			grid.addEventListener('event', gridHandler);
 
 		</script>
 

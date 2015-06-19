@@ -1,0 +1,54 @@
+{
+    "title": "Manage Drivers",
+    "columns": [
+        {
+            "id": "alias",
+            "index": 0,
+            "name": "Alias",
+            "width": 100,
+            "sortable": false,
+            "visible": true
+        },
+        {
+            "id": "first_name",
+            "index": 1,
+            "name": "First name",
+            "width": 100,
+            "sortable": true,
+            "visible": true
+        },
+        {
+            "id": "last_name",
+            "index": 2,
+            "name": "Last name",
+            "width": 100,
+            "sortable": true,
+            "visible": true
+        },
+        {
+            "id": "license_number",
+            "index": 3,
+            "name": "License Number",
+            "width": 100,
+            "sortable": true,
+            "visible": true
+        },
+        {
+            "id": "driver_id",
+            "index": 4,
+            "name": "Driver ID",
+            "width": 100,
+            "sortable": true,
+            "visible": true,
+            "is_numeric": true
+        },
+        {
+            "id": "active",
+            "index": 5,
+            "name": "Active",
+            "width": 100,
+            "sortable": true,
+            "visible": true
+        }
+    ]
+}
