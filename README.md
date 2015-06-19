@@ -1,4 +1,4 @@
-# React Datepicker
+# React Grid
 
 #### Requirements
 
