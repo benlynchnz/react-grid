@@ -42,7 +42,7 @@ export default class RowsView extends React.Component {
 		let cellsOf = (item, i) => {
 			let data = [];
 
-			_.forEach(order, (col, j) => {
+			_.map(order, (col, j) => {
 				data.push(React.DOM.td({
 					key: j,
 					className: genClass(col)
