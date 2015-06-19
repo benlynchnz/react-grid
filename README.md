@@ -8,7 +8,7 @@ https://iojs.org/en/index.html
 
 #### Installation
 
-`git clone git@github.com:benlynchnz/react-datepicker.git`
+`git clone git@github.com:benlynchnz/react-grid.git`
 
 `npm install`
 
