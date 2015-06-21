@@ -26,6 +26,13 @@ export default {
 			type: Constants.COL_SORT,
 			data: column
 		});
+	},
+
+	movePage: (direction) => {
+		AppDispatcher.dispatch({
+			type: Constants.MOVE_PAGE,
+			data: direction
+		});
 	}
 
 }

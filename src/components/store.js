@@ -11,12 +11,26 @@ let _opts = {};
 
 class Store extends EventEmitter {
 
-	getData() {
-		return _data;
+	getTotalRows() {
+		return _rows.length;
+	}
+
+	setPage(direction) {
+		let page = _opts.current_page;
+
+		if (direction === 'forward') {
+			page = page + 1;
+		} else {
+			page = page - 1;
+		}
+
+		_opts.current_page = page;
 	}
 
 	setOptions(data) {
 		_opts.title = data.title;
+		_opts.rows_per_page = data.rows_per_page;
+		_opts.current_page = 0;
 	}
 
 	getOptions() {
@@ -29,12 +43,12 @@ class Store extends EventEmitter {
 
 	getColumns() {
 		let string_columns = _.chain(_columns)
-			.filter((column) => { return !column.is_numeric })
+			.filter((column) => { return column.type.name !== 'numeric' })
 			.sortBy('index')
 			.value();
 
 		let numeric_columns = _.chain(_columns)
-			.filter((column) => { return column.is_numeric })
+			.filter((column) => { return column.type.name === 'numeric' })
 			.sortBy('index')
 			.value();
 
@@ -43,11 +57,7 @@ class Store extends EventEmitter {
 
 	getColumnSortOrder() {
 		let order = _.map(this.getColumns(), (item, i) => {
-			return {
-				id: item.id,
-				position: i,
-				is_numeric: item.is_numeric
-			}
+			return item;
 		});
 
 		return order;
@@ -75,16 +85,37 @@ class Store extends EventEmitter {
 		}
 
 		column.active_sort = true;
+
+		if (!column.ascending) {
+			_asc = false;
+		}
+
 		_sortIndex = column.id;
 
 		this.updateColumn(column);
 	}
 
 	getRows() {
-		let result = _.sortBy(_rows, _sortIndex);
+		let result = _.chain(_rows)
+			.sortBy(_sortIndex)
+			.value()
 
 		if (!_asc) {
 			result.reverse();
+		}
+
+		if (result.length) {
+			let records = _.slice(result, (_opts.current_page * _opts.rows_per_page), (_opts.rows_per_page * (_opts.current_page + 1)));
+			_opts.current_page_records = records.length;
+			_opts.paging_from = (_opts.current_page * _opts.rows_per_page) + 1;
+
+			if (_opts.current_page_records < _opts.rows_per_page) {
+				_opts.paging_to = _opts.paging_from + (_opts.current_page_records - 1);
+			} else {
+				_opts.paging_to = _opts.paging_from + (_opts.rows_per_page - 1);
+			}
+
+			return records;
 		}
 
 		return result;
@@ -144,6 +175,10 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 			break;
 		case Constants.COL_SORT:
 			_Store.sortRows(payload.data);
+			_Store.emitChange();
+			break;
+		case Constants.MOVE_PAGE:
+			_Store.setPage(payload.data);
 			_Store.emitChange();
 			break;
 		default:

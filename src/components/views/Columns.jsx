@@ -54,11 +54,17 @@ export default class ColumnsView extends React.Component {
 				classes += ' ' + styles['desc'];
 			}
 
-			if (item.is_numeric) {
+			if (item.type.name === 'numeric') {
 				classes += ' ' + styles['numeric'];
 			}
 
 			return classes;
+		}
+
+		let genStyles = (item) => {
+			if (item.style) {
+				return item.style;
+			}
 		}
 
 		let trClass = () => {
@@ -83,6 +89,7 @@ export default class ColumnsView extends React.Component {
 							<th
 								key={item.id}
 								className={genClass(item)}
+								style={genStyles(item)}
 								data-column-id={item.id}
 								onClick={this._onClick}>
 									{item.name}

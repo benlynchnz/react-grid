@@ -1,54 +1,82 @@
 {
-    "title": "Manage Drivers",
+    "title": "Transactions",
+	"rows_per_page": 10,
     "columns": [
-        {
-            "id": "alias",
+		{
+            "id": "transaction_date",
             "index": 0,
-            "name": "Alias",
-            "width": 100,
-            "sortable": false,
-            "visible": true
+            "name": "Date",
+			"style": {
+				"width": 100
+			},
+            "sortable": true,
+			"ascending": false,
+            "visible": true,
+			"type": {
+				"name": "date",
+				"format": "ddd DD MMM"
+			}
         },
         {
-            "id": "first_name",
+            "id": "payee",
             "index": 1,
-            "name": "First name",
-            "width": 100,
-            "sortable": true,
-            "visible": true
-        },
-        {
-            "id": "last_name",
-            "index": 2,
-            "name": "Last name",
-            "width": 100,
-            "sortable": true,
-            "visible": true
-        },
-        {
-            "id": "license_number",
-            "index": 3,
-            "name": "License Number",
-            "width": 100,
-            "sortable": true,
-            "visible": true
-        },
-        {
-            "id": "driver_id",
-            "index": 4,
-            "name": "Driver ID",
-            "width": 100,
+            "name": "Payee",
             "sortable": true,
             "visible": true,
-            "is_numeric": true
+			"type": {
+				"name": "string"
+			}
         },
-        {
-            "id": "active",
-            "index": 5,
-            "name": "Active",
-            "width": 100,
+		{
+            "id": "memo",
+            "index": 2,
+            "name": "Ref",
             "sortable": true,
-            "visible": true
+            "visible": true,
+			"type": {
+				"name": "string"
+			}
+        },
+		{
+            "id": "type",
+            "index": 3,
+            "name": "Type",
+			"style": {
+            	"width": 100
+			},
+            "sortable": true,
+            "visible": true,
+			"type": {
+				"name": "string"
+			}
+        },
+		{
+            "id": "comments",
+            "index": 4,
+            "name": "Comments",
+            "sortable": false,
+            "visible": true,
+			"row_style": {
+				"color": "rgba(0,0,0,0.54)"
+			},
+			"type": {
+				"name": "array",
+				"value": "comment",
+				"default_text": "Add a comment"
+			}
+        },
+		{
+            "id": "amount",
+            "index": 1,
+            "name": "Amount $",
+			"style": {
+            	"width": 100
+			},
+            "sortable": true,
+            "visible": true,
+			"type": {
+				"name": "numeric"
+			}
         }
     ]
 }

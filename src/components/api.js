@@ -10,7 +10,9 @@ export default {
 		request
 			.get(uri)
 			.end(function(err, result) {
-				deferred.resolve(result.body);
+				if (result.body) {
+					deferred.resolve(result.body);
+				}
 			});
 
 		return deferred.promise;

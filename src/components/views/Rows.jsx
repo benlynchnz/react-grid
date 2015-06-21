@@ -17,8 +17,8 @@ export default class RowsView extends React.Component {
 	componentWillMount() {
 		Store.addChangeListener(this._onChange.bind(this));
 	}
-	componentWillUnmount() {
 
+	componentWillUnmount() {
 		Store.addRemoveListener(this._onChange.bind(this));
 	}
 
@@ -30,23 +30,48 @@ export default class RowsView extends React.Component {
 		let genClass = (col) => {
 			let classes = styles.td;
 
-			if (col.is_numeric) {
+			if (col.type.name === 'numeric') {
 				classes += ' ' + styles['numeric'];
 			}
 
 			return classes;
 		}
 
+		let genStyle = (col) => {
+			if (col.row_style) {
+				return col.row_style;
+			}
+		}
+
+		let genValue = (col, row) => {
+			let result = row[col.id];
+
+			if (col.type.name === 'date') {
+				result = moment(result).format(col.type.format);
+			}
+
+			if (col.type.name === 'array') {
+				if (result && result.length) {
+					result = _.last(result)[col.type.value];
+				} else {
+					result = col.type.default_text;
+				}
+			}
+
+			return result || '-';
+		}
+
 		let order = Store.getColumnSortOrder();
 
-		let cellsOf = (item, i) => {
+		let cellsOf = (item) => {
 			let data = [];
 
 			_.map(order, (col, j) => {
 				data.push(React.DOM.td({
 					key: j,
-					className: genClass(col)
-				}, item[col.id].toString()));
+					className: genClass(col),
+					style: genStyle(col)
+				}, genValue(col, item).toString()));
 			});
 
 			return data;
@@ -58,7 +83,7 @@ export default class RowsView extends React.Component {
 					return (
 						<tr key={i} className={styles.tr}>
 							return (
-								{cellsOf(item, i)}
+								{cellsOf(item)}
 							);
 						</tr>
 					);

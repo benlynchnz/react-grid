@@ -22,7 +22,7 @@ gulp.task('webpack', function() {
 gulp.task('server', function(done) {
     http.createServer(
         st({ path: __dirname + '/dist', index: 'index.html', cache: false })
-    ).listen(3000, done);
+    ).listen(5000, done);
 });
 
 gulp.task('watch', ['server'], function() {

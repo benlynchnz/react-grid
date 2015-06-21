@@ -7,6 +7,7 @@ import styles from './GridStyle.css';
 
 import Columns from './components/views/Columns.jsx';
 import Rows from './components/views/Rows.jsx';
+import Footer from './components/views/Footer.jsx';
 
 export default class GridView extends React.Component {
 
@@ -52,10 +53,13 @@ export default class GridView extends React.Component {
 	render() {
 		if (this.state.columns.length) {
 			return (
-				<table className={styles.table}>
-					<Columns columns={Store.getColumns()} />
-					<Rows rows={Store.getRows()}/>
-				</table>
+				<div>
+					<table className={styles.table}>
+						<Columns columns={Store.getColumns()} />
+						<Rows rows={Store.getRows()}/>
+					</table>
+					<Footer />
+				</div>
 			);
 		}
 
