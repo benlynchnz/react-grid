@@ -5,7 +5,8 @@ const constants = {
 	FETCH_COLUMNS: "FETCH_COLUMNS",
 	FETCH_ROWS: "FETCH_ROWS",
 	COL_SORT: "COL_SORT",
-	MOVE_PAGE: "MOVE_PAGE"
+	MOVE_PAGE: "MOVE_PAGE",
+	ROWS_PER_PAGE: "ROWS_PER_PAGE"
 };
 
 export default constants;

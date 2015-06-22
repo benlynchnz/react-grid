@@ -5,6 +5,8 @@ import Actions from '../actions';
 import utils from '../utils';
 import styles from '../../GridStyle.css';
 
+import RowsPerPage from './RowsPerPage.jsx';
+
 export default class FooterView extends React.Component {
 
 	displayName: 'grid-footer'
@@ -14,6 +16,7 @@ export default class FooterView extends React.Component {
 		this.state = Store.getOptions();
 
 		this._onClick = this._onClick.bind(this);
+		this._onRowsPerPageClick = this._onRowsPerPageClick.bind(this);
 	}
 
 	componentWillMount() {
@@ -45,15 +48,27 @@ export default class FooterView extends React.Component {
 		Actions.movePage(direction);
 	}
 
+	_onRowsPerPageClick(e) {
+		let position = e.target.getBoundingClientRect(),
+			menuWrapper = document.getElementById('rows-per-page');
+
+		menuWrapper.style.position = 'fixed';
+		menuWrapper.style.left = position.left + 'px';
+		menuWrapper.style.top = (position.top - 150) + 'px';
+
+		React.render(<RowsPerPage opts={this.state} el={menuWrapper}/>, menuWrapper);
+	}
+
 	render() {
 		return (
 			<div className={styles.footer}>
+				<div id="rows-per-page"></div>
 				<ul className={styles.ul}>
-					<li className={styles.li} data-direction="forward" onClick={this._onClick}><img src="./icons/chevron-right.png" /></li>
-					<li className={styles.li} data-direction="back" onClick={this._onClick}><img src="./icons/chevron-left.png" /></li>
-					<li className={styles.li}>{this.state.paging_from} - {this.state.paging_to} of {Store.getTotalRows()}</li>
-					<li className={styles.li}><b>{this.state.rows_per_page}</b></li>
 					<li className={styles.li}>Rows per page:</li>
+					<li className={styles.li} onClick={this._onRowsPerPageClick} ><b>{this.state.rows_per_page}</b><img className={styles.caret} src="./icons/menu-down.png" /></li>
+					<li className={styles.li}>{this.state.paging_from} - {this.state.paging_to} of {Store.getTotalRows()}</li>
+					<li className={styles.li} data-direction="back" onClick={this._onClick}><img src="./icons/chevron-left.png" /></li>
+					<li className={styles.li} data-direction="forward" onClick={this._onClick}><img src="./icons/chevron-right.png" /></li>
 				</ul>
 			</div>
 		);

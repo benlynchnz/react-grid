@@ -2,12 +2,13 @@ import {EventEmitter} from 'events';
 import AppDispatcher from './dispatcher';
 import Constants from './constants';
 
-let _data = [];
-let _columns = [];
-let _rows = [];
-let _sortIndex = null;
-let _asc = true;
-let _opts = {};
+let _columns = [],
+	_rows = [],
+	_sortIndex = null,
+	_asc = true,
+	_opts = {};
+
+_opts.pagingOpts = [10, 20, 50, 100];
 
 class Store extends EventEmitter {
 
@@ -33,6 +34,11 @@ class Store extends EventEmitter {
 		_opts.current_page = 0;
 	}
 
+	setRowsPerPage(rows) {
+		_opts.rows_per_page = Number(rows);
+		_opts.current_page = 0;
+	}
+
 	getOptions() {
 		return _opts;
 	}
@@ -42,7 +48,7 @@ class Store extends EventEmitter {
 	}
 
 	getColumns() {
-		let string_columns = _.chain(_columns)
+		let non_numeric_columns = _.chain(_columns)
 			.filter((column) => { return column.type.name !== 'numeric' })
 			.sortBy('index')
 			.value();
@@ -52,7 +58,7 @@ class Store extends EventEmitter {
 			.sortBy('index')
 			.value();
 
-		return string_columns.concat(numeric_columns);
+		return non_numeric_columns.concat(numeric_columns);
 	}
 
 	getColumnSortOrder() {
@@ -179,6 +185,10 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 			break;
 		case Constants.MOVE_PAGE:
 			_Store.setPage(payload.data);
+			_Store.emitChange();
+			break;
+		case Constants.ROWS_PER_PAGE:
+			_Store.setRowsPerPage(payload.data);
 			_Store.emitChange();
 			break;
 		default:

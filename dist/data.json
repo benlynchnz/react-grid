@@ -1,11 +1,11 @@
 {
-    "title": "Transactions",
+    "title": "Manage Vehicles",
 	"rows_per_page": 10,
     "columns": [
 		{
-            "id": "transaction_date",
+            "id": "alias",
             "index": 0,
-            "name": "Date",
+            "name": "Alias",
 			"style": {
 				"width": 100
 			},
@@ -13,14 +13,14 @@
 			"ascending": false,
             "visible": true,
 			"type": {
-				"name": "date",
+				"name": "string",
 				"format": "ddd DD MMM"
 			}
         },
         {
-            "id": "payee",
+            "id": "first_name",
             "index": 1,
-            "name": "Payee",
+            "name": "First name",
             "sortable": true,
             "visible": true,
 			"type": {
@@ -28,9 +28,9 @@
 			}
         },
 		{
-            "id": "memo",
+            "id": "last_name",
             "index": 2,
-            "name": "Ref",
+            "name": "Last name",
             "sortable": true,
             "visible": true,
 			"type": {
@@ -38,9 +38,9 @@
 			}
         },
 		{
-            "id": "type",
+            "id": "license_number",
             "index": 3,
-            "name": "Type",
+            "name": "License number",
 			"style": {
             	"width": 100
 			},
@@ -51,24 +51,25 @@
 			}
         },
 		{
-            "id": "comments",
+            "id": "active",
             "index": 4,
-            "name": "Comments",
+            "name": "Active",
             "sortable": false,
             "visible": true,
+            "style": {
+                "width": 100
+            },
 			"row_style": {
 				"color": "rgba(0,0,0,0.54)"
 			},
 			"type": {
-				"name": "array",
-				"value": "comment",
-				"default_text": "Add a comment"
+				"name": "string"
 			}
         },
 		{
-            "id": "amount",
+            "id": "driver_id",
             "index": 1,
-            "name": "Amount $",
+            "name": "Driver ID",
 			"style": {
             	"width": 100
 			},

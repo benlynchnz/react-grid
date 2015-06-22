@@ -25,6 +25,14 @@
             "active": true
         },
         {
+            "alias": "@tom",
+            "first_name": "Tom",
+            "last_name": "Smith",
+            "license_number": "SB193003",
+            "driver_id": 439389,
+            "active": true
+        },
+        {
             "alias": "@john",
             "first_name": "John",
             "last_name": "Wang",

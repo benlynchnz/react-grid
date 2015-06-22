@@ -33,6 +33,13 @@ export default {
 			type: Constants.MOVE_PAGE,
 			data: direction
 		});
+	},
+
+	setRowsPerPage: (rows) => {
+		AppDispatcher.dispatch({
+			type: Constants.ROWS_PER_PAGE,
+			data: rows
+		});
 	}
 
 }
