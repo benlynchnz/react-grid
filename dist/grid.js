@@ -259,7 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _asc = true,
 	    _opts = {};
 
-	_opts.pagingOpts = [10, 20, 50, 100];
+	_opts.pagingOpts = [5, 10, 20, 50, 100];
 
 	var Store = (function (_EventEmitter) {
 		function Store() {
@@ -455,7 +455,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				_Store.emitChange();
 				break;
 			case _constants2['default'].FETCH_ROWS:
-				_rows = payload.data.Items;
+				_rows = payload.data;
 				_Store.emitChange();
 				break;
 			case _constants2['default'].COL_SORT:
@@ -664,23 +664,23 @@ return /******/ (function(modules) { // webpackBootstrap
 				var _this = this;
 
 				var genClass = function genClass(item) {
-					var classes = _GridStyleCss2['default'].th;
+					var classes = [_GridStyleCss2['default'].th];
 
 					if (item.active_sort) {
-						classes += ' ' + _GridStyleCss2['default']['column-sort'];
+						classes.push(_GridStyleCss2['default']['column-sort']);
 					}
 
 					if (_store2['default'].getSortOrder()) {
-						classes += ' ' + _GridStyleCss2['default']['asc'];
+						classes.push(_GridStyleCss2['default']['asc']);
 					} else {
-						classes += ' ' + _GridStyleCss2['default']['desc'];
+						classes.push(_GridStyleCss2['default']['desc']);
 					}
 
 					if (item.type.name === 'numeric') {
-						classes += ' ' + _GridStyleCss2['default']['numeric'];
+						classes.push(_GridStyleCss2['default']['numeric']);
 					}
 
-					return classes;
+					return classes.join(' ');
 				};
 
 				var genStyles = function genStyles(item) {
@@ -690,11 +690,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				};
 
 				var trClass = function trClass() {
-					var classes = _GridStyleCss2['default'].tr;
+					var classes = [_GridStyleCss2['default'].tr];
 
-					classes += ' ' + _GridStyleCss2['default']['header'];
+					classes.push(_GridStyleCss2['default']['header']);
 
-					return classes;
+					return classes.join(' ');
 				};
 
 				return React.createElement(
@@ -804,13 +804,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'render',
 			value: function render() {
 				var genClass = function genClass(col) {
-					var classes = _GridStyleCss2['default'].td;
+					var classes = [_GridStyleCss2['default'].td];
 
 					if (col.type.name === 'numeric') {
-						classes += ' ' + _GridStyleCss2['default']['numeric'];
+						classes.push(_GridStyleCss2['default']['numeric']);
 					}
 
-					return classes;
+					return classes.join(' ');
 				};
 
 				var genStyle = function genStyle(col) {
@@ -823,7 +823,11 @@ return /******/ (function(modules) { // webpackBootstrap
 					var result = row[col.id];
 
 					if (col.type.name === 'date') {
-						result = moment(result).format(col.type.format);
+						if (col.type.from_now) {
+							result = moment(result).fromNow();
+						} else {
+							result = moment(result).format(col.type.format);
+						}
 					}
 
 					if (col.type.name === 'array') {
@@ -832,6 +836,12 @@ return /******/ (function(modules) { // webpackBootstrap
 						} else {
 							result = col.type.default_text;
 						}
+					}
+
+					if (col.type.name === 'link') {
+						// result = React.DOM.a(null, row[col.id]);
+						// console.log(result);
+						result = row[col.id];
 					}
 
 					return result || '-';
@@ -971,6 +981,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				menuWrapper.style.position = 'fixed';
 				menuWrapper.style.left = position.left + 'px';
 				menuWrapper.style.top = position.top - 150 + 'px';
+				menuWrapper.style.display = 'block';
 
 				React.render(React.createElement(_RowsPerPageJsx2['default'], { opts: this.state, el: menuWrapper }), menuWrapper);
 			}
@@ -980,7 +991,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return React.createElement(
 					'div',
 					{ className: _GridStyleCss2['default'].footer },
-					React.createElement('div', { id: 'rows-per-page' }),
+					React.createElement('div', { id: 'rows-per-page', className: _GridStyleCss2['default']['rows-per-page'] }),
 					React.createElement(
 						'ul',
 						{ className: _GridStyleCss2['default'].ul },
@@ -1035,7 +1046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"table":"GridStyle__table___1hfrk","tr":"GridStyle__tr___UqN7K","thead":"GridStyle__thead___19zzh","th":"GridStyle__th___3qVXM","column-sort":"GridStyle__column-sort___1kRVc","numeric":"GridStyle__numeric___hl-Im","asc":"GridStyle__asc___20KVi","desc":"GridStyle__desc___19MPa","header":"GridStyle__header___5Kszw","tbody":"GridStyle__tbody___1iAhb","td":"GridStyle__td___1TO1W","footer":"GridStyle__footer___3SKuL","ul":"GridStyle__ul___7Ryif","li":"GridStyle__li___Y2ezh","caret":"GridStyle__caret___2WrVL","menu-wrapper":"GridStyle__menu-wrapper___2dzHZ","selected":"GridStyle__selected___3eyuf"};
+	module.exports = {"table":"GridStyle__table___1hfrk","tr":"GridStyle__tr___UqN7K","thead":"GridStyle__thead___19zzh","th":"GridStyle__th___3qVXM","column-sort":"GridStyle__column-sort___1kRVc","numeric":"GridStyle__numeric___hl-Im","asc":"GridStyle__asc___20KVi","desc":"GridStyle__desc___19MPa","header":"GridStyle__header___5Kszw","tbody":"GridStyle__tbody___1iAhb","td":"GridStyle__td___1TO1W","footer":"GridStyle__footer___3SKuL","ul":"GridStyle__ul___7Ryif","li":"GridStyle__li___Y2ezh","caret":"GridStyle__caret___2WrVL","menu-wrapper":"GridStyle__menu-wrapper___2dzHZ","rows-per-page":"GridStyle__rows-per-page___1y7Um","selected":"GridStyle__selected___3eyuf"};
 
 /***/ },
 /* 9 */
@@ -1152,6 +1163,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function _onClick(e) {
 				var option = e.target.getAttribute('data-value');
 				_actions2['default'].setRowsPerPage(option);
+
+				this.props.el.removeAttribute('style');
 				React.unmountComponentAtNode(this.props.el);
 			}
 		}, {
@@ -1160,13 +1173,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				var _this = this;
 
 				var genClass = function genClass(item) {
-					var classes = _GridStyleCss2['default'].li;
+					var classes = [_GridStyleCss2['default'].li];
 
 					if (item === _this.props.opts.rows_per_page) {
-						classes += ' ' + _GridStyleCss2['default'].selected;
+						classes.push(_GridStyleCss2['default'].selected);
 					}
 
-					return classes;
+					return classes.join(' ');
 				};
 
 				return React.createElement(

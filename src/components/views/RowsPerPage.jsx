@@ -16,18 +16,20 @@ export default class RowsPerPageView extends React.Component {
 	_onClick(e) {
 		let option = e.target.getAttribute('data-value');
 		Actions.setRowsPerPage(option);
+
+		this.props.el.removeAttribute('style');
 		React.unmountComponentAtNode(this.props.el);
 	}
 
 	render() {
 		let genClass = (item) => {
-			let classes = styles.li;
+			let classes = [styles.li];
 
 			if (item === this.props.opts.rows_per_page) {
-				classes += ' ' + styles.selected;
+				classes.push(styles.selected);
 			}
 
-			return classes;
+			return classes.join(' ');
 		}
 
 		return (

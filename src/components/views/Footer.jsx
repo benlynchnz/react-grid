@@ -55,6 +55,7 @@ export default class FooterView extends React.Component {
 		menuWrapper.style.position = 'fixed';
 		menuWrapper.style.left = position.left + 'px';
 		menuWrapper.style.top = (position.top - 150) + 'px';
+		menuWrapper.style.display = 'block';
 
 		React.render(<RowsPerPage opts={this.state} el={menuWrapper}/>, menuWrapper);
 	}
@@ -62,7 +63,7 @@ export default class FooterView extends React.Component {
 	render() {
 		return (
 			<div className={styles.footer}>
-				<div id="rows-per-page"></div>
+				<div id="rows-per-page" className={styles['rows-per-page']}></div>
 				<ul className={styles.ul}>
 					<li className={styles.li}>Rows per page:</li>
 					<li className={styles.li} onClick={this._onRowsPerPageClick} ><b>{this.state.rows_per_page}</b><img className={styles.caret} src="./icons/menu-down.png" /></li>

@@ -8,7 +8,7 @@ let _columns = [],
 	_asc = true,
 	_opts = {};
 
-_opts.pagingOpts = [10, 20, 50, 100];
+_opts.pagingOpts = [5, 10, 20, 50, 100];
 
 class Store extends EventEmitter {
 
@@ -176,7 +176,7 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 			_Store.emitChange();
 			break;
 		case Constants.FETCH_ROWS:
-			_rows = payload.data.Items;
+			_rows = payload.data;
 			_Store.emitChange();
 			break;
 		case Constants.COL_SORT:

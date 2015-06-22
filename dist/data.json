@@ -1,79 +1,82 @@
 {
-    "title": "Manage Vehicles",
-	"rows_per_page": 10,
+    "title": "EROAD Repos",
+	"rows_per_page": 5,
     "columns": [
 		{
-            "id": "alias",
+            "id": "full_name",
             "index": 0,
-            "name": "Alias",
-			"style": {
-				"width": 100
-			},
+            "name": "Name",
             "sortable": true,
 			"ascending": false,
             "visible": true,
 			"type": {
-				"name": "string",
-				"format": "ddd DD MMM"
+				"name": "link"
 			}
         },
         {
-            "id": "first_name",
+            "id": "updated_at",
             "index": 1,
-            "name": "First name",
+            "name": "Updated",
             "sortable": true,
+			"ascending": false,
             "visible": true,
+            "default_sort": true,
 			"type": {
-				"name": "string"
+				"name": "date",
+                "from_now": true
 			}
         },
-		{
-            "id": "last_name",
+        {
+            "id": "description",
             "index": 2,
-            "name": "Last name",
+            "name": "Description",
             "sortable": true,
+			"ascending": false,
             "visible": true,
-			"type": {
-				"name": "string"
-			}
-        },
-		{
-            "id": "license_number",
-            "index": 3,
-            "name": "License number",
-			"style": {
-            	"width": 100
-			},
-            "sortable": true,
-            "visible": true,
-			"type": {
-				"name": "string"
-			}
-        },
-		{
-            "id": "active",
-            "index": 4,
-            "name": "Active",
-            "sortable": false,
-            "visible": true,
-            "style": {
-                "width": 100
+            "row_style": {
+                "whiteSpace": "nowrap",
+                "maxWidth": 200,
+                "overflow": "hidden",
+                "textOverflow": "ellipsis"
             },
-			"row_style": {
-				"color": "rgba(0,0,0,0.54)"
-			},
 			"type": {
 				"name": "string"
 			}
         },
-		{
-            "id": "driver_id",
-            "index": 1,
-            "name": "Driver ID",
-			"style": {
-            	"width": 100
-			},
+        {
+            "id": "language",
+            "index": 3,
+            "name": "Language",
             "sortable": true,
+			"ascending": false,
+            "visible": true,
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "watchers_count",
+            "index": 0,
+            "name": "Watchers",
+            "sortable": true,
+			"ascending": false,
+            "style": {
+                "width": 25
+            },
+            "visible": true,
+			"type": {
+				"name": "numeric"
+			}
+        },
+        {
+            "id": "open_issues",
+            "index": 0,
+            "name": "Open Issues",
+            "sortable": true,
+			"ascending": false,
+            "style": {
+                "width": 25
+            },
             "visible": true,
 			"type": {
 				"name": "numeric"

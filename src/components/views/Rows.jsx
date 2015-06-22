@@ -28,13 +28,13 @@ export default class RowsView extends React.Component {
 
 	render() {
 		let genClass = (col) => {
-			let classes = styles.td;
+			let classes = [styles.td];
 
 			if (col.type.name === 'numeric') {
-				classes += ' ' + styles['numeric'];
+				classes.push(styles['numeric']);
 			}
 
-			return classes;
+			return classes.join(' ');
 		}
 
 		let genStyle = (col) => {
@@ -47,7 +47,11 @@ export default class RowsView extends React.Component {
 			let result = row[col.id];
 
 			if (col.type.name === 'date') {
-				result = moment(result).format(col.type.format);
+				if (col.type.from_now) {
+					result = moment(result).fromNow();
+				} else {
+					result = moment(result).format(col.type.format);
+				}
 			}
 
 			if (col.type.name === 'array') {
@@ -56,6 +60,12 @@ export default class RowsView extends React.Component {
 				} else {
 					result = col.type.default_text;
 				}
+			}
+
+			if (col.type.name === 'link') {
+				// result = React.DOM.a(null, row[col.id]);
+				// console.log(result);
+				result = row[col.id];
 			}
 
 			return result || '-';

@@ -144,6 +144,10 @@
 	box-shadow: 0 2px 5px rgba(0,0,0,0.26);
 }
 
+.rows-per-page {
+	display: none;
+}
+
 .menu-wrapper .li {
 	line-height: 48px;
 	min-width: 100px;

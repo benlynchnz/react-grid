@@ -42,23 +42,23 @@ export default class ColumnsView extends React.Component {
 
 	render() {
 		let genClass = (item) => {
-			let classes = styles.th;
+			let classes = [styles.th];
 
 			if (item.active_sort) {
-				classes += ' ' + styles['column-sort'];
+				classes.push(styles['column-sort']);
 			}
 
 			if (Store.getSortOrder()) {
-				classes += ' ' + styles['asc'];
+				classes.push(styles['asc']);
 			} else {
-				classes += ' ' + styles['desc'];
+				classes.push(styles['desc']);
 			}
 
 			if (item.type.name === 'numeric') {
-				classes += ' ' + styles['numeric'];
+				classes.push(styles['numeric']);
 			}
 
-			return classes;
+			return classes.join(' ');
 		}
 
 		let genStyles = (item) => {
@@ -68,11 +68,11 @@ export default class ColumnsView extends React.Component {
 		}
 
 		let trClass = () => {
-			let classes = styles.tr;
+			let classes = [styles.tr];
 
-			classes += ' ' + styles['header'];
+			classes.push(styles['header']);
 
-			return classes;
+			return classes.join(' ');
 		}
 
 		return (
