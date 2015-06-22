@@ -256,7 +256,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _columns = [],
 	    _rows = [],
 	    _sortIndex = null,
-	    _asc = true,
+	    _isAsc = true,
 	    _opts = {};
 
 	_opts.pagingOpts = [5, 10, 20, 50, 100];
@@ -364,7 +364,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				column.active_sort = true;
 
 				if (!column.ascending) {
-					_asc = false;
+					_isAsc = false;
 				}
 
 				_sortIndex = column.id;
@@ -376,7 +376,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function getRows() {
 				var result = _.chain(_rows).sortBy(_sortIndex).value();
 
-				if (!_asc) {
+				if (!_isAsc) {
 					result.reverse();
 				}
 
@@ -405,9 +405,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'sortRows',
 			value: function sortRows(column) {
 				if (_sortIndex !== column.id) {
-					_asc = false;
+					_isAsc = false;
 				} else {
-					_asc = !_asc;
+					_isAsc = !_isAsc;
 				}
 
 				_columns.forEach(function (item) {
@@ -422,7 +422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getSortOrder',
 			value: function getSortOrder() {
-				return _asc;
+				return _isAsc;
 			}
 		}, {
 			key: 'emitChange',

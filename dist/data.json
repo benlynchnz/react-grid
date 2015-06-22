@@ -70,7 +70,7 @@
         },
         {
             "id": "open_issues",
-            "index": 0,
+            "index": 1,
             "name": "Open Issues",
             "sortable": true,
 			"ascending": false,
