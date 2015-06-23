@@ -54,7 +54,7 @@ export default class ColumnsView extends React.Component {
 				classes.push(styles['desc']);
 			}
 
-			if (item.type.name === 'numeric') {
+			if (item.type.name === 'number') {
 				classes.push(styles['numeric']);
 			}
 

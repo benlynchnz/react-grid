@@ -91,7 +91,8 @@
             "sortable": true,
 			"ascending": true,
 			"type": {
-				"name": "numeric"
+				"name": "number",
+				"format": "0,0"
 			}
         }
     ]

@@ -31,7 +31,7 @@ export default class RowsView extends React.Component {
 		let genClass = (col) => {
 			let classes = [styles.td];
 
-			if (col.type.name === 'numeric') {
+			if (col.type.name === 'number') {
 				classes.push(styles['numeric']);
 			}
 

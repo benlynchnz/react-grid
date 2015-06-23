@@ -59,6 +59,7 @@ class Store extends EventEmitter {
 		_opts.rows_per_page = data.rows_per_page;
 		_opts.paging_options = data.paging_options || [5, 10, 20, 50, 100];
 		_opts.default_date_format = data.default_date_format || "ddd DD MMM YYYY";
+		_opts.default_number_format = data.default_number_format || "0,0";
 		_opts.show_paging = data.show_paging;
 		_opts.current_page = 0;
 		_opts.endpoint = data.endpoint;
@@ -70,12 +71,12 @@ class Store extends EventEmitter {
 
 	getColumns() {
 		let non_numeric_columns = _.chain(_columns)
-			.filter((column) => { return column.type.name !== 'numeric' })
+			.filter((column) => { return column.type.name !== 'number' })
 			.sortBy('index')
 			.value();
 
 		let numeric_columns = _.chain(_columns)
-			.filter((column) => { return column.type.name === 'numeric' })
+			.filter((column) => { return column.type.name === 'number' })
 			.sortBy('index')
 			.value();
 

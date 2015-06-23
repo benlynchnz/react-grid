@@ -21,6 +21,7 @@
     "flux": "^2.0.3",
     "gulp-webpack": "^1.4.0",
     "lodash": "^3.9.3",
+    "numeral": "^1.5.3",
     "postcss-color-rebeccapurple": "^1.1.0",
     "postcss-loader": "^0.4.4",
     "q": "^1.4.1",

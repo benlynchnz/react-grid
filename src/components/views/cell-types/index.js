@@ -3,6 +3,7 @@
 import A from './link';
 import IMG from './img';
 import DATETIME from './datetime';
+import NUMBER from './number';
 
 export default function(col, row) {
 
@@ -18,6 +19,9 @@ export default function(col, row) {
             break;
         case 'array':
             return ARRAY(col, row);
+            break;
+        case 'number':
+            return NUMBER(col, row);
             break;
         default:
             return row[col.id] || '-';
