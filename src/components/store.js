@@ -1,14 +1,15 @@
 import {EventEmitter} from 'events';
 import AppDispatcher from './dispatcher';
 import Constants from './constants';
+import Actions from './actions';
 
 let _columns = [],
 	_rows = [],
 	_sortIndex = null,
 	_isAsc = true,
-	_opts = {};
-
-_opts.pagingOpts = [5, 10, 20, 50, 100];
+	_opts = {},
+	_isReady = false,
+	_dataSource = null;
 
 class Store extends EventEmitter {
 
@@ -28,10 +29,20 @@ class Store extends EventEmitter {
 		_opts.current_page = page;
 	}
 
-	setOptions(data) {
-		_opts.title = data.title;
-		_opts.rows_per_page = data.rows_per_page;
-		_opts.current_page = 0;
+	setDataSource(src) {
+		_dataSource = src;
+	}
+
+	getDataSource() {
+		return _dataSource;
+	}
+
+	isReady() {
+		return _isReady;
+	}
+
+	setReady(bool) {
+		_isReady = Boolean(bool);
 	}
 
 	setRowsPerPage(rows) {
@@ -41,6 +52,16 @@ class Store extends EventEmitter {
 
 	getOptions() {
 		return _opts;
+	}
+
+	setOptions(data) {
+		_opts.title = data.title;
+		_opts.rows_per_page = data.rows_per_page;
+		_opts.paging_options = data.paging_options || [5, 10, 20, 50, 100];
+		_opts.default_date_format = data.default_date_format || "ddd DD MMM YYYY";
+		_opts.show_paging = data.show_paging;
+		_opts.current_page = 0;
+		_opts.endpoint = data.endpoint;
 	}
 
 	setColumns(data) {
@@ -175,8 +196,13 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 			_Store.setOptions(payload.data);
 			_Store.emitChange();
 			break;
+		case Constants.SET_DATA_SOURCE:
+			_Store.setDataSource(payload.data);
+			_Store.emitChange();
+			break;
 		case Constants.FETCH_ROWS:
 			_rows = payload.data;
+			_Store.setReady(true);
 			_Store.emitChange();
 			break;
 		case Constants.COL_SORT:

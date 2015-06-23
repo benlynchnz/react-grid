@@ -13,20 +13,11 @@
 				padding: 20px;
 				font-family: 'Roboto', sans-serif;
 			}
-			h1 {
-				font-size: 26px;
-				font-weight: 400;
-			}
+
 			.component {
 				margin-bottom: 50px;
 			}
 
-			input {
-				height: 48px;
-				width: 300px;
-				line-height: 48px;
-				padding-left: 10px;
-			}
 		</style>
 
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
@@ -40,8 +31,8 @@
 		<div class="component">
 			<react-grid
 				id="myGrid"
-				data="https://api.github.com/orgs/eroad/repos"
-				config="./data.json">
+				data="https://restcountries.p.mashape.com/all"
+				config="./examples/countries/config.json">
 			</react-grid>
 		</div>
 

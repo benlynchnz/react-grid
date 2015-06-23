@@ -34,10 +34,16 @@ export default class GridView extends React.Component {
 	}
 
 	_onChange() {
-		this.setState({
-			columns: Store.getColumns(),
-			rows: Store.getRows()
-		});
+		if (Store.isReady()) {
+			this.setState({
+				columns: Store.getColumns(),
+				rows: Store.getRows()
+			});
+		}
+
+		if (!Store.isReady() && Store.getDataSource()) {
+			Actions.fetchRows(Store.getDataSource());
+		}
 	}
 
 	_updateState(props) {
@@ -46,7 +52,7 @@ export default class GridView extends React.Component {
 		}
 
 		if (props['data']) {
-			Actions.fetchRows(props['data']);
+			Actions.setDataSource(props['data']);
 		}
 	}
 
@@ -55,10 +61,10 @@ export default class GridView extends React.Component {
 			return (
 				<div>
 					<table className={styles.table}>
-						<Columns columns={Store.getColumns()} />
-						<Rows rows={Store.getRows()}/>
+						<Columns columns={this.state.columns} />
+						<Rows rows={this.state.rows}/>
 					</table>
-					<Footer />
+					{Store.getOptions().show_paging ? <Footer /> : null}
 				</div>
 			);
 		}

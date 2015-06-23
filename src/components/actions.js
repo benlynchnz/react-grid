@@ -4,7 +4,7 @@ import API from './api';
 
 export default {
 	fetchColumns: (uri) => {
-		API.fetch(uri).then((data) => {
+		API.fetch(uri, 'fetchColumns').then((data) => {
 			AppDispatcher.dispatch({
 				type: Constants.FETCH_COLUMNS,
 				data: data
@@ -13,12 +13,19 @@ export default {
 	},
 
 	fetchRows: (uri) => {
-		API.fetch(uri).then((data) => {
+		API.fetch(uri, 'fetchRows').then((data) => {
 			AppDispatcher.dispatch({
 				type: Constants.FETCH_ROWS,
 				data: data
 			});
 		})
+	},
+
+	setDataSource: (src) => {
+		AppDispatcher.dispatch({
+			type: Constants.SET_DATA_SOURCE,
+			data: src
+		});
 	},
 
 	sortRows: (column) => {

@@ -41,7 +41,7 @@ export default class FooterView extends React.Component {
 
 		let next_rows = ((this.state.current_page + 1) * this.state.rows_per_page) + this.state.rows_per_page;
 
-		if (direction === 'forward' && (next_rows - this.state.rows_per_page) > Store.getTotalRows()) {
+		if (direction === 'forward' && (next_rows - this.state.rows_per_page) >= Store.getTotalRows()) {
 			return;
 		}
 
@@ -49,15 +49,9 @@ export default class FooterView extends React.Component {
 	}
 
 	_onRowsPerPageClick(e) {
-		let position = e.target.getBoundingClientRect(),
-			menuWrapper = document.getElementById('rows-per-page');
+		let menuWrapper = document.getElementById('rows-per-page');
 
-		menuWrapper.style.position = 'fixed';
-		menuWrapper.style.left = position.left + 'px';
-		menuWrapper.style.top = (position.top - 150) + 'px';
-		menuWrapper.style.display = 'block';
-
-		React.render(<RowsPerPage opts={this.state} el={menuWrapper}/>, menuWrapper);
+		React.render(<RowsPerPage opts={this.state} target={e.target} el={menuWrapper}/>, menuWrapper);
 	}
 
 	render() {

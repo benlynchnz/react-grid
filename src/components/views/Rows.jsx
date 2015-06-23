@@ -4,6 +4,7 @@ import Store from '../store';
 import Actions from '../actions';
 import utils from '../utils';
 import styles from '../../GridStyle.css';
+import GenerateCell from './cell-types/index';
 
 export default class RowsView extends React.Component {
 
@@ -43,58 +44,18 @@ export default class RowsView extends React.Component {
 			}
 		}
 
-		let genValue = (col, row) => {
-			let result = row[col.id];
-
-			if (col.type.name === 'date') {
-				if (col.type.from_now) {
-					result = moment(result).fromNow();
-				} else {
-					result = moment(result).format(col.type.format);
-				}
-			}
-
-			if (col.type.name === 'array') {
-				if (result && result.length) {
-					result = _.last(result)[col.type.value];
-				} else {
-					result = col.type.default_text;
-				}
-			}
-
-			if (col.type.name === 'link') {
-				// result = React.DOM.a(null, row[col.id]);
-				// console.log(result);
-				result = row[col.id];
-			}
-
-			return result || '-';
-		}
-
-		let order = Store.getColumnSortOrder();
-
-		let cellsOf = (item) => {
-			let data = [];
-
-			_.map(order, (col, j) => {
-				data.push(React.DOM.td({
-					key: j,
-					className: genClass(col),
-					style: genStyle(col)
-				}, genValue(col, item).toString()));
-			});
-
-			return data;
-		}
-
 		return (
 			<tbody className={styles.tbody}>
 				{this.state.rows.map((item, i) => {
 					return (
 						<tr key={i} className={styles.tr}>
-							return (
-								{cellsOf(item)}
-							);
+							{Store.getColumnSortOrder().map((col, j) => {
+								return (<td
+									key={j}
+									className={genClass(col)}
+									style={genStyle(col)}>{GenerateCell(col, item)}
+								</td>);
+							})}
 						</tr>
 					);
 				})}

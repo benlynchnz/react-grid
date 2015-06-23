@@ -77,12 +77,13 @@ export default class ColumnsView extends React.Component {
 
 		return (
 			<thead className={styles.thead}>
-				<tr className={trClass()}>
+				{this.state.options.title ?
+				(<tr className={trClass()}>
 					<th className={styles.th} colSpan={this.state.columns.length - 1}>
 						{this.state.options.title}
 					</th>
 					<th></th>
-				</tr>
+				</tr>) : null}
 				<tr className={styles.tr}>
 					{this.state.columns.map((item) => {
 						return (

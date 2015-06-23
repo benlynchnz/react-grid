@@ -177,10 +177,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_onChange',
 			value: function _onChange() {
-				this.setState({
-					columns: _componentsStore2['default'].getColumns(),
-					rows: _componentsStore2['default'].getRows()
-				});
+				if (_componentsStore2['default'].isReady()) {
+					this.setState({
+						columns: _componentsStore2['default'].getColumns(),
+						rows: _componentsStore2['default'].getRows()
+					});
+				}
+
+				if (!_componentsStore2['default'].isReady() && _componentsStore2['default'].getDataSource()) {
+					_componentsActions2['default'].fetchRows(_componentsStore2['default'].getDataSource());
+				}
 			}
 		}, {
 			key: '_updateState',
@@ -190,7 +196,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				if (props['data']) {
-					_componentsActions2['default'].fetchRows(props['data']);
+					_componentsActions2['default'].setDataSource(props['data']);
 				}
 			}
 		}, {
@@ -203,10 +209,10 @@ return /******/ (function(modules) { // webpackBootstrap
 						React.createElement(
 							'table',
 							{ className: _GridStyleCss2['default'].table },
-							React.createElement(_componentsViewsColumnsJsx2['default'], { columns: _componentsStore2['default'].getColumns() }),
-							React.createElement(_componentsViewsRowsJsx2['default'], { rows: _componentsStore2['default'].getRows() })
+							React.createElement(_componentsViewsColumnsJsx2['default'], { columns: this.state.columns }),
+							React.createElement(_componentsViewsRowsJsx2['default'], { rows: this.state.rows })
 						),
-						React.createElement(_componentsViewsFooterJsx2['default'], null)
+						_componentsStore2['default'].getOptions().show_paging ? React.createElement(_componentsViewsFooterJsx2['default'], null) : null
 					);
 				}
 
@@ -243,7 +249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var _events = __webpack_require__(13);
+	var _events = __webpack_require__(14);
 
 	var _dispatcher = __webpack_require__(9);
 
@@ -253,13 +259,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _constants2 = _interopRequireDefault(_constants);
 
+	var _actions = __webpack_require__(3);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
 	var _columns = [],
 	    _rows = [],
 	    _sortIndex = null,
 	    _isAsc = true,
-	    _opts = {};
-
-	_opts.pagingOpts = [5, 10, 20, 50, 100];
+	    _opts = {},
+	    _isReady = false,
+	    _dataSource = null;
 
 	var Store = (function (_EventEmitter) {
 		function Store() {
@@ -291,11 +301,24 @@ return /******/ (function(modules) { // webpackBootstrap
 				_opts.current_page = page;
 			}
 		}, {
-			key: 'setOptions',
-			value: function setOptions(data) {
-				_opts.title = data.title;
-				_opts.rows_per_page = data.rows_per_page;
-				_opts.current_page = 0;
+			key: 'setDataSource',
+			value: function setDataSource(src) {
+				_dataSource = src;
+			}
+		}, {
+			key: 'getDataSource',
+			value: function getDataSource() {
+				return _dataSource;
+			}
+		}, {
+			key: 'isReady',
+			value: function isReady() {
+				return _isReady;
+			}
+		}, {
+			key: 'setReady',
+			value: function setReady(bool) {
+				_isReady = Boolean(bool);
 			}
 		}, {
 			key: 'setRowsPerPage',
@@ -307,6 +330,17 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'getOptions',
 			value: function getOptions() {
 				return _opts;
+			}
+		}, {
+			key: 'setOptions',
+			value: function setOptions(data) {
+				_opts.title = data.title;
+				_opts.rows_per_page = data.rows_per_page;
+				_opts.paging_options = data.paging_options || [5, 10, 20, 50, 100];
+				_opts.default_date_format = data.default_date_format || 'ddd DD MMM YYYY';
+				_opts.show_paging = data.show_paging;
+				_opts.current_page = 0;
+				_opts.endpoint = data.endpoint;
 			}
 		}, {
 			key: 'setColumns',
@@ -454,8 +488,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				_Store.setOptions(payload.data);
 				_Store.emitChange();
 				break;
+			case _constants2['default'].SET_DATA_SOURCE:
+				_Store.setDataSource(payload.data);
+				_Store.emitChange();
+				break;
 			case _constants2['default'].FETCH_ROWS:
 				_rows = payload.data;
+				_Store.setReady(true);
 				_Store.emitChange();
 				break;
 			case _constants2['default'].COL_SORT:
@@ -504,7 +543,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports['default'] = {
 		fetchColumns: function fetchColumns(uri) {
-			_api2['default'].fetch(uri).then(function (data) {
+			_api2['default'].fetch(uri, 'fetchColumns').then(function (data) {
 				_dispatcher2['default'].dispatch({
 					type: _constants2['default'].FETCH_COLUMNS,
 					data: data
@@ -513,11 +552,18 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		fetchRows: function fetchRows(uri) {
-			_api2['default'].fetch(uri).then(function (data) {
+			_api2['default'].fetch(uri, 'fetchRows').then(function (data) {
 				_dispatcher2['default'].dispatch({
 					type: _constants2['default'].FETCH_ROWS,
 					data: data
 				});
+			});
+		},
+
+		setDataSource: function setDataSource(src) {
+			_dispatcher2['default'].dispatch({
+				type: _constants2['default'].SET_DATA_SOURCE,
+				data: src
 			});
 		},
 
@@ -700,7 +746,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return React.createElement(
 					'thead',
 					{ className: _GridStyleCss2['default'].thead },
-					React.createElement(
+					this.state.options.title ? React.createElement(
 						'tr',
 						{ className: trClass() },
 						React.createElement(
@@ -709,7 +755,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							this.state.options.title
 						),
 						React.createElement('th', null)
-					),
+					) : null,
 					React.createElement(
 						'tr',
 						{ className: _GridStyleCss2['default'].tr },
@@ -775,6 +821,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
+	var _cellTypesIndex = __webpack_require__(13);
+
+	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
+
 	var RowsView = (function (_React$Component) {
 		function RowsView(props) {
 			_classCallCheck(this, RowsView);
@@ -819,50 +869,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				};
 
-				var genValue = function genValue(col, row) {
-					var result = row[col.id];
-
-					if (col.type.name === 'date') {
-						if (col.type.from_now) {
-							result = moment(result).fromNow();
-						} else {
-							result = moment(result).format(col.type.format);
-						}
-					}
-
-					if (col.type.name === 'array') {
-						if (result && result.length) {
-							result = _.last(result)[col.type.value];
-						} else {
-							result = col.type.default_text;
-						}
-					}
-
-					if (col.type.name === 'link') {
-						// result = React.DOM.a(null, row[col.id]);
-						// console.log(result);
-						result = row[col.id];
-					}
-
-					return result || '-';
-				};
-
-				var order = _store2['default'].getColumnSortOrder();
-
-				var cellsOf = function cellsOf(item) {
-					var data = [];
-
-					_.map(order, function (col, j) {
-						data.push(React.DOM.td({
-							key: j,
-							className: genClass(col),
-							style: genStyle(col)
-						}, genValue(col, item).toString()));
-					});
-
-					return data;
-				};
-
 				return React.createElement(
 					'tbody',
 					{ className: _GridStyleCss2['default'].tbody },
@@ -870,9 +876,16 @@ return /******/ (function(modules) { // webpackBootstrap
 						return React.createElement(
 							'tr',
 							{ key: i, className: _GridStyleCss2['default'].tr },
-							'return (',
-							cellsOf(item),
-							');'
+							_store2['default'].getColumnSortOrder().map(function (col, j) {
+								return React.createElement(
+									'td',
+									{
+										key: j,
+										className: genClass(col),
+										style: genStyle(col) },
+									(0, _cellTypesIndex2['default'])(col, item)
+								);
+							})
 						);
 					})
 				);
@@ -966,7 +979,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				var next_rows = (this.state.current_page + 1) * this.state.rows_per_page + this.state.rows_per_page;
 
-				if (direction === 'forward' && next_rows - this.state.rows_per_page > _store2['default'].getTotalRows()) {
+				if (direction === 'forward' && next_rows - this.state.rows_per_page >= _store2['default'].getTotalRows()) {
 					return;
 				}
 
@@ -975,15 +988,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_onRowsPerPageClick',
 			value: function _onRowsPerPageClick(e) {
-				var position = e.target.getBoundingClientRect(),
-				    menuWrapper = document.getElementById('rows-per-page');
+				var menuWrapper = document.getElementById('rows-per-page');
 
-				menuWrapper.style.position = 'fixed';
-				menuWrapper.style.left = position.left + 'px';
-				menuWrapper.style.top = position.top - 150 + 'px';
-				menuWrapper.style.display = 'block';
-
-				React.render(React.createElement(_RowsPerPageJsx2['default'], { opts: this.state, el: menuWrapper }), menuWrapper);
+				React.render(React.createElement(_RowsPerPageJsx2['default'], { opts: this.state, target: e.target, el: menuWrapper }), menuWrapper);
 			}
 		}, {
 			key: 'render',
@@ -1058,7 +1065,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _flux = __webpack_require__(14);
+	var _flux = __webpack_require__(18);
 
 	exports['default'] = new _flux.Dispatcher();
 	module.exports = exports['default'];
@@ -1078,7 +1085,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		FETCH_ROWS: "FETCH_ROWS",
 		COL_SORT: "COL_SORT",
 		MOVE_PAGE: "MOVE_PAGE",
-		ROWS_PER_PAGE: "ROWS_PER_PAGE"
+		ROWS_PER_PAGE: "ROWS_PER_PAGE",
+		SET_DATA_SOURCE: "SET_DATA_SOURCE"
 	};
 
 	exports["default"] = constants;
@@ -1096,23 +1104,53 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _superagent = __webpack_require__(16);
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _superagent = __webpack_require__(20);
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _q = __webpack_require__(15);
+	var _q = __webpack_require__(19);
 
 	var _q2 = _interopRequireDefault(_q);
 
 	exports['default'] = {
-		fetch: function fetch(uri) {
+		fetch: function fetch(uri, req) {
 			var deferred = _q2['default'].defer();
 
-			_superagent2['default'].get(uri).end(function (err, result) {
-				if (result.body) {
-					deferred.resolve(result.body);
+			if (req === 'fetchRows') {
+
+				if (_store2['default'].getOptions().endpoint) {
+					(function () {
+
+						var req = _superagent2['default'].get(uri),
+						    opts = _store2['default'].getOptions().endpoint;
+
+						var headers = opts.headers.map(function (item) {
+							var values = _.pairs(item);
+							return values.map(function (val) {
+								req.set(val[0], val[1]);
+							});
+						});
+
+						console.log(req);
+
+						req.end(function (err, result) {
+							if (result.body) {
+								deferred.resolve(result.body);
+							}
+						});
+					})();
 				}
-			});
+			} else {
+				_superagent2['default'].get(uri).end(function (err, result) {
+					if (result.body) {
+						deferred.resolve(result.body);
+					}
+				});
+			}
 
 			return deferred.promise;
 		}
@@ -1154,6 +1192,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_get(Object.getPrototypeOf(RowsPerPageView.prototype), 'constructor', this).call(this, props);
 
 			this._onClick = this._onClick.bind(this);
+			this._onBlur = this._onBlur.bind(this);
 		}
 
 		_inherits(RowsPerPageView, _React$Component);
@@ -1163,7 +1202,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function _onClick(e) {
 				var option = e.target.getAttribute('data-value');
 				_actions2['default'].setRowsPerPage(option);
-
+				this._onBlur();
+			}
+		}, {
+			key: '_onBlur',
+			value: function _onBlur() {
 				this.props.el.removeAttribute('style');
 				React.unmountComponentAtNode(this.props.el);
 			}
@@ -1171,6 +1214,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'render',
 			value: function render() {
 				var _this = this;
+
+				var position = this.props.target.getBoundingClientRect(),
+				    offsetTop = this.props.opts.rows_per_page.length * 48;
+
+				this.props.el.style.position = 'fixed';
+				this.props.el.style.left = position.left - 20 + 'px';
+				this.props.el.style.top = position.top - offsetTop + 'px';
+				this.props.el.style.display = 'block';
 
 				var genClass = function genClass(item) {
 					var classes = [_GridStyleCss2['default'].li];
@@ -1182,13 +1233,20 @@ return /******/ (function(modules) { // webpackBootstrap
 					return classes.join(' ');
 				};
 
+				var clickHandler = function clickHandler(e) {
+					document.removeEventListener('click', clickHandler);
+					_this._onBlur();
+				};
+
+				document.addEventListener('click', clickHandler);
+
 				return React.createElement(
 					'div',
 					{ className: _GridStyleCss2['default']['menu-wrapper'] },
 					React.createElement(
 						'ul',
 						{ className: _GridStyleCss2['default'].ul },
-						this.props.opts.pagingOpts.map(function (item, i) {
+						this.props.opts.paging_options.map(function (item, i) {
 							return React.createElement(
 								'li',
 								{ key: i, className: genClass(item), 'data-value': item, onClick: _this._onClick },
@@ -1209,6 +1267,53 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _link = __webpack_require__(15);
+
+	var _link2 = _interopRequireDefault(_link);
+
+	var _img = __webpack_require__(16);
+
+	var _img2 = _interopRequireDefault(_img);
+
+	var _datetime = __webpack_require__(17);
+
+	var _datetime2 = _interopRequireDefault(_datetime);
+
+	exports['default'] = function (col, row) {
+
+	    switch (col.type.name) {
+	        case 'link':
+	            return (0, _link2['default'])(col, row);
+	            break;
+	        case 'image':
+	            return (0, _img2['default'])(col, row);
+	            break;
+	        case 'datetime':
+	            return (0, _datetime2['default'])(col, row);
+	            break;
+	        case 'array':
+	            return ARRAY(col, row);
+	            break;
+	        default:
+	            return row[col.id] || '-';
+	    }
+	};
+
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -1515,7 +1620,95 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 14 */
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (col, row) {
+	    var props = col.type.props;
+
+	    props.href = row[col.type.href];
+
+	    return React.DOM.a(props, row[col.type.display]);
+	};
+
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (col, row) {
+	    var props = col.type.props || {},
+	        src = row[col.type.src];
+
+	    props.href = row[col.type.href];
+
+	    if (col.type.src.indexOf('.') !== -1) {
+	        (function () {
+	            var keys = col.type.src.split('.'),
+	                value = row;
+
+	            keys.forEach(function (item) {
+	                value = value[item];
+	            });
+
+	            src = value;
+	        })();
+	    }
+
+	    props.src = src;
+
+	    return React.DOM.img(props, null);
+	};
+
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	exports['default'] = function (col, row) {
+	    var props = col.type.props,
+	        value = row[col.id];
+
+	    if (col.type.from_now) {
+	        return moment(value).fromNow();
+	    } else {
+	        return moment(value).format(col.type.format || _store2['default'].getOptions().default_date_format);
+	    }
+	};
+
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1527,11 +1720,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(17)
+	module.exports.Dispatcher = __webpack_require__(21)
 
 
 /***/ },
-/* 15 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process, setImmediate) {// vim:ts=4:sts=4:sw=4:
@@ -3583,18 +3776,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	});
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18), __webpack_require__(19).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22), __webpack_require__(23).setImmediate))
 
 /***/ },
-/* 16 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Emitter = __webpack_require__(21);
-	var reduce = __webpack_require__(22);
+	var Emitter = __webpack_require__(25);
+	var reduce = __webpack_require__(26);
 
 	/**
 	 * Root reference for iframes.
@@ -4715,7 +4908,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 17 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -4732,7 +4925,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	var invariant = __webpack_require__(20);
+	var invariant = __webpack_require__(24);
 
 	var _lastID = 1;
 	var _prefix = 'ID_';
@@ -4971,7 +5164,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 18 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// shim for using process in browser
@@ -5035,10 +5228,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 19 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(23).nextTick;
+	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(27).nextTick;
 	var apply = Function.prototype.apply;
 	var slice = Array.prototype.slice;
 	var immediateIds = {};
@@ -5114,10 +5307,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19).setImmediate, __webpack_require__(19).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23).setImmediate, __webpack_require__(23).clearImmediate))
 
 /***/ },
-/* 20 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5176,7 +5369,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 21 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5346,7 +5539,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 22 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5375,7 +5568,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 23 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// shim for using process in browser

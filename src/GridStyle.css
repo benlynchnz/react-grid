@@ -22,6 +22,12 @@
 	font-size: 12px;
 	line-height: 56px;
 	white-space: nowrap;
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .table .tr .th:first-child {
@@ -121,7 +127,7 @@
 
 .footer .li {
 	float: left;
-	margin-right: 20px;
+	margin-right: 30px;
 	color: rgba(0,0,0,0.56);
 	font-size: 13px;
 	line-height: 56px;
@@ -153,14 +159,14 @@
 	min-width: 100px;
 	text-align: center;
 	color: rgba(0,0,0,0.87);
-	font-weight: 500;
+	font-weight: 400;
 	margin-right: 0;
 	float: none;
 	cursor: pointer;
 }
 
 .menu-wrapper .li.selected {
-	background-color: #eee;
+	font-weight: 600;
 }
 
 .menu-wrapper .li:hover {

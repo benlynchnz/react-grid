@@ -1,0 +1,98 @@
+{
+    "title": "Countries",
+	"rows_per_page": 10,
+    "paging_options": [5, 10, 20, 50, 100, 250],
+    "show_paging": true,
+    "endpoint": {
+        "headers": [
+            {
+                "X-Mashape-Key": "DLhi4pkqMsmshJ9twnpplCqed27cp1QOesDjsnHv4oDHV4SKhF",
+                "Accept": "application/json"
+            }
+        ]
+    },
+    "columns": [
+		{
+            "id": "name",
+            "index": 0,
+            "name": "Name",
+            "sortable": true,
+			"ascending": true,
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "capital",
+            "index": 1,
+            "name": "Capital",
+            "sortable": true,
+			"ascending": true,
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "topLevelDomain",
+            "index": 2,
+            "name": "TLD",
+            "sortable": true,
+			"ascending": true,
+            "style": {
+                "width": 30
+            },
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "region",
+            "index": 3,
+            "name": "Region",
+            "sortable": true,
+			"ascending": true,
+            "style": {
+                "width": 75
+            },
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "subregion",
+            "index": 4,
+            "name": "Sub Region",
+            "sortable": true,
+			"ascending": true,
+            "style": {
+                "width": 75
+            },
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "currency",
+            "index": 4,
+            "name": "Currency",
+            "sortable": true,
+			"ascending": true,
+            "style": {
+                "width": 75
+            },
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "population",
+            "index": 0,
+            "name": "Population",
+            "sortable": true,
+			"ascending": true,
+			"type": {
+				"name": "numeric"
+			}
+        }
+    ]
+}
