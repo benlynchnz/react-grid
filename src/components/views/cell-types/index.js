@@ -23,6 +23,6 @@ export default (col, row) => {
             return NUMBER(col, row);
             break;
         default:
-            return row[col.id] || '-';
+            return row.value || row[col.id] || '-';
     }
 };
