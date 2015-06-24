@@ -4,6 +4,7 @@ import Store from '../store';
 import Actions from '../actions';
 import utils from '../utils';
 import styles from '../../GridStyle.css';
+import Groups from './Groups.jsx';
 
 export default class ColumnsView extends React.Component {
 
@@ -12,21 +13,8 @@ export default class ColumnsView extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			columns: this.props.columns,
 			options: Store.getOptions()
 		}
-	}
-
-	componentWillMount() {
-		Store.addChangeListener(this._onChange.bind(this));
-	}
-
-	componentWillUnmount() {
-		Store.addRemoveListener(this._onChange.bind(this));
-	}
-
-	_onChange() {
-		// this.setState({ data: Store.getColumns() });
 	}
 
 	_onClick(e) {
@@ -38,6 +26,12 @@ export default class ColumnsView extends React.Component {
 		}
 
 		Actions.sortRows(column);
+	}
+
+	_onGroupByClick(e) {
+		let menuWrapper = document.getElementById('group-by');
+
+		React.render(<Groups target={e.target} el={menuWrapper}/>, menuWrapper);
 	}
 
 	render() {
@@ -69,7 +63,6 @@ export default class ColumnsView extends React.Component {
 
 		let trClass = () => {
 			let classes = [styles.tr];
-
 			classes.push(styles['header']);
 
 			return classes.join(' ');
@@ -79,13 +72,20 @@ export default class ColumnsView extends React.Component {
 			<thead className={styles.thead}>
 				{this.state.options.title ?
 				(<tr className={trClass()}>
-					<th className={styles.th} colSpan={this.state.columns.length - 1}>
-						{this.state.options.title}
+					<th className={styles.th} colSpan={this.props.columns.length - 1}>
+						{this.state.options.title}<span className={styles['group-by-header']}>{Store.getCurrentGroup() ? 'by ' + Store.getCurrentGroup().name : null}</span>
 					</th>
-					<th></th>
+					<th>
+						<div id="group-by" className={styles['group-by']}></div>
+						<ul className={styles.ul}>
+							<li className={styles.li}>Group by:</li>
+							<li className={styles.li} onClick={this._onGroupByClick} >
+								{Store.getCurrentGroup() ? Store.getCurrentGroup().name : 'None'}<img className={styles.caret} src="./icons/menu-down.png" /></li>
+						</ul>
+					</th>
 				</tr>) : null}
 				<tr className={styles.tr}>
-					{this.state.columns.map((item) => {
+					{this.props.columns.map((item) => {
 						return (
 							<th
 								key={item.id}

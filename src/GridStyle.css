@@ -46,6 +46,12 @@
 	text-align: right;
 }
 
+.table .tr .th .group-by-header {
+	font-size: 80%;
+	margin-left: 6px;
+	color: rgba(0,0,0,0.56);
+}
+
 .table .tr .th.column-sort.asc::before {
 	background-image: url('../dist/icons/arrow-up.png');
     background-size: 16px 16px;
@@ -94,6 +100,11 @@
 	line-height: 48px;
 }
 
+.table .tr .td.group {
+	background-color: #f9f9f9;
+	font-weight: 500;
+}
+
 .table .tr .td:first-child {
 	padding-left: 32px;
 }
@@ -118,11 +129,27 @@
 	height: 56px;
 }
 
-.footer .ul {
+.ul {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 	float: right;
+}
+
+.thead .li {
+	float: left;
+	margin-right: 30px;
+	color: rgba(0,0,0,0.56);
+	font-size: 13px;
+	line-height: 56px;
+}
+
+.thead .li .caret {
+	float: right;
+}
+
+.thead .li img {
+	padding: 15px 0;
 }
 
 .footer .li {
@@ -151,6 +178,10 @@
 }
 
 .rows-per-page {
+	display: none;
+}
+
+.group-by {
 	display: none;
 }
 

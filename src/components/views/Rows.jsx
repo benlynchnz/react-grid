@@ -5,6 +5,8 @@ import Actions from '../actions';
 import utils from '../utils';
 import styles from '../../GridStyle.css';
 import GenerateCell from './cell-types/index';
+import Row from './Row.jsx';
+import RowGrouped from './RowGrouped.jsx';
 
 export default class RowsView extends React.Component {
 
@@ -38,26 +40,24 @@ export default class RowsView extends React.Component {
 			return classes.join(' ');
 		}
 
+		let self = this;
+
 		let genStyle = (col) => {
 			if (col.row_style) {
 				return col.row_style;
 			}
 		}
 
+		let columns = Store.getColumns();
+
 		return (
 			<tbody className={styles.tbody}>
 				{this.state.rows.map((item, i) => {
-					return (
-						<tr key={i} className={styles.tr}>
-							{Store.getColumnSortOrder().map((col, j) => {
-								return (<td
-									key={j}
-									className={genClass(col)}
-									style={genStyle(col)}>{GenerateCell(col, item)}
-								</td>);
-							})}
-						</tr>
-					);
+					{if (item.groupedBy) {
+						return <RowGrouped i={i} row={item} />
+					} else {
+						return <Row i={i} row={item} />
+					}}
 				})}
 			</tbody>
 		);

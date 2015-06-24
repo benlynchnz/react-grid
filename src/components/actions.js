@@ -3,29 +3,22 @@ import Constants from './constants';
 import API from './api';
 
 export default {
-	fetchColumns: (uri) => {
-		API.fetch(uri, 'fetchColumns').then((data) => {
+	bootstrap: (uri) => {
+		API.bootstrap(uri).then((data) => {
 			AppDispatcher.dispatch({
-				type: Constants.FETCH_COLUMNS,
+				type: Constants.BOOTSTRAP,
 				data: data
 			});
 		})
 	},
 
 	fetchRows: (uri) => {
-		API.fetch(uri, 'fetchRows').then((data) => {
+		API.fetch(uri).then((data) => {
 			AppDispatcher.dispatch({
 				type: Constants.FETCH_ROWS,
 				data: data
 			});
 		})
-	},
-
-	setDataSource: (src) => {
-		AppDispatcher.dispatch({
-			type: Constants.SET_DATA_SOURCE,
-			data: src
-		});
 	},
 
 	sortRows: (column) => {
@@ -46,6 +39,13 @@ export default {
 		AppDispatcher.dispatch({
 			type: Constants.ROWS_PER_PAGE,
 			data: rows
+		});
+	},
+
+	setGroup: (id) => {
+		AppDispatcher.dispatch({
+			type: Constants.SET_GROUP,
+			data: id
 		});
 	}
 

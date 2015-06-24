@@ -1,6 +1,6 @@
 'use strict';
 
-export default function(col, row) {
+export default (col, row) => {
     let props = col.type.props;
 
     props.href = row[col.type.href];

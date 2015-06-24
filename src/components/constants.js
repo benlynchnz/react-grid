@@ -7,7 +7,8 @@ const constants = {
 	COL_SORT: "COL_SORT",
 	MOVE_PAGE: "MOVE_PAGE",
 	ROWS_PER_PAGE: "ROWS_PER_PAGE",
-	SET_DATA_SOURCE: "SET_DATA_SOURCE"
+	BOOTSTRAP: "BOOTSTRAP",
+	SET_GROUP: "SET_GROUP"
 };
 
 export default constants;

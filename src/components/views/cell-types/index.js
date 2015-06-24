@@ -5,8 +5,7 @@ import IMG from './img';
 import DATETIME from './datetime';
 import NUMBER from './number';
 
-export default function(col, row) {
-
+export default (col, row) => {
     switch (col.type.name) {
         case 'link':
             return A(col, row);

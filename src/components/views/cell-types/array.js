@@ -1,6 +1,6 @@
 'use strict';
 
-export default function(col, row) {
+export default (col, row) => {
     let value = row[col.id];
 
     if (value && value.length) {

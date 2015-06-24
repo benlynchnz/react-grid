@@ -8,10 +8,20 @@ let _columns = [],
 	_sortIndex = null,
 	_isAsc = true,
 	_opts = {},
-	_isReady = false,
-	_dataSource = null;
+	_groups = [],
+	_groupBy = null,
+	_isReady = false;
 
 class Store extends EventEmitter {
+
+	bootstrap(data) {
+		this.setOptions(data);
+		this.setColumns(data.columns);
+		this.setDefaultColumnSort();
+		this.setGroups();
+
+		Actions.fetchRows(_opts.request.uri);
+	}
 
 	getTotalRows() {
 		return _rows.length;
@@ -27,14 +37,6 @@ class Store extends EventEmitter {
 		}
 
 		_opts.current_page = page;
-	}
-
-	setDataSource(src) {
-		_dataSource = src;
-	}
-
-	getDataSource() {
-		return _dataSource;
 	}
 
 	isReady() {
@@ -62,33 +64,67 @@ class Store extends EventEmitter {
 		_opts.default_number_format = data.default_number_format || "0,0";
 		_opts.show_paging = data.show_paging;
 		_opts.current_page = 0;
-		_opts.endpoint = data.endpoint;
+		_opts.request = data.request;
 	}
 
 	setColumns(data) {
-		_columns = data;
-	}
-
-	getColumns() {
-		let non_numeric_columns = _.chain(_columns)
+		let non_numeric_columns = _.chain(data)
 			.filter((column) => { return column.type.name !== 'number' })
 			.sortBy('index')
 			.value();
 
-		let numeric_columns = _.chain(_columns)
+		let numeric_columns = _.chain(data)
 			.filter((column) => { return column.type.name === 'number' })
 			.sortBy('index')
 			.value();
 
-		return non_numeric_columns.concat(numeric_columns);
-	}
-
-	getColumnSortOrder() {
-		let order = _.map(this.getColumns(), (item, i) => {
+		_columns = non_numeric_columns.concat(numeric_columns).map((item, i) => {
+			item.internal_idx = i;
 			return item;
 		});
+	}
 
-		return order;
+	setGroups() {
+		let data = [];
+		let groups = _.forEach(_columns, (item) => {
+			if (item.can_group) {
+				data.push(item);
+			}
+		});
+
+		_groups = data;
+	}
+
+	getGroups() {
+		return _groups;
+	}
+
+	setGroup(id) {
+		if (id) {
+			_groupBy = this.getColumn(id);
+		} else {
+			_groupBy = null;
+		}
+	}
+
+	getCurrentGroup() {
+		return _groupBy;
+	}
+
+	getColumns() {
+		let sorted = _.sortBy(_columns, 'internal_idx');
+
+		if (_groupBy) {
+			sorted = _.remove(sorted, (item) => {
+				return item.id !== _groupBy.id;
+			});
+		}
+
+		return sorted;
+	}
+
+	getColumnCount() {
+		return _columns.length;
 	}
 
 	getColumn(id) {
@@ -105,7 +141,7 @@ class Store extends EventEmitter {
 		_columns.push(column);
 	}
 
-	setDefaults(data) {
+	setDefaultColumnSort() {
 		let column = _.findWhere(_columns, { default_sort: true });
 
 		if (!column) {
@@ -127,6 +163,30 @@ class Store extends EventEmitter {
 		let result = _.chain(_rows)
 			.sortBy(_sortIndex)
 			.value()
+
+		if (_groupBy) {
+			let grouped = _.groupBy(result, (item) => {
+				return item[_groupBy.id];
+			});
+
+			let map = [];
+
+			let res = _.chain(grouped)
+				.pairs()
+				.each((item) => {
+					map.push({
+						groupedBy: _groupBy,
+						value: item[0]
+					});
+
+					_.each(item[1], (row) => {
+						map.push(row);
+					});
+				})
+				.value()
+
+			result = map;
+		}
 
 		if (!_isAsc) {
 			result.reverse();
@@ -191,15 +251,8 @@ let _Store = new Store();
 
 _Store.dispatchToken = AppDispatcher.register((payload) => {
 	switch(payload.type) {
-		case Constants.FETCH_COLUMNS:
-			_Store.setColumns(payload.data.columns);
-			_Store.setDefaults(payload.data);
-			_Store.setOptions(payload.data);
-			_Store.emitChange();
-			break;
-		case Constants.SET_DATA_SOURCE:
-			_Store.setDataSource(payload.data);
-			_Store.emitChange();
+		case Constants.BOOTSTRAP:
+			_Store.bootstrap(payload.data);
 			break;
 		case Constants.FETCH_ROWS:
 			_rows = payload.data;
@@ -218,6 +271,9 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 			_Store.setRowsPerPage(payload.data);
 			_Store.emitChange();
 			break;
+		case Constants.SET_GROUP:
+			_Store.setGroup(payload.data);
+			_Store.emitChange();
 		default:
 			break;
 	}

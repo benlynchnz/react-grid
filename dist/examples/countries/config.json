@@ -3,7 +3,8 @@
 	"rows_per_page": 10,
     "paging_options": [5, 10, 20, 50, 100, 250],
     "show_paging": true,
-    "endpoint": {
+    "request": {
+        "uri": "https://restcountries.p.mashape.com/all",
         "headers": [
             {
                 "X-Mashape-Key": "DLhi4pkqMsmshJ9twnpplCqed27cp1QOesDjsnHv4oDHV4SKhF",
@@ -51,6 +52,7 @@
             "name": "Region",
             "sortable": true,
 			"ascending": true,
+            "can_group": true,
             "style": {
                 "width": 75
             },
@@ -64,6 +66,7 @@
             "name": "Sub Region",
             "sortable": true,
 			"ascending": true,
+            "can_group": true,
             "style": {
                 "width": 75
             },
@@ -77,6 +80,7 @@
             "name": "Currency",
             "sortable": true,
 			"ascending": true,
+            "can_group": true,
             "style": {
                 "width": 75
             },

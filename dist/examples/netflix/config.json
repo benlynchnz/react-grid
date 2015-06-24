@@ -1,0 +1,81 @@
+{
+    "title": "Public Web Cams",
+	"rows_per_page": 10,
+    "paging_options": [5, 10, 20, 50, 100, 250],
+    "show_paging": true,
+    "request": {
+        "uri": "https://marcoherbst-evercam-public-cameras.p.mashape.com/public/cameras.json?case_sensitive=false&limit=1000&offset=0",
+        "headers": [
+            {
+                "X-Mashape-Key": "DLhi4pkqMsmshJ9twnpplCqed27cp1QOesDjsnHv4oDHV4SKhF",
+                "Accept": "application/json"
+            }
+        ]
+    },
+    "columns": [
+		{
+            "id": "name",
+            "index": 0,
+            "name": "Name",
+            "sortable": true,
+			"ascending": true,
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "timezone",
+            "index": 2,
+            "name": "Timezone",
+            "sortable": true,
+			"ascending": true,
+            "can_group": true,
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "owner",
+            "index": 1,
+            "name": "Owner",
+            "sortable": true,
+			"ascending": true,
+            "can_group": true,
+            "style": {
+                "maxWidth": 200
+            },
+            "row_style": {
+                "whiteSpace": "nowrap",
+                "maxWidth": 300,
+                "overflow": "hidden",
+                "textOverflow": "ellipsis"
+            },
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "created_at",
+            "index": 3,
+            "name": "Created",
+            "sortable": true,
+			"ascending": true,
+            "can_group": true,
+			"type": {
+				"name": "datetime"
+			}
+        },
+        {
+            "id": "updated_at",
+            "index": 3,
+            "name": "Updated",
+            "sortable": true,
+			"ascending": true,
+            "can_group": true,
+			"type": {
+				"name": "datetime",
+                "from_now": true
+			}
+        }
+    ]
+}

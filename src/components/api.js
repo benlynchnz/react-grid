@@ -5,41 +5,37 @@ import request from 'superagent';
 import q from 'q';
 
 export default {
-	fetch: (uri, req) => {
+	bootstrap: (uri) => {
 		let deferred = q.defer();
 
-		if (req === 'fetchRows') {
+		request
+			.get(uri)
+			.end((err, result) => {
+				if (result.body) {
+					deferred.resolve(result.body);
+				}
+			});
 
-			if (Store.getOptions().endpoint) {
+		return deferred.promise;
+	},
 
-				let req = request.get(uri),
-					opts = Store.getOptions().endpoint;
+	fetch: (uri) => {
+		let deferred = q.defer();
 
-				let headers = opts.headers.map((item) => {
-					let values = _.pairs(item);
-					return values.map((val) => {
-						req.set(val[0], val[1]);
-					});
-				});
+		let req = request.get(uri),
+			headers = Store.getOptions().request.headers;
 
-				console.log(req);
+		(headers || []).map((item) => {
+			return _.pairs(item).map((val) => {
+				req.set(val[0], val[1]);
+			});
+		});
 
-				req.end((err, result) => {
-					if (result.body) {
-						deferred.resolve(result.body);
-					}
-				});
+		req.end((err, result) => {
+			if (result.body) {
+				deferred.resolve(result.body);
 			}
-
-		} else {
-			request
-				.get(uri)
-				.end(function(err, result) {
-					if (result.body) {
-						deferred.resolve(result.body);
-					}
-				});
-		}
+		});
 
 		return deferred.promise;
 	}

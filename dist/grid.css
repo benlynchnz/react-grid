@@ -46,6 +46,12 @@
 	text-align: right;
 }
 
+.GridStyle__table___1hfrk .GridStyle__tr___UqN7K .GridStyle__th___3qVXM .GridStyle__group-by-header___1w9CU {
+	font-size: 80%;
+	margin-left: 6px;
+	color: rgba(0,0,0,0.56);
+}
+
 .GridStyle__table___1hfrk .GridStyle__tr___UqN7K .GridStyle__th___3qVXM.GridStyle__column-sort___1kRVc.GridStyle__asc___20KVi::before {
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAABIAAAASABGyWs+AAAACXZwQWcAAAAYAAAAGAB4TKWmAAAAa0lEQVRIx2NgGAVDDURBMc0M/wPFVLcEZvh/KKaqJeiGU9USZMMbkAyHsSmyBN1wBiQLGCi1BJvh6BaQbQkuw7FZQJYl9TgMx2UBsiX1xPrCAYc4Lgvw6SEJ4LMAK2Cihq2jFgxuC0bBwAMA7n830znuWaYAAAAASUVORK5CYII=);
     background-size: 16px 16px;
@@ -94,6 +100,11 @@
 	line-height: 48px;
 }
 
+.GridStyle__table___1hfrk .GridStyle__tr___UqN7K .GridStyle__td___1TO1W.GridStyle__group___3GIS0 {
+	background-color: #f9f9f9;
+	font-weight: 500;
+}
+
 .GridStyle__table___1hfrk .GridStyle__tr___UqN7K .GridStyle__td___1TO1W:first-child {
 	padding-left: 32px;
 }
@@ -118,11 +129,27 @@
 	height: 56px;
 }
 
-.GridStyle__footer___3SKuL .GridStyle__ul___7Ryif {
+.GridStyle__ul___7Ryif {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 	float: right;
+}
+
+.GridStyle__thead___19zzh .GridStyle__li___Y2ezh {
+	float: left;
+	margin-right: 30px;
+	color: rgba(0,0,0,0.56);
+	font-size: 13px;
+	line-height: 56px;
+}
+
+.GridStyle__thead___19zzh .GridStyle__li___Y2ezh .GridStyle__caret___2WrVL {
+	float: right;
+}
+
+.GridStyle__thead___19zzh .GridStyle__li___Y2ezh img {
+	padding: 15px 0;
 }
 
 .GridStyle__footer___3SKuL .GridStyle__li___Y2ezh {
@@ -151,6 +178,10 @@
 }
 
 .GridStyle__rows-per-page___1y7Um {
+	display: none;
+}
+
+.GridStyle__group-by___O3qZl {
 	display: none;
 }
 

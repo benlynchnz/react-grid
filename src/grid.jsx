@@ -17,7 +17,8 @@ export default class GridView extends React.Component {
 		super(props);
 		this.state = {
 			columns: [],
-			rows: []
+			rows: [],
+			isReady: false
 		};
 	}
 
@@ -37,27 +38,22 @@ export default class GridView extends React.Component {
 		if (Store.isReady()) {
 			this.setState({
 				columns: Store.getColumns(),
-				rows: Store.getRows()
+				rows: Store.getRows(),
+				isReady: Store.isReady()
 			});
-		}
-
-		if (!Store.isReady() && Store.getDataSource()) {
-			Actions.fetchRows(Store.getDataSource());
 		}
 	}
 
 	_updateState(props) {
 		if (props['config']) {
-			Actions.fetchColumns(props['config']);
-		}
-
-		if (props['data']) {
-			Actions.setDataSource(props['data']);
+			Actions.bootstrap(props['config']);
+		} else {
+			throw new Error('no config.json defined');
 		}
 	}
 
 	render() {
-		if (this.state.columns.length) {
+		if (this.state.isReady) {
 			return (
 				<div>
 					<table className={styles.table}>
@@ -67,8 +63,9 @@ export default class GridView extends React.Component {
 					{Store.getOptions().show_paging ? <Footer /> : null}
 				</div>
 			);
+		} else {
+			return <div>Loading ...</div>;
 		}
 
-		return <div>No Data</div>
 	}
 };
