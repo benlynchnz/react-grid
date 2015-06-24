@@ -55,7 +55,7 @@ export default class GridView extends React.Component {
 	render() {
 		if (this.state.isReady) {
 			return (
-				<div>
+				<div className={styles.wrapper}>
 					<table className={styles.table}>
 						<Columns columns={this.state.columns} />
 						<Rows rows={this.state.rows}/>
