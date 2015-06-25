@@ -20,7 +20,15 @@
             "sortable": true,
 			"ascending": true,
 			"type": {
-				"name": "string"
+				"name": "link",
+                "display": "name",
+                "href": {
+                    "uri": "https://www.google.com/maps/@{latlng.0},{latlng.1},6z",
+                    "data": ["latlng.0", "latlng.1"]
+                },
+                "props": {
+                    "target": "_blank"
+                }
 			}
         },
         {
@@ -94,6 +102,7 @@
             "name": "Population",
             "sortable": true,
 			"ascending": true,
+            "can_group": true,
 			"type": {
 				"name": "number",
 				"format": "0,0"

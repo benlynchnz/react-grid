@@ -33,7 +33,7 @@ export default {
 
 		req.end((err, result) => {
 			if (result.body) {
-				deferred.resolve(result.body.Items);
+				deferred.resolve(result.body);
 			}
 		});
 

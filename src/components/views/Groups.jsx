@@ -30,7 +30,7 @@ export default class GroupsMenu extends React.Component {
 		let position = this.props.target.getBoundingClientRect();
 
 		this.props.el.style.position = 'fixed';
-		this.props.el.style.left = (position.left - 20) + 'px';
+		this.props.el.style.left = (position.left - 90) + 'px';
 		this.props.el.style.top = position.top + 'px';
 		this.props.el.style.display = 'block';
 
@@ -62,6 +62,7 @@ export default class GroupsMenu extends React.Component {
 		return (
 			<div className={styles['menu-wrapper']}>
 				<ul className={styles.ul}>
+					<li className={styles['menu-hdr']}>Group By ...</li>
 					{groups.map((item, i) => {
 						return (
 							<li key={i} className={genClass(item)} data-value={item.id} onClick={this._onClick}>{item.name}</li>

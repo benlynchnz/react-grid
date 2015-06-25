@@ -37,6 +37,8 @@ class Store extends EventEmitter {
 		}
 
 		_opts.current_page = page;
+
+		window.scroll(0,0);
 	}
 
 	isReady() {
@@ -164,6 +166,10 @@ class Store extends EventEmitter {
 			.sortBy(_sortIndex)
 			.value()
 
+		if (!_isAsc) {
+			result.reverse();
+		}
+
 		if (_groupBy) {
 			let grouped = _.groupBy(result, (item) => {
 				return item[_groupBy.id];
@@ -186,10 +192,6 @@ class Store extends EventEmitter {
 				.value()
 
 			result = map;
-		}
-
-		if (!_isAsc) {
-			result.reverse();
 		}
 
 		if (result.length) {

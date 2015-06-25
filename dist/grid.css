@@ -92,6 +92,7 @@
 
 .GridStyle__table___1hfrk .GridStyle__tbody___1iAhb .GridStyle__tr___UqN7K:hover {
 	background-color: #f5f5f5;
+	cursor: hand;
 }
 
 .GridStyle__table___1hfrk .GridStyle__tr___UqN7K .GridStyle__td___1TO1W {
@@ -150,8 +151,14 @@
 	line-height: 56px;
 }
 
-.GridStyle__thead___19zzh .GridStyle__li___Y2ezh .GridStyle__caret___2WrVL {
+.GridStyle__thead___19zzh .GridStyle__li___Y2ezh .GridStyle__dots-vertical___3-Jus {
 	float: right;
+	opacity: 0.56;
+	cursor: hand;
+}
+
+.GridStyle__thead___19zzh .GridStyle__li___Y2ezh .GridStyle__dots-vertical___3-Jus:hover {
+	opacity: 1;
 }
 
 .GridStyle__thead___19zzh .GridStyle__li___Y2ezh img {
@@ -168,38 +175,64 @@
 
 .GridStyle__footer___3SKuL .GridStyle__li___Y2ezh .GridStyle__caret___2WrVL {
 	float: right;
+	opacity: 0.56;
 }
 
 .GridStyle__footer___3SKuL .GridStyle__li___Y2ezh img {
 	padding-top: 15px;
 	padding-bottom: 15px;
+	cursor: hand;
+	opacity: 0.56;
+}
+
+.GridStyle__footer___3SKuL .GridStyle__li___Y2ezh img:hover {
+	opacity: 1;
 }
 
 .GridStyle__menu-wrapper___2dzHZ {
 	position: fixed;
 	width: auto;
-	background-color: #f9f9f9;
+	background-color: #fcfcfc;
 	border: 1px solid #eee;
 	box-shadow: 0 2px 5px rgba(0,0,0,0.26);
 }
 
 .GridStyle__rows-per-page___1y7Um {
 	display: none;
+	z-index: 999;
 }
 
 .GridStyle__group-by___O3qZl {
 	display: none;
+	z-index: 999;
 }
 
 .GridStyle__menu-wrapper___2dzHZ .GridStyle__li___Y2ezh {
 	line-height: 48px;
+	max-width: 200px;
 	min-width: 100px;
-	text-align: center;
+	text-align: left;
+	padding: 0 15px;
 	color: rgba(0,0,0,0.87);
 	font-weight: 400;
-	margin-right: 0;
 	float: none;
 	cursor: pointer;
+	margin: 0;
+}
+
+.GridStyle__footer___3SKuL .GridStyle__menu-wrapper___2dzHZ .GridStyle__li___Y2ezh {
+	text-align: center;
+}
+
+.GridStyle__menu-wrapper___2dzHZ .GridStyle__menu-hdr___1J_7i {
+	line-height: 48px;
+	color: rgba(0,0,0,0.87);
+	border-bottom: 1px solid #ddd;
+	font-weight: 400;
+	text-align: left;
+	font-size: 14px;
+	padding: 0 15px;
+	background-color: #fff;
 }
 
 .GridStyle__menu-wrapper___2dzHZ .GridStyle__li___Y2ezh.GridStyle__selected___3eyuf {

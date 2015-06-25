@@ -26,7 +26,14 @@ export default class RowsView extends React.Component {
 	}
 
 	_onChange() {
-		this.setState({ rows: Store.getRows() });
+		let rows = Store.getRows(),
+			group = Store.getCurrentGroup();
+
+		if (group && !rows[0].groupedBy) {
+			rows.unshift({ value: '... ' + rows[0][group.id], groupedBy: group});
+		}
+
+		this.setState({ rows: rows });
 	}
 
 	render() {

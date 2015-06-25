@@ -27,7 +27,7 @@ export default class RowsPerPageView extends React.Component {
 
 	render() {
 		let position = this.props.target.getBoundingClientRect(),
-			offsetTop = (this.props.opts.rows_per_page.length * 48);
+			offsetTop = (this.props.opts.paging_options.length * 48) - 48;
 
 		this.props.el.style.position = 'fixed';
 		this.props.el.style.left = (position.left - 20) + 'px';
