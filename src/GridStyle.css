@@ -15,10 +15,6 @@
 	background: #fff;
 }
 
-.table .thead {
-	border: 1px solid #eee;
-}
-
 .table .tr .th {
 	text-align: left;
 	font-weight: 600;
@@ -87,10 +83,6 @@
 	font-weight: 500;
 }
 
-.table .tbody {
-	border: 1px solid #eee;
-}
-
 .table .tbody .tr:hover {
 	background-color: #f5f5f5;
 	cursor: hand;
@@ -110,12 +102,18 @@
 }
 
 .table .tr .td.group {
-	background-color: #f9f9f9;
+	background-color: #fff;
 	font-weight: 500;
+	font-size: 15px;
+	border-top: 1px solid #fff;
 }
 
 .table .tr .td:first-child {
 	padding-left: 32px;
+}
+
+.table .tbody .tr:first-child {
+	border-top: 1px solid #eee;
 }
 
 .table .tr .td:last-child {
