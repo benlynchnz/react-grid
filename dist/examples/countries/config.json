@@ -19,6 +19,7 @@
             "name": "Name",
             "sortable": true,
 			"ascending": true,
+            "weight": 0,
 			"type": {
 				"name": "link",
                 "display": "name",
@@ -35,6 +36,7 @@
             "id": "capital",
             "index": 1,
             "name": "Capital",
+            "weight": 1,
             "sortable": true,
 			"ascending": true,
 			"type": {
@@ -47,9 +49,7 @@
             "name": "TLD",
             "sortable": true,
 			"ascending": true,
-            "style": {
-                "width": 30
-            },
+            "weight": 4,
 			"type": {
 				"name": "string"
 			}
@@ -61,9 +61,7 @@
             "sortable": true,
 			"ascending": true,
             "can_group": true,
-            "style": {
-                "width": 75
-            },
+            "weight": 2,
 			"type": {
 				"name": "string"
 			}
@@ -75,9 +73,7 @@
             "sortable": true,
 			"ascending": true,
             "can_group": true,
-            "style": {
-                "width": 75
-            },
+            "weight": 3,
 			"type": {
 				"name": "string"
 			}
@@ -89,9 +85,7 @@
             "sortable": true,
 			"ascending": true,
             "can_group": true,
-            "style": {
-                "width": 75
-            },
+            "weight": 4,
 			"type": {
 				"name": "string"
 			}
@@ -102,6 +96,7 @@
             "name": "Population",
             "sortable": true,
 			"ascending": true,
+            "weight": 0,
             "can_group": true,
 			"type": {
 				"name": "number",

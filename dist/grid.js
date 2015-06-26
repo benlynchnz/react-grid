@@ -151,6 +151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_classCallCheck(this, GridView);
 
 			_get(Object.getPrototypeOf(GridView.prototype), 'constructor', this).call(this, props);
+
 			this.state = {
 				columns: [],
 				rows: [],
@@ -203,7 +204,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						'div',
 						{ className: _GridStyleCss2['default'].wrapper },
 						React.createElement(
-							'table',
+							'div',
 							{ className: _GridStyleCss2['default'].table },
 							React.createElement(_componentsViewsColumnsJsx2['default'], { columns: this.state.columns }),
 							React.createElement(_componentsViewsRowsJsx2['default'], { rows: this.state.rows })
@@ -764,7 +765,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var _this = this;
 
 				var genClass = function genClass(item) {
-					var classes = [_GridStyleCss2['default'].th];
+					var classes = [_GridStyleCss2['default'].cell];
 
 					if (item.active_sort) {
 						classes.push(_GridStyleCss2['default']['column-sort']);
@@ -777,7 +778,17 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 
 					if (item.type.name === 'number') {
-						classes.push(_GridStyleCss2['default']['numeric']);
+						classes.push(_GridStyleCss2['default']['cell-align-right']);
+					}
+
+					if (item.classes) {
+						item.classes.forEach(function (item) {
+							classes.push(_GridStyleCss2['default'][item]);
+						});
+					}
+
+					if (item.weight.toString()) {
+						classes.push(_GridStyleCss2['default']['w-' + item.weight]);
 					}
 
 					return classes.join(' ');
@@ -790,21 +801,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				};
 
 				var trClass = function trClass() {
-					var classes = [_GridStyleCss2['default'].tr];
+					var classes = [_GridStyleCss2['default'].row];
 					classes.push(_GridStyleCss2['default']['header']);
 
 					return classes.join(' ');
 				};
 
 				return React.createElement(
-					'thead',
-					{ className: _GridStyleCss2['default'].thead },
+					'div',
+					{ className: _GridStyleCss2['default'].head },
 					this.state.options.title ? React.createElement(
-						'tr',
+						'div',
 						{ className: trClass() },
 						React.createElement(
-							'th',
-							{ className: _GridStyleCss2['default'].th, colSpan: this.props.columns.length - 1 },
+							'div',
+							{ className: _GridStyleCss2['default'].title },
 							this.state.options.title,
 							React.createElement(
 								'span',
@@ -813,8 +824,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							)
 						),
 						React.createElement(
-							'th',
-							null,
+							'div',
+							{ className: _GridStyleCss2['default'].options },
 							React.createElement('div', { id: 'group-by', className: _GridStyleCss2['default']['group-by'] }),
 							React.createElement(
 								'ul',
@@ -828,11 +839,11 @@ return /******/ (function(modules) { // webpackBootstrap
 						)
 					) : null,
 					React.createElement(
-						'tr',
-						{ className: _GridStyleCss2['default'].tr },
+						'div',
+						{ className: trClass() },
 						this.props.columns.map(function (item) {
 							return React.createElement(
-								'th',
+								'div',
 								{
 									key: item.id,
 									className: genClass(item),
@@ -890,15 +901,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _cellTypesIndex = __webpack_require__(14);
+	var _cellTypesIndex = __webpack_require__(13);
 
 	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
 
-	var _RowJsx = __webpack_require__(15);
+	var _RowJsx = __webpack_require__(14);
 
 	var _RowJsx2 = _interopRequireDefault(_RowJsx);
 
-	var _RowGroupedJsx = __webpack_require__(16);
+	var _RowGroupedJsx = __webpack_require__(15);
 
 	var _RowGroupedJsx2 = _interopRequireDefault(_RowGroupedJsx);
 
@@ -907,6 +918,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_classCallCheck(this, RowsView);
 
 			_get(Object.getPrototypeOf(RowsView.prototype), 'constructor', this).call(this, props);
+
 			this.state = this.props;
 		}
 
@@ -930,6 +942,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				if (group && !rows[0].groupedBy) {
 					rows.unshift({ value: '... ' + rows[0][group.id], groupedBy: group });
+					console.log(rows);
 				}
 
 				this.setState({ rows: rows });
@@ -937,35 +950,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'render',
 			value: function render() {
-				var genClass = function genClass(col) {
-					var classes = [_GridStyleCss2['default'].td];
-
-					if (col.type.name === 'number') {
-						classes.push(_GridStyleCss2['default']['numeric']);
-					}
-
-					return classes.join(' ');
-				};
-
-				var self = this;
-
-				var genStyle = function genStyle(col) {
-					if (col.row_style) {
-						return col.row_style;
-					}
-				};
-
-				var columns = _store2['default'].getColumns();
-
 				return React.createElement(
-					'tbody',
-					{ className: _GridStyleCss2['default'].tbody },
+					'div',
+					{ className: _GridStyleCss2['default'].body },
 					this.state.rows.map(function (item, i) {
 						{
 							if (item.groupedBy) {
-								return React.createElement(_RowGroupedJsx2['default'], { i: i, row: item });
+								return React.createElement(_RowGroupedJsx2['default'], { key: i, i: i, row: item });
 							} else {
-								return React.createElement(_RowJsx2['default'], { i: i, row: item });
+								return React.createElement(_RowJsx2['default'], { key: i, i: i, row: item });
 							}
 						}
 					})
@@ -1016,7 +1009,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _RowsPerPageJsx = __webpack_require__(13);
+	var _RowsPerPageJsx = __webpack_require__(16);
 
 	var _RowsPerPageJsx2 = _interopRequireDefault(_RowsPerPageJsx);
 
@@ -1134,7 +1127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"wrapper":"GridStyle__wrapper___2GPIa","table":"GridStyle__table___1hfrk","tr":"GridStyle__tr___UqN7K","th":"GridStyle__th___3qVXM","column-sort":"GridStyle__column-sort___1kRVc","numeric":"GridStyle__numeric___hl-Im","group-by-header":"GridStyle__group-by-header___1w9CU","asc":"GridStyle__asc___20KVi","desc":"GridStyle__desc___19MPa","header":"GridStyle__header___5Kszw","tbody":"GridStyle__tbody___1iAhb","td":"GridStyle__td___1TO1W","group":"GridStyle__group___3GIS0","footer":"GridStyle__footer___3SKuL","ul":"GridStyle__ul___7Ryif","thead":"GridStyle__thead___19zzh","li":"GridStyle__li___Y2ezh","dots-vertical":"GridStyle__dots-vertical___3-Jus","caret":"GridStyle__caret___2WrVL","menu-wrapper":"GridStyle__menu-wrapper___2dzHZ","rows-per-page":"GridStyle__rows-per-page___1y7Um","group-by":"GridStyle__group-by___O3qZl","menu-hdr":"GridStyle__menu-hdr___1J_7i","selected":"GridStyle__selected___3eyuf"};
+	module.exports = {"wrapper":"GridStyle__wrapper___2GPIa","table":"GridStyle__table___1hfrk","body":"GridStyle__body___3fMzu","row":"GridStyle__row___25tH_","group":"GridStyle__group___3GIS0","head":"GridStyle__head___2E1A4","cell":"GridStyle__cell___nHb5Q","header":"GridStyle__header___5Kszw","title":"GridStyle__title___1qH-h","group-by-header":"GridStyle__group-by-header___1w9CU","options":"GridStyle__options___3Xxx3","cell-valign-middle":"GridStyle__cell-valign-middle___VjDQk","cell-valign-bottom":"GridStyle__cell-valign-bottom___1bXVW","cell-min":"GridStyle__cell-min___2PDoq","cell-max":"GridStyle__cell-max___wXFkb","column-sort":"GridStyle__column-sort___1kRVc","cell-nowrap":"GridStyle__cell-nowrap___1AC-S","cell-align-center":"GridStyle__cell-align-center___2MEAH","cell-align-right":"GridStyle__cell-align-right___1VhSM","cell-100px":"GridStyle__cell-100px___3LsNv","asc":"GridStyle__asc___20KVi","desc":"GridStyle__desc___19MPa","footer":"GridStyle__footer___3SKuL","ul":"GridStyle__ul___7Ryif","thead":"GridStyle__thead___19zzh","li":"GridStyle__li___Y2ezh","dots-vertical":"GridStyle__dots-vertical___3-Jus","caret":"GridStyle__caret___2WrVL","menu-wrapper":"GridStyle__menu-wrapper___2dzHZ","rows-per-page":"GridStyle__rows-per-page___1y7Um","group-by":"GridStyle__group-by___O3qZl","menu-hdr":"GridStyle__menu-hdr___1J_7i","selected":"GridStyle__selected___3eyuf","w-0":"GridStyle__w-0___3iPqO","w-1":"GridStyle__w-1___1EdTA","w-2":"GridStyle__w-2___g3RIZ","w-3":"GridStyle__w-3___25drh","w-4":"GridStyle__w-4___3rlJH"};
 
 /***/ },
 /* 9 */
@@ -1365,6 +1358,238 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _link = __webpack_require__(18);
+
+	var _link2 = _interopRequireDefault(_link);
+
+	var _img = __webpack_require__(19);
+
+	var _img2 = _interopRequireDefault(_img);
+
+	var _datetime = __webpack_require__(20);
+
+	var _datetime2 = _interopRequireDefault(_datetime);
+
+	var _number = __webpack_require__(21);
+
+	var _number2 = _interopRequireDefault(_number);
+
+	exports['default'] = function (col, row) {
+	    switch (col.type.name) {
+	        case 'link':
+	            return (0, _link2['default'])(col, row);
+	            break;
+	        case 'image':
+	            return (0, _img2['default'])(col, row);
+	            break;
+	        case 'datetime':
+	            return (0, _datetime2['default'])(col, row);
+	            break;
+	        case 'array':
+	            return ARRAY(col, row);
+	            break;
+	        case 'number':
+	            return (0, _number2['default'])(col, row);
+	            break;
+	        default:
+	            return row.value || row[col.id] || '-';
+	    }
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _GridStyleCss = __webpack_require__(8);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _cellTypesIndex = __webpack_require__(13);
+
+	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
+
+	var RowView = (function (_React$Component) {
+		function RowView(props) {
+			_classCallCheck(this, RowView);
+
+			_get(Object.getPrototypeOf(RowView.prototype), 'constructor', this).call(this, props);
+		}
+
+		_inherits(RowView, _React$Component);
+
+		_createClass(RowView, [{
+			key: 'render',
+			value: function render() {
+				var _this = this;
+
+				var genClass = function genClass(col) {
+					var classes = [_GridStyleCss2['default'].cell];
+
+					if (col.classes) {
+						col.classes.forEach(function (item) {
+							classes.push(_GridStyleCss2['default'][item]);
+						});
+					}
+
+					if (col.weight.toString()) {
+						classes.push(_GridStyleCss2['default']['w-' + col.weight]);
+					}
+
+					if (col.type.name === 'number') {
+						classes.push(_GridStyleCss2['default']['cell-align-right']);
+					}
+
+					return classes.join(' ');
+				};
+
+				var genStyle = function genStyle(col) {
+					if (col.row_style) {
+						return col.row_style;
+					}
+				};
+
+				var columns = _store2['default'].getColumns();
+
+				return React.createElement(
+					'div',
+					{ key: this.props.i, className: _GridStyleCss2['default'].row },
+					columns.map(function (col, j) {
+						return React.createElement(
+							'div',
+							{
+								key: j,
+								'data-label': col.name,
+								className: genClass(col),
+								style: genStyle(col) },
+							(0, _cellTypesIndex2['default'])(col, _this.props.row)
+						);
+					})
+				);
+			}
+		}]);
+
+		return RowView;
+	})(React.Component);
+
+	exports['default'] = RowView;
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _GridStyleCss = __webpack_require__(8);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _cellTypesIndex = __webpack_require__(13);
+
+	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
+
+	var RowGroupedView = (function (_React$Component) {
+		function RowGroupedView(props) {
+			_classCallCheck(this, RowGroupedView);
+
+			_get(Object.getPrototypeOf(RowGroupedView.prototype), 'constructor', this).call(this, props);
+		}
+
+		_inherits(RowGroupedView, _React$Component);
+
+		_createClass(RowGroupedView, [{
+			key: 'render',
+			value: function render() {
+				var genRowClass = function genRowClass(col) {
+					var classes = [_GridStyleCss2['default'].row];
+					classes.push(_GridStyleCss2['default'].group);
+
+					return classes.join(' ');
+				};
+
+				var genClass = function genClass(col) {
+					var classes = [_GridStyleCss2['default'].cell];
+					classes.push(_GridStyleCss2['default'].group);
+
+					return classes.join(' ');
+				};
+
+				var columns = _store2['default'].getColumnCount(),
+				    col = _store2['default'].getColumn(this.props.row.groupedBy.id),
+				    row = this.props.row;
+
+				return React.createElement(
+					'div',
+					{ key: this.props.i, className: genRowClass() },
+					React.createElement(
+						'div',
+						{ key: this.props.row.value, className: _GridStyleCss2['default'].cell },
+						(0, _cellTypesIndex2['default'])(col, row)
+					)
+				);
+			}
+		}]);
+
+		return RowGroupedView;
+	})(React.Component);
+
+	exports['default'] = RowGroupedView;
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
 		value: true
 	});
 
@@ -1463,220 +1688,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(React.Component);
 
 	exports['default'] = RowsPerPageView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _link = __webpack_require__(18);
-
-	var _link2 = _interopRequireDefault(_link);
-
-	var _img = __webpack_require__(19);
-
-	var _img2 = _interopRequireDefault(_img);
-
-	var _datetime = __webpack_require__(20);
-
-	var _datetime2 = _interopRequireDefault(_datetime);
-
-	var _number = __webpack_require__(21);
-
-	var _number2 = _interopRequireDefault(_number);
-
-	exports['default'] = function (col, row) {
-	    switch (col.type.name) {
-	        case 'link':
-	            return (0, _link2['default'])(col, row);
-	            break;
-	        case 'image':
-	            return (0, _img2['default'])(col, row);
-	            break;
-	        case 'datetime':
-	            return (0, _datetime2['default'])(col, row);
-	            break;
-	        case 'array':
-	            return ARRAY(col, row);
-	            break;
-	        case 'number':
-	            return (0, _number2['default'])(col, row);
-	            break;
-	        default:
-	            return row.value || row[col.id] || '-';
-	    }
-	};
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _GridStyleCss = __webpack_require__(8);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _cellTypesIndex = __webpack_require__(14);
-
-	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
-
-	var RowView = (function (_React$Component) {
-		function RowView(props) {
-			_classCallCheck(this, RowView);
-
-			_get(Object.getPrototypeOf(RowView.prototype), 'constructor', this).call(this, props);
-		}
-
-		_inherits(RowView, _React$Component);
-
-		_createClass(RowView, [{
-			key: 'render',
-			value: function render() {
-				var _this = this;
-
-				var genClass = function genClass(col) {
-					var classes = [_GridStyleCss2['default'].td];
-
-					if (col.type.name === 'number') {
-						classes.push(_GridStyleCss2['default']['numeric']);
-					}
-
-					return classes.join(' ');
-				};
-
-				var genStyle = function genStyle(col) {
-					if (col.row_style) {
-						return col.row_style;
-					}
-				};
-
-				var columns = _store2['default'].getColumns();
-
-				return React.createElement(
-					'tr',
-					{ key: this.props.i, className: _GridStyleCss2['default'].tr },
-					columns.map(function (col, j) {
-						return React.createElement(
-							'td',
-							{
-								key: j,
-								className: genClass(col),
-								style: genStyle(col) },
-							(0, _cellTypesIndex2['default'])(col, _this.props.row)
-						);
-					})
-				);
-			}
-		}]);
-
-		return RowView;
-	})(React.Component);
-
-	exports['default'] = RowView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _GridStyleCss = __webpack_require__(8);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _cellTypesIndex = __webpack_require__(14);
-
-	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
-
-	var RowGroupedView = (function (_React$Component) {
-		function RowGroupedView(props) {
-			_classCallCheck(this, RowGroupedView);
-
-			_get(Object.getPrototypeOf(RowGroupedView.prototype), 'constructor', this).call(this, props);
-		}
-
-		_inherits(RowGroupedView, _React$Component);
-
-		_createClass(RowGroupedView, [{
-			key: 'render',
-			value: function render() {
-				var genClass = function genClass(col) {
-					var classes = [_GridStyleCss2['default'].td];
-					classes.push(_GridStyleCss2['default'].group);
-
-					return classes.join(' ');
-				};
-
-				var columns = _store2['default'].getColumnCount(),
-				    col = _store2['default'].getColumn(this.props.row.groupedBy.id),
-				    row = this.props.row;
-
-				return React.createElement(
-					'tr',
-					{ key: this.props.i, className: _GridStyleCss2['default'].tr },
-					React.createElement(
-						'td',
-						{ key: this.props.row.value, className: genClass(), colSpan: columns },
-						(0, _cellTypesIndex2['default'])(col, row)
-					)
-				);
-			}
-		}]);
-
-		return RowGroupedView;
-	})(React.Component);
-
-	exports['default'] = RowGroupedView;
 	;
 	module.exports = exports['default'];
 
@@ -4209,8 +4220,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Module dependencies.
 	 */
 
-	var Emitter = __webpack_require__(30);
-	var reduce = __webpack_require__(31);
+	var Emitter = __webpack_require__(31);
+	var reduce = __webpack_require__(30);
 
 	/**
 	 * Root reference for iframes.
@@ -6482,6 +6493,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	
 	/**
+	 * Reduce `arr` with `fn`.
+	 *
+	 * @param {Array} arr
+	 * @param {Function} fn
+	 * @param {Mixed} initial
+	 *
+	 * TODO: combatible error handling?
+	 */
+
+	module.exports = function(arr, fn, initial){  
+	  var idx = 0;
+	  var len = arr.length;
+	  var curr = arguments.length == 3
+	    ? initial
+	    : arr[idx++];
+
+	  while (idx < len) {
+	    curr = fn.call(null, curr, arr[idx], ++idx, arr);
+	  }
+	  
+	  return curr;
+	};
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
 	 * Expose `Emitter`.
 	 */
 
@@ -6645,35 +6685,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return !! this.listeners(event).length;
 	};
 
-
-/***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * Reduce `arr` with `fn`.
-	 *
-	 * @param {Array} arr
-	 * @param {Function} fn
-	 * @param {Mixed} initial
-	 *
-	 * TODO: combatible error handling?
-	 */
-
-	module.exports = function(arr, fn, initial){  
-	  var idx = 0;
-	  var len = arr.length;
-	  var curr = arguments.length == 3
-	    ? initial
-	    : arr[idx++];
-
-	  while (idx < len) {
-	    curr = fn.call(null, curr, arr[idx], ++idx, arr);
-	  }
-	  
-	  return curr;
-	};
 
 /***/ },
 /* 32 */

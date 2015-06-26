@@ -14,6 +14,7 @@ export default class RowsView extends React.Component {
 
 	constructor(props) {
 		super(props);
+
 		this.state = this.props;
 	}
 
@@ -31,42 +32,23 @@ export default class RowsView extends React.Component {
 
 		if (group && !rows[0].groupedBy) {
 			rows.unshift({ value: '... ' + rows[0][group.id], groupedBy: group});
+			console.log(rows);
 		}
 
 		this.setState({ rows: rows });
 	}
 
 	render() {
-		let genClass = (col) => {
-			let classes = [styles.td];
-
-			if (col.type.name === 'number') {
-				classes.push(styles['numeric']);
-			}
-
-			return classes.join(' ');
-		}
-
-		let self = this;
-
-		let genStyle = (col) => {
-			if (col.row_style) {
-				return col.row_style;
-			}
-		}
-
-		let columns = Store.getColumns();
-
 		return (
-			<tbody className={styles.tbody}>
+			<div className={styles.body}>
 				{this.state.rows.map((item, i) => {
 					{if (item.groupedBy) {
-						return <RowGrouped i={i} row={item} />
+						return <RowGrouped key={i} i={i} row={item} />
 					} else {
-						return <Row i={i} row={item} />
+						return <Row key={i} i={i} row={item} />
 					}}
 				})}
-			</tbody>
+			</div>
 		);
 	}
 };

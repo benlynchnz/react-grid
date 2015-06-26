@@ -15,6 +15,7 @@ export default class GridView extends React.Component {
 
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			columns: [],
 			rows: [],
@@ -56,10 +57,10 @@ export default class GridView extends React.Component {
 		if (this.state.isReady) {
 			return (
 				<div className={styles.wrapper}>
-					<table className={styles.table}>
+					<div className={styles.table}>
 						<Columns columns={this.state.columns} />
 						<Rows rows={this.state.rows}/>
-					</table>
+					</div>
 					{Store.getOptions().show_paging ? <Footer /> : null}
 				</div>
 			);

@@ -36,7 +36,7 @@ export default class ColumnsView extends React.Component {
 
 	render() {
 		let genClass = (item) => {
-			let classes = [styles.th];
+			let classes = [styles.cell];
 
 			if (item.active_sort) {
 				classes.push(styles['column-sort']);
@@ -49,7 +49,17 @@ export default class ColumnsView extends React.Component {
 			}
 
 			if (item.type.name === 'number') {
-				classes.push(styles['numeric']);
+				classes.push(styles['cell-align-right']);
+			}
+
+			if (item.classes) {
+				item.classes.forEach((item) => {
+					classes.push(styles[item]);
+				});
+			}
+
+			if (item.weight.toString()) {
+				classes.push(styles['w-' + item.weight]);
 			}
 
 			return classes.join(' ');
@@ -62,43 +72,43 @@ export default class ColumnsView extends React.Component {
 		}
 
 		let trClass = () => {
-			let classes = [styles.tr];
+			let classes = [styles.row];
 			classes.push(styles['header']);
 
 			return classes.join(' ');
 		}
 
 		return (
-			<thead className={styles.thead}>
+			<div className={styles.head}>
 				{this.state.options.title ?
-				(<tr className={trClass()}>
-					<th className={styles.th} colSpan={this.props.columns.length - 1}>
+				(<div className={trClass()}>
+					<div className={styles.title}>
 						{this.state.options.title}<span className={styles['group-by-header']}>{Store.getCurrentGroup() ? 'by ' + Store.getCurrentGroup().name : null}</span>
-					</th>
-					<th>
+					</div>
+					<div className={styles.options}>
 						<div id="group-by" className={styles['group-by']}></div>
 						<ul className={styles.ul}>
 							<li className={styles.li} onClick={this._onGroupByClick} >
 								<img className={styles['dots-vertical']} src="./icons/dots-vertical.png" />
 							</li>
 						</ul>
-					</th>
-				</tr>) : null}
-				<tr className={styles.tr}>
+					</div>
+				</div>) : null}
+				<div className={trClass()}>
 					{this.props.columns.map((item) => {
 						return (
-							<th
+							<div
 								key={item.id}
 								className={genClass(item)}
 								style={genStyles(item)}
 								data-column-id={item.id}
 								onClick={this._onClick}>
 									{item.name}
-							</th>
+							</div>
 						);
 					})}
-				</tr>
-			</thead>
+				</div>
+			</div>
 		);
 	}
 };

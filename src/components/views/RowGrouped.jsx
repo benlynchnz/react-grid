@@ -13,8 +13,15 @@ export default class RowGroupedView extends React.Component {
 	}
 
 	render() {
+		let genRowClass = (col) => {
+			let classes = [styles.row];
+			classes.push(styles.group);
+
+			return classes.join(' ');
+		}
+
 		let genClass = (col) => {
-			let classes = [styles.td];
+			let classes = [styles.cell];
 			classes.push(styles.group);
 
 			return classes.join(' ');
@@ -25,9 +32,9 @@ export default class RowGroupedView extends React.Component {
 			row = this.props.row;
 
 		return (
-			<tr key={this.props.i} className={styles.tr}>
-				<td key={this.props.row.value} className={genClass()} colSpan={columns}>{GenerateCell(col, row)}</td>
-			</tr>
+			<div key={this.props.i} className={genRowClass()}>
+				<div key={this.props.row.value} className={styles.cell}>{GenerateCell(col, row)}</div>
+			</div>
 		);
 
 	}
