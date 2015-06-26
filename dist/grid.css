@@ -137,7 +137,7 @@
 
 .GridStyle__row___25tH_:not(.GridStyle__header___5Kszw):hover {
 	background-color: #fff;
-	cursor: hand;
+	cursor: pointer;
 }
 
 .GridStyle__row___25tH_.GridStyle__group___3GIS0 {
@@ -233,10 +233,6 @@
 	float: right;
 }
 
-.GridStyle__thead___19zzh {
-	/*display: none;*/
-}
-
 .GridStyle__options___3Xxx3 .GridStyle__li___Y2ezh {
 	float: left;
 	margin-right: 30px;
@@ -248,7 +244,7 @@
 .GridStyle__options___3Xxx3 .GridStyle__dots-vertical___3-Jus {
 	float: right;
 	opacity: 0.56;
-	cursor: hand;
+	cursor: pointer;
 }
 
 .GridStyle__options___3Xxx3 .GridStyle__dots-vertical___3-Jus:hover {
@@ -271,7 +267,7 @@
 .GridStyle__footer___3SKuL .GridStyle__li___Y2ezh img {
 	padding-top: 15px;
 	padding-bottom: 15px;
-	cursor: hand;
+	cursor: pointer;
 	opacity: 0.56;
 }
 

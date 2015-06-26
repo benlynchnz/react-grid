@@ -137,7 +137,7 @@
 
 .row:not(.header):hover {
 	background-color: #fff;
-	cursor: hand;
+	cursor: pointer;
 }
 
 .row.group {
@@ -233,10 +233,6 @@
 	float: right;
 }
 
-.thead {
-	/*display: none;*/
-}
-
 .options .li {
 	float: left;
 	margin-right: 30px;
@@ -248,7 +244,7 @@
 .options .dots-vertical {
 	float: right;
 	opacity: 0.56;
-	cursor: hand;
+	cursor: pointer;
 }
 
 .options .dots-vertical:hover {
@@ -271,7 +267,7 @@
 .footer .li img {
 	padding-top: 15px;
 	padding-bottom: 15px;
-	cursor: hand;
+	cursor: pointer;
 	opacity: 0.56;
 }
 
