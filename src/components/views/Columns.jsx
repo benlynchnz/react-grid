@@ -58,7 +58,7 @@ export default class ColumnsView extends React.Component {
 				});
 			}
 
-			if (item.weight.toString()) {
+			if (item.weight || item.weight === 0) {
 				classes.push(styles['w-' + item.weight]);
 			}
 

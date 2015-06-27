@@ -4,6 +4,7 @@ import A from './link';
 import IMG from './img';
 import DATETIME from './datetime';
 import NUMBER from './number';
+import STRING from './string';
 
 export default (col, row) => {
     switch (col.type.name) {
@@ -21,6 +22,13 @@ export default (col, row) => {
             break;
         case 'number':
             return NUMBER(col, row);
+            break;
+        case 'string':
+            if (col.type.src) {
+                return STRING(col, row);
+            } else {
+                return row.value || row[col.id] || '-';
+            }
             break;
         default:
             return row.value || row[col.id] || '-';

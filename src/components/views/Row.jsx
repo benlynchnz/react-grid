@@ -22,7 +22,7 @@ export default class RowView extends React.Component {
 				});
 			}
 
-			if (col.weight.toString()) {
+			if (col.weight || col.weight === 0) {
 				classes.push(styles['w-' + col.weight]);
 			}
 
@@ -39,11 +39,9 @@ export default class RowView extends React.Component {
 			}
 		}
 
-		let columns = Store.getColumns();
-
 		return (
 			<div key={this.props.i} className={styles.row}>
-				{columns.map((col, j) => {
+				{Store.getColumns().map((col, j) => {
 					return (<div
 						key={j}
 						data-label={col.name}

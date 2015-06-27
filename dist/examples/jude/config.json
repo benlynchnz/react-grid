@@ -4,7 +4,7 @@
     "paging_options": [5, 10, 20, 50, 100, 250, 500],
     "show_paging": true,
     "request": {
-        "uri": "http://localhost:3011/a53f6a7d-a167-42b0-b0b4-e959ca8c2add",
+        "uri": "http://localhost:3011/user/fe614209-203b-4e2a-a777-f0ea990ac79e",
         "headers": [
             {
                 "X-Mashape-Key": "DLhi4pkqMsmshJ9twnpplCqed27cp1QOesDjsnHv4oDHV4SKhF",
@@ -20,47 +20,56 @@
             "sortable": true,
 			"ascending": false,
             "can_group": true,
+            "weight": 0,
 			"type": {
-				"name": "datetime"
+				"name": "datetime",
+                "format": "ddd DD MMM"
+			}
+        },
+        {
+            "id": "feed.name",
+            "index": 1,
+            "name": "Feed",
+            "sortable": true,
+			"ascending": true,
+            "can_group": true,
+            "weight": 2,
+			"type": {
+				"name": "string",
+                "src": "feed.name"
 			}
         },
         {
             "id": "payee",
-            "index": 1,
+            "index": 2,
             "name": "Payee",
             "sortable": true,
 			"ascending": true,
             "can_group": true,
+            "weight": 0,
 			"type": {
 				"name": "string"
 			}
         },
         {
             "id": "memo",
-            "index": 2,
+            "index": 3,
             "name": "Ref",
             "sortable": true,
 			"ascending": true,
-            "row_style": {
-                "width": 100,
-                "textOverflow": "ellipsis",
-                "overflow": "hidden",
-                "whiteSpace": "nowrap"
-            },
+            "weight": 2,
 			"type": {
 				"name": "string"
 			}
         },
         {
             "id": "type",
-            "index": 3,
+            "index": 4,
             "name": "Type",
             "sortable": true,
 			"ascending": true,
             "can_group": true,
-            "style": {
-                "width": 75
-            },
+            "weight": 3,
 			"type": {
 				"name": "string"
 			}
@@ -72,6 +81,7 @@
             "sortable": true,
 			"ascending": true,
             "can_group": true,
+            "weight": 0,
 			"type": {
 				"name": "number",
 				"format": "0,0.00"

@@ -172,6 +172,17 @@ class Store extends EventEmitter {
 
 		if (_groupBy) {
 			let grouped = _.groupBy(result, (item) => {
+				if (_groupBy.id.split('.') !== -1) {
+					let keys = _groupBy.id.split('.'),
+			            value = item;
+
+			        keys.forEach((item) => {
+			            value = value[item];
+			        });
+
+			        return value;
+				}
+				
 				return item[_groupBy.id];
 			});
 
