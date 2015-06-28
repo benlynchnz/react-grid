@@ -5386,22 +5386,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				    group = _store2['default'].getCurrentGroup();
 
 				if (group && !rows[0].groupedBy) {
-					var src = rows[0][group.id];
-
-					if (group.id.split('.') !== -1) {
-						(function () {
-							var keys = group.id.split('.'),
-							    value = rows[0];
-
-							keys.forEach(function (item) {
-								value = value[item];
-							});
-
-							src = value;
-						})();
-					}
-
-					rows.unshift({ value: '... ' + src, groupedBy: group });
+					rows.unshift({ value: '... ' + (0, _cellTypesIndex2['default'])(group, rows[0]), groupedBy: group });
 				}
 
 				this.setState({ rows: rows });

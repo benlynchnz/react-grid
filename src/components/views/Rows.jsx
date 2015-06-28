@@ -31,20 +31,7 @@ export default class RowsView extends React.Component {
 			group = Store.getCurrentGroup();
 
 		if (group && !rows[0].groupedBy) {
-			let src = rows[0][group.id];
-
-			if (group.id.split('.') !== -1) {
-				let keys = group.id.split('.'),
-		            value = rows[0];
-
-		        keys.forEach((item) => {
-		            value = value[item];
-		        });
-
-		        src = value;
-			}
-
-			rows.unshift({ value: '... ' + src, groupedBy: group});
+			rows.unshift({ value: '... ' + GenerateCell(group, rows[0]), groupedBy: group});
 		}
 
 		this.setState({ rows: rows });
