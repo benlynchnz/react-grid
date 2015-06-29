@@ -179,10 +179,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_onChange',
 			value: function _onChange() {
+				console.log('change');
 				if (_componentsStore2['default'].isReady()) {
 					this.setState({
 						columns: _componentsStore2['default'].getColumns(),
-						rows: _componentsStore2['default'].getRows(),
+						rows: _componentsStore2['default'].getSortedRows(),
 						isReady: _componentsStore2['default'].isReady()
 					});
 				}
@@ -262,6 +263,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _columns = [],
 	    _rows = [],
+	    _sorted_rows = [],
 	    _sortIndex = null,
 	    _isAsc = true,
 	    _opts = {},
@@ -384,6 +386,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 					_groupBy = null;
 				}
+
+				this.sortedRows();
 			}
 		}, {
 			key: 'getCurrentGroup',
@@ -445,13 +449,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.updateColumn(column);
 			}
 		}, {
-			key: 'getRows',
-			value: function getRows() {
+			key: 'sortedRows',
+			value: function sortedRows() {
 				var result = _.chain(_rows).sortBy(_sortIndex).value();
 
 				if (!_isAsc) {
 					result.reverse();
-				}
+				};
 
 				if (_groupBy) {
 					(function () {
@@ -476,6 +480,91 @@ return /******/ (function(modules) { // webpackBootstrap
 							return item[_groupBy.id];
 						});
 
+						var map = [],
+						    res = _.chain(grouped).pairs().each(function (item) {
+							_.each(item[1], function (row) {
+								map.push(row);
+							});
+						}).value();
+
+						result = map;
+					})();
+				}
+
+				_sorted_rows = result;
+			}
+		}, {
+			key: 'getSortedRows',
+			value: function getSortedRows() {
+				var start = _opts.current_page * _opts.rows_per_page,
+				    end = start === 0 ? _opts.rows_per_page : start + _opts.rows_per_page,
+				    rows = _.slice(_sorted_rows, start, end),
+				    current_group = rows[0];
+
+				// Get all the raw data rows
+				var data = rows.map(function (item) {
+					return {
+						is_group: false,
+						data: item
+					};
+				});
+
+				// Add grouping titles
+				if (_groupBy) {
+					data.unshift({
+						is_group: true,
+						data: current_group
+					});
+
+					data.forEach(function (item, i) {
+						if (item.data[_groupBy.id] !== current_group[_groupBy.id]) {
+							data.splice(i, 0, {
+								is_group: true,
+								data: item.data
+							});
+							current_group = item.data;
+						}
+					});
+				}
+
+				this.setPaging(start, end);
+
+				return data;
+			}
+		}, {
+			key: 'setPaging',
+			value: function setPaging(start, end) {
+				_opts.paging_from = start + 1;
+				_opts.paging_to = end;
+			}
+		}, {
+			key: 'getRows',
+			value: function getRows() {
+				var result = this.getSortedRows();
+
+				if (_groupBy) {
+					(function () {
+						var grouped = _.groupBy(result, function (item) {
+							if (_groupBy.id.split('.') !== -1) {
+								var _ret4 = (function () {
+									var keys = _groupBy.id.split('.'),
+									    value = item;
+
+									keys.forEach(function (item) {
+										value = value[item];
+									});
+
+									return {
+										v: value
+									};
+								})();
+
+								if (typeof _ret4 === 'object') return _ret4.v;
+							}
+
+							return item[_groupBy.id];
+						});
+
 						var map = [];
 
 						var res = _.chain(grouped).pairs().each(function (item) {
@@ -491,20 +580,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						result = map;
 					})();
-				}
-
-				if (result.length) {
-					var records = _.slice(result, _opts.current_page * _opts.rows_per_page, _opts.rows_per_page * (_opts.current_page + 1));
-					_opts.current_page_records = records.length;
-					_opts.paging_from = _opts.current_page * _opts.rows_per_page + 1;
-
-					if (_opts.current_page_records < _opts.rows_per_page) {
-						_opts.paging_to = _opts.paging_from + (_opts.current_page_records - 1);
-					} else {
-						_opts.paging_to = _opts.paging_from + (_opts.rows_per_page - 1);
-					}
-
-					return records;
 				}
 
 				return result;
@@ -531,6 +606,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				_sortIndex = column.id;
 
 				this.updateColumn(column);
+				this.sortedRows();
 			}
 		}, {
 			key: 'getSortOrder',
@@ -561,22 +637,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	_Store.dispatchToken = _dispatcher2['default'].register(function (payload) {
 		switch (payload.type) {
+
 			case _constants2['default'].BOOTSTRAP:
 				_Store.bootstrap(payload.data);
 				break;
+
 			case _constants2['default'].FETCH_ROWS:
 				_rows = payload.data;
+				_Store.sortedRows();
 				_Store.setReady(true);
 				_Store.emitChange();
 				break;
+
 			case _constants2['default'].COL_SORT:
 				_Store.sortRows(payload.data);
 				_Store.emitChange();
 				break;
+
 			case _constants2['default'].MOVE_PAGE:
 				_Store.setPage(payload.data);
 				_Store.emitChange();
 				break;
+
 			case _constants2['default'].ROWS_PER_PAGE:
 				_Store.setRowsPerPage(payload.data);
 				_Store.emitChange();
@@ -584,8 +666,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			case _constants2['default'].SET_GROUP:
 				_Store.setGroup(payload.data);
 				_Store.emitChange();
+
 			default:
 				break;
+
 		}
 	});
 
@@ -935,44 +1019,20 @@ return /******/ (function(modules) { // webpackBootstrap
 			_classCallCheck(this, RowsView);
 
 			_get(Object.getPrototypeOf(RowsView.prototype), 'constructor', this).call(this, props);
-
-			this.state = this.props;
 		}
 
 		_inherits(RowsView, _React$Component);
 
 		_createClass(RowsView, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				_store2['default'].addChangeListener(this._onChange.bind(this));
-			}
-		}, {
-			key: 'componentWillUnmount',
-			value: function componentWillUnmount() {
-				_store2['default'].addRemoveListener(this._onChange.bind(this));
-			}
-		}, {
-			key: '_onChange',
-			value: function _onChange() {
-				var rows = _store2['default'].getRows(),
-				    group = _store2['default'].getCurrentGroup();
-
-				if (group && !rows[0].groupedBy) {
-					rows.unshift({ value: '... ' + (0, _cellTypesIndex2['default'])(group, rows[0]), groupedBy: group });
-				}
-
-				this.setState({ rows: rows });
-			}
-		}, {
 			key: 'render',
 			value: function render() {
 				return React.createElement(
 					'div',
 					{ className: _GridStyleCss2['default'].body },
-					this.state.rows.map(function (item, i) {
+					this.props.rows.map(function (item, i) {
 						{
-							if (item.groupedBy) {
-								return React.createElement(_RowGroupedJsx2['default'], { key: i, i: i, row: item });
+							if (item.is_group) {
+								return React.createElement(_RowGroupedJsx2['default'], { row: item, group: _store2['default'].getCurrentGroup() });
 							} else {
 								return React.createElement(_RowJsx2['default'], { key: i, i: i, row: item });
 							}
@@ -1400,6 +1460,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _string2 = _interopRequireDefault(_string);
 
 	exports['default'] = function (col, row) {
+
+	    return row[col.id];
+
 	    switch (col.type.name) {
 	        case 'link':
 	            return (0, _link2['default'])(col, row);
@@ -1513,7 +1576,7 @@ return /******/ (function(modules) { // webpackBootstrap
 								'data-label': col.name,
 								className: genClass(col),
 								style: genStyle(col) },
-							(0, _cellTypesIndex2['default'])(col, _this.props.row)
+							(0, _cellTypesIndex2['default'])(col, _this.props.row.data)
 						);
 					})
 				);
@@ -1571,6 +1634,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(RowGroupedView, [{
 			key: 'render',
 			value: function render() {
+
+				if (!this.props.group) {
+					return React.createElement('div', null);
+				}
+
 				var genRowClass = function genRowClass(col) {
 					var classes = [_GridStyleCss2['default'].row];
 					classes.push(_GridStyleCss2['default'].group);
@@ -1585,17 +1653,16 @@ return /******/ (function(modules) { // webpackBootstrap
 					return classes.join(' ');
 				};
 
-				var columns = _store2['default'].getColumnCount(),
-				    col = _store2['default'].getColumn(this.props.row.groupedBy.id),
+				var col = _store2['default'].getColumn(this.props.group.id),
 				    row = this.props.row;
 
 				return React.createElement(
 					'div',
-					{ key: this.props.i, className: genRowClass() },
+					{ key: col.id, className: genRowClass() },
 					React.createElement(
 						'div',
-						{ key: this.props.row.value, className: _GridStyleCss2['default'].cell },
-						(0, _cellTypesIndex2['default'])(col, row)
+						{ className: _GridStyleCss2['default'].cell },
+						(0, _cellTypesIndex2['default'])(col, row.data)
 					)
 				);
 			}
@@ -4266,7 +4333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	});
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28), __webpack_require__(29).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29), __webpack_require__(28).setImmediate))
 
 /***/ },
 /* 25 */
@@ -6342,70 +6409,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// shim for using process in browser
-
-	var process = module.exports = {};
-	var queue = [];
-	var draining = false;
-
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    draining = true;
-	    var currentQueue;
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        var i = -1;
-	        while (++i < len) {
-	            currentQueue[i]();
-	        }
-	        len = queue.length;
-	    }
-	    draining = false;
-	}
-	process.nextTick = function (fun) {
-	    queue.push(fun);
-	    if (!draining) {
-	        setTimeout(drainQueue, 0);
-	    }
-	};
-
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-
-	function noop() {}
-
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-
-	// TODO(shtylman)
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
-
-
-/***/ },
-/* 29 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(33).nextTick;
 	var apply = Function.prototype.apply;
 	var slice = Array.prototype.slice;
@@ -6482,7 +6485,71 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29).setImmediate, __webpack_require__(29).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28).setImmediate, __webpack_require__(28).clearImmediate))
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// shim for using process in browser
+
+	var process = module.exports = {};
+	var queue = [];
+	var draining = false;
+
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    draining = true;
+	    var currentQueue;
+	    var len = queue.length;
+	    while(len) {
+	        currentQueue = queue;
+	        queue = [];
+	        var i = -1;
+	        while (++i < len) {
+	            currentQueue[i]();
+	        }
+	        len = queue.length;
+	    }
+	    draining = false;
+	}
+	process.nextTick = function (fun) {
+	    queue.push(fun);
+	    if (!draining) {
+	        setTimeout(drainQueue, 0);
+	    }
+	};
+
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	// TODO(shtylman)
+	process.cwd = function () { return '/' };
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function() { return 0; };
+
 
 /***/ },
 /* 30 */

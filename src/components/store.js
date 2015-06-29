@@ -5,6 +5,7 @@ import Actions from './actions';
 
 let _columns = [],
 	_rows = [],
+	_sorted_rows = [],
 	_sortIndex = null,
 	_isAsc = true,
 	_opts = {},
@@ -107,6 +108,8 @@ class Store extends EventEmitter {
 		} else {
 			_groupBy = null;
 		}
+
+		this.sortedRows();
 	}
 
 	getCurrentGroup() {
@@ -161,14 +164,14 @@ class Store extends EventEmitter {
 		this.updateColumn(column);
 	}
 
-	getRows() {
+	sortedRows() {
 		let result = _.chain(_rows)
 			.sortBy(_sortIndex)
-			.value()
+			.value();
 
 		if (!_isAsc) {
 			result.reverse();
-		}
+		};
 
 		if (_groupBy) {
 			let grouped = _.groupBy(result, (item) => {
@@ -182,7 +185,85 @@ class Store extends EventEmitter {
 
 			        return value;
 				}
-				
+
+				return item[_groupBy.id];
+			});
+
+			let map = [],
+				res = _.chain(grouped)
+				.pairs()
+				.each((item) => {
+					_.each(item[1], (row) => {
+						map.push(row);
+					});
+				})
+				.value()
+
+			result = map;
+		}
+
+		_sorted_rows = result;
+	}
+
+	getSortedRows() {
+		let start = (_opts.current_page * _opts.rows_per_page),
+			end = start === 0 ? _opts.rows_per_page : (start + _opts.rows_per_page),
+			rows = _.slice(_sorted_rows, start, end),
+			current_group = rows[0];
+
+
+		// Get all the raw data rows
+		let data = rows.map((item) => {
+			return {
+				is_group: false,
+				data: item
+			}
+		});
+
+		// Add grouping titles
+		if (_groupBy) {
+			data.unshift({
+				is_group: true,
+				data: current_group
+			});
+
+			data.forEach((item, i) => {
+				if (item.data[_groupBy.id] !== current_group[_groupBy.id]) {
+					data.splice(i, 0, {
+						is_group: true,
+						data: item.data
+					});
+					current_group = item.data;
+				}
+			})
+		}
+
+		this.setPaging(start, end);
+
+		return data;
+	}
+
+	setPaging(start, end) {
+		_opts.paging_from = start + 1;
+		_opts.paging_to = end;
+	}
+
+	getRows() {
+		let result = this.getSortedRows();
+
+		if (_groupBy) {
+			let grouped = _.groupBy(result, (item) => {
+				if (_groupBy.id.split('.') !== -1) {
+					let keys = _groupBy.id.split('.'),
+			            value = item;
+
+			        keys.forEach((item) => {
+			            value = value[item];
+			        });
+
+			        return value;
+				}
+
 				return item[_groupBy.id];
 			});
 
@@ -203,20 +284,6 @@ class Store extends EventEmitter {
 				.value()
 
 			result = map;
-		}
-
-		if (result.length) {
-			let records = _.slice(result, (_opts.current_page * _opts.rows_per_page), (_opts.rows_per_page * (_opts.current_page + 1)));
-			_opts.current_page_records = records.length;
-			_opts.paging_from = (_opts.current_page * _opts.rows_per_page) + 1;
-
-			if (_opts.current_page_records < _opts.rows_per_page) {
-				_opts.paging_to = _opts.paging_from + (_opts.current_page_records - 1);
-			} else {
-				_opts.paging_to = _opts.paging_from + (_opts.rows_per_page - 1);
-			}
-
-			return records;
 		}
 
 		return result;
@@ -241,6 +308,7 @@ class Store extends EventEmitter {
 		_sortIndex = column.id;
 
 		this.updateColumn(column);
+		this.sortedRows();
 	}
 
 	getSortOrder() {
@@ -264,22 +332,28 @@ let _Store = new Store();
 
 _Store.dispatchToken = AppDispatcher.register((payload) => {
 	switch(payload.type) {
+
 		case Constants.BOOTSTRAP:
 			_Store.bootstrap(payload.data);
 			break;
+
 		case Constants.FETCH_ROWS:
 			_rows = payload.data;
+			_Store.sortedRows();
 			_Store.setReady(true);
 			_Store.emitChange();
 			break;
+
 		case Constants.COL_SORT:
 			_Store.sortRows(payload.data);
 			_Store.emitChange();
 			break;
+
 		case Constants.MOVE_PAGE:
 			_Store.setPage(payload.data);
 			_Store.emitChange();
 			break;
+
 		case Constants.ROWS_PER_PAGE:
 			_Store.setRowsPerPage(payload.data);
 			_Store.emitChange();
@@ -287,8 +361,10 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 		case Constants.SET_GROUP:
 			_Store.setGroup(payload.data);
 			_Store.emitChange();
+
 		default:
 			break;
+
 	}
 });
 

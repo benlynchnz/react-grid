@@ -36,10 +36,11 @@ export default class GridView extends React.Component {
 	}
 
 	_onChange() {
+		console.log('change');
 		if (Store.isReady()) {
 			this.setState({
 				columns: Store.getColumns(),
-				rows: Store.getRows(),
+				rows: Store.getSortedRows(),
 				isReady: Store.isReady()
 			});
 		}

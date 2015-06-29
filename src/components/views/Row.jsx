@@ -38,7 +38,7 @@ export default class RowView extends React.Component {
 				return col.row_style;
 			}
 		}
-
+		
 		return (
 			<div key={this.props.i} className={styles.row}>
 				{Store.getColumns().map((col, j) => {
@@ -46,7 +46,7 @@ export default class RowView extends React.Component {
 						key={j}
 						data-label={col.name}
 						className={genClass(col)}
-						style={genStyle(col)}>{GenerateCell(col, this.props.row)}
+						style={genStyle(col)}>{GenerateCell(col, this.props.row.data)}
 					</div>);
 				})}
 			</div>

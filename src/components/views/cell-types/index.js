@@ -7,6 +7,9 @@ import NUMBER from './number';
 import STRING from './string';
 
 export default (col, row) => {
+
+    return row[col.id];
+    
     switch (col.type.name) {
         case 'link':
             return A(col, row);

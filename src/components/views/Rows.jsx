@@ -14,35 +14,14 @@ export default class RowsView extends React.Component {
 
 	constructor(props) {
 		super(props);
-
-		this.state = this.props;
-	}
-
-	componentWillMount() {
-		Store.addChangeListener(this._onChange.bind(this));
-	}
-
-	componentWillUnmount() {
-		Store.addRemoveListener(this._onChange.bind(this));
-	}
-
-	_onChange() {
-		let rows = Store.getRows(),
-			group = Store.getCurrentGroup();
-
-		if (group && !rows[0].groupedBy) {
-			rows.unshift({ value: '... ' + GenerateCell(group, rows[0]), groupedBy: group});
-		}
-
-		this.setState({ rows: rows });
 	}
 
 	render() {
 		return (
 			<div className={styles.body}>
-				{this.state.rows.map((item, i) => {
-					{if (item.groupedBy) {
-						return <RowGrouped key={i} i={i} row={item} />
+				{this.props.rows.map((item, i) => {
+					{if (item.is_group) {
+						return <RowGrouped row={item} group={Store.getCurrentGroup()} />
 					} else {
 						return <Row key={i} i={i} row={item} />
 					}}
