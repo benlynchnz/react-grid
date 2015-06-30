@@ -1,11 +1,11 @@
 'use strict';
 
 export default (col, row) => {
-    let src = row[col.type.src];
+    let src = row.data[col.type.src];
 
     if (!row.value && col.type.src.indexOf('.') !== -1) {
         let keys = col.type.src.split('.'),
-            value = row;
+            value = row.data;
 
         keys.forEach((item) => {
             value = value[item];
@@ -14,5 +14,5 @@ export default (col, row) => {
         src = value;
     }
 
-    return row.value || src || '-';
+    return src || '-';
 };

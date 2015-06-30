@@ -8,6 +8,7 @@ import styles from './GridStyle.css';
 import Columns from './components/views/Columns.jsx';
 import Rows from './components/views/Rows.jsx';
 import Footer from './components/views/Footer.jsx';
+import Options from './components/views/Options.jsx';
 
 export default class GridView extends React.Component {
 
@@ -38,9 +39,11 @@ export default class GridView extends React.Component {
 	_onChange() {
 		console.log('change');
 		if (Store.isReady()) {
+			let rows = Store.getSearchRows() ? Store.getSearchRows() : Store.getRows();
+
 			this.setState({
 				columns: Store.getColumns(),
-				rows: Store.getSortedRows(),
+				rows: rows,
 				isReady: Store.isReady()
 			});
 		}
@@ -59,6 +62,7 @@ export default class GridView extends React.Component {
 			return (
 				<div className={styles.wrapper}>
 					<div className={styles.table}>
+						<Options />
 						<Columns columns={this.state.columns} />
 						<Rows rows={this.state.rows} />
 					</div>

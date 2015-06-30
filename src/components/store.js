@@ -6,6 +6,7 @@ import Actions from './actions';
 let _columns = [],
 	_rows = [],
 	_sorted_rows = [],
+	_search_results = null,
 	_sortIndex = null,
 	_isAsc = true,
 	_opts = {},
@@ -38,8 +39,6 @@ class Store extends EventEmitter {
 		}
 
 		_opts.current_page = page;
-
-		window.scroll(0,0);
 	}
 
 	isReady() {
@@ -83,13 +82,14 @@ class Store extends EventEmitter {
 
 		_columns = non_numeric_columns.concat(numeric_columns).map((item, i) => {
 			item.internal_idx = i;
+
 			return item;
 		});
 	}
 
 	setGroups() {
-		let data = [];
-		let groups = _.forEach(_columns, (item) => {
+		let data = [],
+		groups = _.forEach(_columns, (item) => {
 			if (item.can_group) {
 				data.push(item);
 			}
@@ -109,7 +109,7 @@ class Store extends EventEmitter {
 			_groupBy = null;
 		}
 
-		this.sortedRows();
+		this.sortRows();
 	}
 
 	getCurrentGroup() {
@@ -164,7 +164,7 @@ class Store extends EventEmitter {
 		this.updateColumn(column);
 	}
 
-	sortedRows() {
+	sortRows() {
 		let result = _.chain(_rows)
 			.sortBy(_sortIndex)
 			.value();
@@ -205,10 +205,11 @@ class Store extends EventEmitter {
 		_sorted_rows = result;
 	}
 
-	getSortedRows() {
-		let start = (_opts.current_page * _opts.rows_per_page),
+	getRows(use_search) {
+		let _data = use_search ? _search_results : _sorted_rows,
+			start = (_opts.current_page * _opts.rows_per_page),
 			end = start === 0 ? _opts.rows_per_page : (start + _opts.rows_per_page),
-			rows = _.slice(_sorted_rows, start, end),
+			rows = _.slice(_data, start, end),
 			current_group = rows[0];
 
 
@@ -235,7 +236,7 @@ class Store extends EventEmitter {
 					});
 					current_group = item.data;
 				}
-			})
+			});
 		}
 
 		this.setPaging(start, end);
@@ -248,52 +249,11 @@ class Store extends EventEmitter {
 		_opts.paging_to = end;
 	}
 
-	getRows() {
-		let result = this.getSortedRows();
-
-		if (_groupBy) {
-			let grouped = _.groupBy(result, (item) => {
-				if (_groupBy.id.split('.') !== -1) {
-					let keys = _groupBy.id.split('.'),
-			            value = item;
-
-			        keys.forEach((item) => {
-			            value = value[item];
-			        });
-
-			        return value;
-				}
-
-				return item[_groupBy.id];
-			});
-
-			let map = [];
-
-			let res = _.chain(grouped)
-				.pairs()
-				.each((item) => {
-					map.push({
-						groupedBy: _groupBy,
-						value: item[0]
-					});
-
-					_.each(item[1], (row) => {
-						map.push(row);
-					});
-				})
-				.value()
-
-			result = map;
-		}
-
-		return result;
-	}
-
 	getRowAtIndex(i) {
 		return this.getRows()[i];
 	}
 
-	sortRows(column) {
+	sortColumns(column) {
 		if (_sortIndex !== column.id) {
 			_isAsc = false;
 		} else {
@@ -308,11 +268,54 @@ class Store extends EventEmitter {
 		_sortIndex = column.id;
 
 		this.updateColumn(column);
-		this.sortedRows();
+		this.sortRows();
 	}
 
 	getSortOrder() {
 		return _isAsc;
+	}
+
+	getSearchRows() {
+		return _search_results;
+	}
+
+	clearSearchRows() {
+		_search_results = null;
+		this.emitChange();
+	}
+
+	searchRows(q) {
+		let columns = _.filter(_columns, ((item) => {
+			return item.allow_search;
+		}));
+
+		let matches = [];
+
+		_.forEach(_rows, ((item) => {
+
+			_.forEach(columns, ((col) => {
+				let field = item[col.id].toLowerCase();
+
+				if (field.indexOf(q) !== -1) {
+					matches.push({
+						is_group: false,
+						match: col.id,
+						position: {
+							start: field.indexOf(q),
+							end: q.length
+						},
+						term: q,
+						data: item
+					});
+				}
+			}));
+		}));
+
+		if (matches.length) {
+			_search_results = matches;
+		}
+
+		this.emitChange();
 	}
 
 	emitChange() {
@@ -339,13 +342,13 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 
 		case Constants.FETCH_ROWS:
 			_rows = payload.data;
-			_Store.sortedRows();
+			_Store.sortRows();
 			_Store.setReady(true);
 			_Store.emitChange();
 			break;
 
 		case Constants.COL_SORT:
-			_Store.sortRows(payload.data);
+			_Store.sortColumns(payload.data);
 			_Store.emitChange();
 			break;
 
@@ -358,9 +361,14 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 			_Store.setRowsPerPage(payload.data);
 			_Store.emitChange();
 			break;
+
 		case Constants.SET_GROUP:
 			_Store.setGroup(payload.data);
 			_Store.emitChange();
+
+		case Constants.SEARCHING:
+			_Store.searchRows(payload.data);
+			break;
 
 		default:
 			break;

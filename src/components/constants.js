@@ -8,7 +8,8 @@ const constants = {
 	MOVE_PAGE: "MOVE_PAGE",
 	ROWS_PER_PAGE: "ROWS_PER_PAGE",
 	BOOTSTRAP: "BOOTSTRAP",
-	SET_GROUP: "SET_GROUP"
+	SET_GROUP: "SET_GROUP",
+	SEARCHING: "SEARCHING"
 };
 
 export default constants;

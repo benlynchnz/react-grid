@@ -13,7 +13,7 @@ export default class RowView extends React.Component {
 	}
 
 	render() {
-		let genClass = (col) => {
+		let genClass = (col, row) => {
 			let classes = [styles.cell];
 
 			if (col.classes) {
@@ -30,6 +30,10 @@ export default class RowView extends React.Component {
 				classes.push(styles['cell-align-right']);
 			}
 
+			if (row.match && (col.id === row.match)) {
+				classes.push(styles['cell-highlight']);
+			}
+
 			return classes.join(' ');
 		}
 
@@ -38,15 +42,15 @@ export default class RowView extends React.Component {
 				return col.row_style;
 			}
 		}
-		
+
 		return (
 			<div key={this.props.i} className={styles.row}>
 				{Store.getColumns().map((col, j) => {
 					return (<div
 						key={j}
 						data-label={col.name}
-						className={genClass(col)}
-						style={genStyle(col)}>{GenerateCell(col, this.props.row.data)}
+						className={genClass(col, this.props.row)}
+						style={genStyle(col)}>{GenerateCell(col, this.props.row)}
 					</div>);
 				})}
 			</div>

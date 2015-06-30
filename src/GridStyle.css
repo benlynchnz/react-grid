@@ -187,6 +187,26 @@
   text-align: right;
 }
 
+.cell.cell-highlight div {
+	float: left
+}
+
+.cell.cell-highlight::after {
+	content: '';
+	width: 8px;
+	height: 8px;
+	line-height: 48px;
+	border-radius: 50%;
+	display: block;
+	float: right;
+	margin-top: 21px;
+	background-color: rgba(46,204,113,1);
+}
+
+.cell .highlight {
+	font-weight: 800;
+}
+
 .cell.cell-100px {
   -webkit-box-flex: 0;
   -webkit-flex: none;
@@ -328,6 +348,56 @@
 
 .menu-wrapper .li:hover {
 	background-color: #eee;
+}
+
+.options-wrapper {
+	background-color: #fff;
+	padding: 24px 32px;
+}
+
+.options-tools {
+	float: right;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.options-tools li {
+	float: left;
+	padding-right: 24px;
+	opacity: 0.56;
+	cursor: pointer;
+}
+
+.options-tools li:hover {
+	opacity: 1;
+}
+
+.options-tools li:last-child {
+	padding-right: 0;
+}
+
+.tools-search {
+	display: inline-block;
+	position: absolute;
+	right: 160px;
+	margin-top: -15px;
+	float: left;
+}
+
+input {
+	font-size: 18px;
+	padding: 10px 10px 10px 5px;
+	display: block;
+	background-color: transparent;
+	width: 300px;
+	border: none;
+	border-bottom: 1px solid #757575;
+}
+
+input:focus {
+	outline: none;
+	border-bottom: 2px solid #2E88C5;
 }
 
 .w-0 {}

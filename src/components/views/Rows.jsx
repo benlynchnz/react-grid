@@ -21,7 +21,7 @@ export default class RowsView extends React.Component {
 			<div className={styles.body}>
 				{this.props.rows.map((item, i) => {
 					{if (item.is_group) {
-						return <RowGrouped row={item} group={Store.getCurrentGroup()} />
+						return <RowGrouped key={i} row={item} group={Store.getCurrentGroup()} />
 					} else {
 						return <Row key={i} i={i} row={item} />
 					}}

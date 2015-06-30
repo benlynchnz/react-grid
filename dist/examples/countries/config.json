@@ -19,6 +19,7 @@
             "name": "Name",
             "sortable": true,
 			"ascending": true,
+            "allow_search": true,
             "weight": 0,
 			"type": {
 				"name": "link",
@@ -39,6 +40,7 @@
             "weight": 1,
             "sortable": true,
 			"ascending": true,
+            "allow_search": true,
 			"type": {
 				"name": "string"
 			}
@@ -61,6 +63,7 @@
             "sortable": true,
 			"ascending": true,
             "can_group": true,
+            "allow_search": true,
             "weight": 2,
 			"type": {
 				"name": "string"
@@ -73,6 +76,7 @@
             "sortable": true,
 			"ascending": true,
             "can_group": true,
+            "allow_search": true,
             "weight": 3,
 			"type": {
 				"name": "string"

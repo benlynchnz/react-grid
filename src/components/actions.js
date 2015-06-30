@@ -47,6 +47,13 @@ export default {
 			type: Constants.SET_GROUP,
 			data: id
 		});
+	},
+
+	search: (q) => {
+		AppDispatcher.dispatch({
+			type: Constants.SEARCHING,
+			data: q
+		});
 	}
 
 }

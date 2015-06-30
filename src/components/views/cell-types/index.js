@@ -5,11 +5,28 @@ import IMG from './img';
 import DATETIME from './datetime';
 import NUMBER from './number';
 import STRING from './string';
+import styles from '../../../GridStyle.css';
+
+let highlight = (element, start, end) => {
+    var str = element;
+
+    str = str.substr(0, start) +
+        '<span class="'+styles['highlight']+'">' +
+        str.substr(start, end) +
+        '</span>' +
+        str.substr(start + end);
+        
+    return str;
+};
+
+let createMarkup = (el, position) => {
+    return {
+        __html: highlight(el, position.start, position.end)
+    }
+};
 
 export default (col, row) => {
 
-    return row[col.id];
-    
     switch (col.type.name) {
         case 'link':
             return A(col, row);
@@ -30,10 +47,14 @@ export default (col, row) => {
             if (col.type.src) {
                 return STRING(col, row);
             } else {
-                return row.value || row[col.id] || '-';
+                if (row.match && (col.id === row.match)) {
+                    let el = row.data[col.id];
+                    return <div dangerouslySetInnerHTML={createMarkup(el, row.position)} />
+                }
+                return row.data[col.id] || '-';
             }
             break;
         default:
-            return row.value || row[col.id] || '-';
+            return row.data[col.id] || '-';
     }
 };

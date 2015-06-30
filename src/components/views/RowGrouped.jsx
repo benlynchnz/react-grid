@@ -37,7 +37,7 @@ export default class RowGroupedView extends React.Component {
 
 		return (
 			<div key={col.id} className={genRowClass()}>
-				<div className={styles.cell}>{GenerateCell(col, row.data)}</div>
+				<div className={styles.cell}>{GenerateCell(col, row)}</div>
 			</div>
 		);
 

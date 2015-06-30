@@ -85,14 +85,6 @@ export default class ColumnsView extends React.Component {
 					<div className={styles.title}>
 						{this.state.options.title}<span className={styles['group-by-header']}>{Store.getCurrentGroup() ? 'by ' + Store.getCurrentGroup().name : null}</span>
 					</div>
-					<div className={styles.options}>
-						<div id="group-by" className={styles['group-by']}></div>
-						<ul className={styles.ul}>
-							<li className={styles.li} onClick={this._onGroupByClick} >
-								<img className={styles['dots-vertical']} src="./icons/dots-vertical.png" />
-							</li>
-						</ul>
-					</div>
 				</div>) : null}
 				<div className={trClass()}>
 					{this.props.columns.map((item) => {
