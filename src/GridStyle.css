@@ -353,6 +353,7 @@
 .options-wrapper {
 	background-color: #fff;
 	padding: 24px 32px;
+	border-top: 1px solid #ddd;
 }
 
 .options-tools {

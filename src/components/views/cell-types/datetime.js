@@ -4,7 +4,7 @@ import Store from '../../store';
 
 export default (col, row) => {
     let props = col.type.props,
-        value = row[col.id];
+        value = row.data[col.id];
 
     if (col.type.from_now) {
         return moment(value).fromNow();

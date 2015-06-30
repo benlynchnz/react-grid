@@ -31,7 +31,7 @@ export default class RowView extends React.Component {
 			}
 
 			if (row.match && (col.id === row.match)) {
-				classes.push(styles['cell-highlight']);
+				// classes.push(styles['cell-highlight']);
 			}
 
 			return classes.join(' ');

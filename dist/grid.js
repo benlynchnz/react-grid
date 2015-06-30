@@ -118,35 +118,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var _componentsStore = __webpack_require__(2);
+	var _componentsStore = __webpack_require__(3);
 
 	var _componentsStore2 = _interopRequireDefault(_componentsStore);
 
-	var _componentsActions = __webpack_require__(3);
+	var _componentsActions = __webpack_require__(10);
 
 	var _componentsActions2 = _interopRequireDefault(_componentsActions);
 
-	var _componentsUtils = __webpack_require__(4);
+	var _componentsUtils = __webpack_require__(18);
 
 	var _componentsUtils2 = _interopRequireDefault(_componentsUtils);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(19);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _componentsViewsColumnsJsx = __webpack_require__(5);
+	var _componentsViewsColumnsJsx = __webpack_require__(2);
 
 	var _componentsViewsColumnsJsx2 = _interopRequireDefault(_componentsViewsColumnsJsx);
 
-	var _componentsViewsRowsJsx = __webpack_require__(6);
+	var _componentsViewsRowsJsx = __webpack_require__(21);
 
 	var _componentsViewsRowsJsx2 = _interopRequireDefault(_componentsViewsRowsJsx);
 
-	var _componentsViewsFooterJsx = __webpack_require__(7);
+	var _componentsViewsFooterJsx = __webpack_require__(31);
 
 	var _componentsViewsFooterJsx2 = _interopRequireDefault(_componentsViewsFooterJsx);
 
-	var _componentsViewsOptionsJsx = __webpack_require__(8);
+	var _componentsViewsOptionsJsx = __webpack_require__(33);
 
 	var _componentsViewsOptionsJsx2 = _interopRequireDefault(_componentsViewsOptionsJsx);
 
@@ -185,7 +185,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function _onChange() {
 				console.log('change');
 				if (_componentsStore2['default'].isReady()) {
-					var rows = _componentsStore2['default'].getSearchRows() ? _componentsStore2['default'].getSearchRows() : _componentsStore2['default'].getRows();
+					var rows = _componentsStore2['default'].getRows();
 
 					this.setState({
 						columns: _componentsStore2['default'].getColumns(),
@@ -248,23 +248,186 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var _events = __webpack_require__(19);
+	var _store = __webpack_require__(3);
 
-	var _dispatcher = __webpack_require__(10);
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(10);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _utils = __webpack_require__(18);
+
+	var _utils2 = _interopRequireDefault(_utils);
+
+	var _GridStyleCss = __webpack_require__(19);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _GroupsJsx = __webpack_require__(20);
+
+	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
+
+	var ColumnsView = (function (_React$Component) {
+		function ColumnsView(props) {
+			_classCallCheck(this, ColumnsView);
+
+			_get(Object.getPrototypeOf(ColumnsView.prototype), 'constructor', this).call(this, props);
+			this.state = {
+				options: _store2['default'].getOptions()
+			};
+		}
+
+		_inherits(ColumnsView, _React$Component);
+
+		_createClass(ColumnsView, [{
+			key: '_onClick',
+			value: function _onClick(e) {
+				var id = e.target.getAttribute('data-column-id'),
+				    column = _store2['default'].getColumn(id);
+
+				if (!column.sortable) {
+					return;
+				}
+
+				_actions2['default'].sortRows(column);
+			}
+		}, {
+			key: '_onGroupByClick',
+			value: function _onGroupByClick(e) {
+				var menuWrapper = document.getElementById('group-by');
+
+				React.render(React.createElement(_GroupsJsx2['default'], { target: e.target, el: menuWrapper }), menuWrapper);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this = this;
+
+				var genClass = function genClass(item) {
+					var classes = [_GridStyleCss2['default'].cell];
+
+					if (item.active_sort) {
+						classes.push(_GridStyleCss2['default']['column-sort']);
+					}
+
+					if (_store2['default'].getSortOrder()) {
+						classes.push(_GridStyleCss2['default']['asc']);
+					} else {
+						classes.push(_GridStyleCss2['default']['desc']);
+					}
+
+					if (item.type.name === 'number') {
+						classes.push(_GridStyleCss2['default']['cell-align-right']);
+					}
+
+					if (item.classes) {
+						item.classes.forEach(function (item) {
+							classes.push(_GridStyleCss2['default'][item]);
+						});
+					}
+
+					if (item.weight || item.weight === 0) {
+						classes.push(_GridStyleCss2['default']['w-' + item.weight]);
+					}
+
+					return classes.join(' ');
+				};
+
+				var genStyles = function genStyles(item) {
+					if (item.style) {
+						return item.style;
+					}
+				};
+
+				var trClass = function trClass() {
+					var classes = [_GridStyleCss2['default'].row];
+					classes.push(_GridStyleCss2['default']['header']);
+
+					return classes.join(' ');
+				};
+
+				return React.createElement(
+					'div',
+					{ className: _GridStyleCss2['default'].head },
+					this.state.options.title ? React.createElement(
+						'div',
+						{ className: trClass() },
+						React.createElement(
+							'div',
+							{ className: _GridStyleCss2['default'].title },
+							this.state.options.title,
+							React.createElement(
+								'span',
+								{ className: _GridStyleCss2['default']['group-by-header'] },
+								_store2['default'].getCurrentGroup() ? 'by ' + _store2['default'].getCurrentGroup().name : null
+							)
+						)
+					) : null,
+					React.createElement(
+						'div',
+						{ className: trClass() },
+						this.props.columns.map(function (item) {
+							return React.createElement(
+								'div',
+								{
+									key: item.id,
+									className: genClass(item),
+									style: genStyles(item),
+									'data-column-id': item.id,
+									onClick: _this._onClick },
+								item.name
+							);
+						})
+					)
+				);
+			}
+		}]);
+
+		return ColumnsView;
+	})(React.Component);
+
+	exports['default'] = ColumnsView;
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _events = __webpack_require__(4);
+
+	var _dispatcher = __webpack_require__(5);
 
 	var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
-	var _constants = __webpack_require__(11);
+	var _constants = __webpack_require__(9);
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _actions = __webpack_require__(3);
+	var _actions = __webpack_require__(10);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -303,7 +466,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getTotalRows',
 			value: function getTotalRows() {
-				return _rows.length;
+				var total = _search_results ? _search_results : _rows;
+				return total.length;
 			}
 		}, {
 			key: 'setPage',
@@ -458,7 +622,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'sortRows',
 			value: function sortRows() {
-				var result = _.chain(_rows).sortBy(_sortIndex).value();
+				var rows = _search_results ? _search_results : _rows;
+				var result = _.chain(rows).sortBy(_sortIndex).value();
 
 				if (!_isAsc) {
 					result.reverse();
@@ -498,23 +663,32 @@ return /******/ (function(modules) { // webpackBootstrap
 					})();
 				}
 
-				_sorted_rows = result;
+				if (_search_results) {
+					_search_results = result;
+				} else {
+					_sorted_rows = result;
+				}
 			}
 		}, {
 			key: 'getRows',
-			value: function getRows(use_search) {
-				var _data = use_search ? _search_results : _sorted_rows,
+			value: function getRows() {
+				var __data = _search_results ? _search_results : _sorted_rows,
 				    start = _opts.current_page * _opts.rows_per_page,
 				    end = start === 0 ? _opts.rows_per_page : start + _opts.rows_per_page,
-				    rows = _.slice(_data, start, end),
+				    rows = _.slice(__data, start, end),
 				    current_group = rows[0];
 
 				// Get all the raw data rows
 				var data = rows.map(function (item) {
-					return {
-						is_group: false,
-						data: item
-					};
+					if (!item.match) {
+						// fix this
+						return {
+							is_group: false,
+							data: item
+						};
+					} else {
+						return item;
+					}
 				});
 
 				// Add grouping titles
@@ -533,6 +707,10 @@ return /******/ (function(modules) { // webpackBootstrap
 							current_group = item.data;
 						}
 					});
+				}
+
+				if (end > this.getTotalRows()) {
+					end = this.getTotalRows();
 				}
 
 				this.setPaging(start, end);
@@ -575,11 +753,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				return _isAsc;
 			}
 		}, {
-			key: 'getSearchRows',
-			value: function getSearchRows() {
-				return _search_results;
-			}
-		}, {
 			key: 'clearSearchRows',
 			value: function clearSearchRows() {
 				_search_results = null;
@@ -597,19 +770,25 @@ return /******/ (function(modules) { // webpackBootstrap
 				_.forEach(_rows, function (item) {
 
 					_.forEach(columns, function (col) {
+						if (!item[col.id]) {
+							return;
+						}
+
 						var field = item[col.id].toLowerCase();
 
 						if (field.indexOf(q) !== -1) {
-							matches.push({
-								is_group: false,
-								match: col.id,
-								position: {
-									start: field.indexOf(q),
-									end: q.length
-								},
-								term: q,
-								data: item
-							});
+							if (!_.findWhere(matches, { data: item })) {
+								matches.push({
+									is_group: false,
+									match: col.id,
+									position: {
+										start: field.indexOf(q),
+										end: q.length
+									},
+									term: q,
+									data: item
+								});
+							}
 						}
 					});
 				});
@@ -689,1337 +868,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _dispatcher = __webpack_require__(10);
-
-	var _dispatcher2 = _interopRequireDefault(_dispatcher);
-
-	var _constants = __webpack_require__(11);
-
-	var _constants2 = _interopRequireDefault(_constants);
-
-	var _api = __webpack_require__(12);
-
-	var _api2 = _interopRequireDefault(_api);
-
-	exports['default'] = {
-		bootstrap: function bootstrap(uri) {
-			_api2['default'].bootstrap(uri).then(function (data) {
-				_dispatcher2['default'].dispatch({
-					type: _constants2['default'].BOOTSTRAP,
-					data: data
-				});
-			});
-		},
-
-		fetchRows: function fetchRows(uri) {
-			_api2['default'].fetch(uri).then(function (data) {
-				_dispatcher2['default'].dispatch({
-					type: _constants2['default'].FETCH_ROWS,
-					data: data
-				});
-			});
-		},
-
-		sortRows: function sortRows(column) {
-			_dispatcher2['default'].dispatch({
-				type: _constants2['default'].COL_SORT,
-				data: column
-			});
-		},
-
-		movePage: function movePage(direction) {
-			_dispatcher2['default'].dispatch({
-				type: _constants2['default'].MOVE_PAGE,
-				data: direction
-			});
-		},
-
-		setRowsPerPage: function setRowsPerPage(rows) {
-			_dispatcher2['default'].dispatch({
-				type: _constants2['default'].ROWS_PER_PAGE,
-				data: rows
-			});
-		},
-
-		setGroup: function setGroup(id) {
-			_dispatcher2['default'].dispatch({
-				type: _constants2['default'].SET_GROUP,
-				data: id
-			});
-		},
-
-		search: function search(q) {
-			_dispatcher2['default'].dispatch({
-				type: _constants2['default'].SEARCHING,
-				data: q
-			});
-		}
-
-	};
-	module.exports = exports['default'];
-
-/***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	var utils = {};
-
-	var componentDidMount = function componentDidMount(ctx) {
-		var rootNode = React.findDOMNode(ctx),
-		    hasNextProps = false,
-		    nextProps = {},
-		    parentNode = rootNode.parentNode;
-
-		Object.keys(parentNode.attributes).forEach(function (key) {
-			var namedNode = undefined;
-
-			if (key !== 'length') {
-				hasNextProps = true;
-				namedNode = parentNode.attributes[key];
-				nextProps[namedNode.name] = namedNode.value;
-			}
-		});
-
-		if (hasNextProps) {
-			ctx._updateState(nextProps);
-		}
-
-		ctx.setState({ element: ctx.props.element });
-	};
-
-	utils.componentDidMount = componentDidMount;
-
-	exports['default'] = utils;
-	module.exports = exports['default'];
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _actions = __webpack_require__(3);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _utils = __webpack_require__(4);
-
-	var _utils2 = _interopRequireDefault(_utils);
-
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _GroupsJsx = __webpack_require__(13);
-
-	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
-
-	var ColumnsView = (function (_React$Component) {
-		function ColumnsView(props) {
-			_classCallCheck(this, ColumnsView);
-
-			_get(Object.getPrototypeOf(ColumnsView.prototype), 'constructor', this).call(this, props);
-			this.state = {
-				options: _store2['default'].getOptions()
-			};
-		}
-
-		_inherits(ColumnsView, _React$Component);
-
-		_createClass(ColumnsView, [{
-			key: '_onClick',
-			value: function _onClick(e) {
-				var id = e.target.getAttribute('data-column-id'),
-				    column = _store2['default'].getColumn(id);
-
-				if (!column.sortable) {
-					return;
-				}
-
-				_actions2['default'].sortRows(column);
-			}
-		}, {
-			key: '_onGroupByClick',
-			value: function _onGroupByClick(e) {
-				var menuWrapper = document.getElementById('group-by');
-
-				React.render(React.createElement(_GroupsJsx2['default'], { target: e.target, el: menuWrapper }), menuWrapper);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this = this;
-
-				var genClass = function genClass(item) {
-					var classes = [_GridStyleCss2['default'].cell];
-
-					if (item.active_sort) {
-						classes.push(_GridStyleCss2['default']['column-sort']);
-					}
-
-					if (_store2['default'].getSortOrder()) {
-						classes.push(_GridStyleCss2['default']['asc']);
-					} else {
-						classes.push(_GridStyleCss2['default']['desc']);
-					}
-
-					if (item.type.name === 'number') {
-						classes.push(_GridStyleCss2['default']['cell-align-right']);
-					}
-
-					if (item.classes) {
-						item.classes.forEach(function (item) {
-							classes.push(_GridStyleCss2['default'][item]);
-						});
-					}
-
-					if (item.weight || item.weight === 0) {
-						classes.push(_GridStyleCss2['default']['w-' + item.weight]);
-					}
-
-					return classes.join(' ');
-				};
-
-				var genStyles = function genStyles(item) {
-					if (item.style) {
-						return item.style;
-					}
-				};
-
-				var trClass = function trClass() {
-					var classes = [_GridStyleCss2['default'].row];
-					classes.push(_GridStyleCss2['default']['header']);
-
-					return classes.join(' ');
-				};
-
-				return React.createElement(
-					'div',
-					{ className: _GridStyleCss2['default'].head },
-					this.state.options.title ? React.createElement(
-						'div',
-						{ className: trClass() },
-						React.createElement(
-							'div',
-							{ className: _GridStyleCss2['default'].title },
-							this.state.options.title,
-							React.createElement(
-								'span',
-								{ className: _GridStyleCss2['default']['group-by-header'] },
-								_store2['default'].getCurrentGroup() ? 'by ' + _store2['default'].getCurrentGroup().name : null
-							)
-						)
-					) : null,
-					React.createElement(
-						'div',
-						{ className: trClass() },
-						this.props.columns.map(function (item) {
-							return React.createElement(
-								'div',
-								{
-									key: item.id,
-									className: genClass(item),
-									style: genStyles(item),
-									'data-column-id': item.id,
-									onClick: _this._onClick },
-								item.name
-							);
-						})
-					)
-				);
-			}
-		}]);
-
-		return ColumnsView;
-	})(React.Component);
-
-	exports['default'] = ColumnsView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _actions = __webpack_require__(3);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _utils = __webpack_require__(4);
-
-	var _utils2 = _interopRequireDefault(_utils);
-
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _cellTypesIndex = __webpack_require__(14);
-
-	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
-
-	var _RowJsx = __webpack_require__(15);
-
-	var _RowJsx2 = _interopRequireDefault(_RowJsx);
-
-	var _RowGroupedJsx = __webpack_require__(16);
-
-	var _RowGroupedJsx2 = _interopRequireDefault(_RowGroupedJsx);
-
-	var RowsView = (function (_React$Component) {
-		function RowsView(props) {
-			_classCallCheck(this, RowsView);
-
-			_get(Object.getPrototypeOf(RowsView.prototype), 'constructor', this).call(this, props);
-		}
-
-		_inherits(RowsView, _React$Component);
-
-		_createClass(RowsView, [{
-			key: 'render',
-			value: function render() {
-				return React.createElement(
-					'div',
-					{ className: _GridStyleCss2['default'].body },
-					this.props.rows.map(function (item, i) {
-						{
-							if (item.is_group) {
-								return React.createElement(_RowGroupedJsx2['default'], { key: i, row: item, group: _store2['default'].getCurrentGroup() });
-							} else {
-								return React.createElement(_RowJsx2['default'], { key: i, i: i, row: item });
-							}
-						}
-					})
-				);
-			}
-		}]);
-
-		return RowsView;
-	})(React.Component);
-
-	exports['default'] = RowsView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _actions = __webpack_require__(3);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _utils = __webpack_require__(4);
-
-	var _utils2 = _interopRequireDefault(_utils);
-
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _RowsPerPageJsx = __webpack_require__(17);
-
-	var _RowsPerPageJsx2 = _interopRequireDefault(_RowsPerPageJsx);
-
-	var FooterView = (function (_React$Component) {
-		function FooterView(props) {
-			_classCallCheck(this, FooterView);
-
-			_get(Object.getPrototypeOf(FooterView.prototype), 'constructor', this).call(this, props);
-			this.state = _store2['default'].getOptions();
-
-			this._onClick = this._onClick.bind(this);
-			this._onRowsPerPageClick = this._onRowsPerPageClick.bind(this);
-		}
-
-		_inherits(FooterView, _React$Component);
-
-		_createClass(FooterView, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				_store2['default'].addChangeListener(this._onChange.bind(this));
-			}
-		}, {
-			key: 'componentWillUnmount',
-			value: function componentWillUnmount() {
-				_store2['default'].addRemoveListener(this._onChange.bind(this));
-			}
-		}, {
-			key: '_onChange',
-			value: function _onChange() {
-				this.setState(_store2['default'].getOptions());
-			}
-		}, {
-			key: '_onClick',
-			value: function _onClick(e) {
-				var target = e.currentTarget.getAttribute('data-direction'),
-				    direction = target === 'forward' ? 'forward' : 'back';
-
-				if (direction === 'back' && this.state.paging_from === 1) {
-					return;
-				}
-
-				var next_rows = (this.state.current_page + 1) * this.state.rows_per_page + this.state.rows_per_page;
-
-				if (direction === 'forward' && next_rows - this.state.rows_per_page >= _store2['default'].getTotalRows()) {
-					return;
-				}
-
-				_actions2['default'].movePage(direction);
-			}
-		}, {
-			key: '_onRowsPerPageClick',
-			value: function _onRowsPerPageClick(e) {
-				var menuWrapper = document.getElementById('rows-per-page');
-
-				React.render(React.createElement(_RowsPerPageJsx2['default'], { opts: this.state, target: e.target, el: menuWrapper }), menuWrapper);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				return React.createElement(
-					'div',
-					{ className: _GridStyleCss2['default'].footer },
-					React.createElement('div', { id: 'rows-per-page', className: _GridStyleCss2['default']['rows-per-page'] }),
-					React.createElement(
-						'ul',
-						{ className: _GridStyleCss2['default'].ul },
-						React.createElement(
-							'li',
-							{ className: _GridStyleCss2['default'].li },
-							'Rows per page:'
-						),
-						React.createElement(
-							'li',
-							{ className: _GridStyleCss2['default'].li, onClick: this._onRowsPerPageClick },
-							React.createElement(
-								'b',
-								null,
-								this.state.rows_per_page
-							),
-							React.createElement('img', { className: _GridStyleCss2['default'].caret, src: './icons/menu-down.png' })
-						),
-						React.createElement(
-							'li',
-							{ className: _GridStyleCss2['default'].li },
-							this.state.paging_from,
-							' - ',
-							this.state.paging_to,
-							' of ',
-							_store2['default'].getTotalRows()
-						),
-						React.createElement(
-							'li',
-							{ className: _GridStyleCss2['default'].li, 'data-direction': 'back', onClick: this._onClick },
-							React.createElement('img', { src: './icons/chevron-left.png' })
-						),
-						React.createElement(
-							'li',
-							{ className: _GridStyleCss2['default'].li, 'data-direction': 'forward', onClick: this._onClick },
-							React.createElement('img', { src: './icons/chevron-right.png' })
-						)
-					)
-				);
-			}
-		}]);
-
-		return FooterView;
-	})(React.Component);
-
-	exports['default'] = FooterView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _actions = __webpack_require__(3);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _utils = __webpack_require__(4);
-
-	var _utils2 = _interopRequireDefault(_utils);
-
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _GroupsJsx = __webpack_require__(13);
-
-	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
-
-	var _SearchJsx = __webpack_require__(18);
-
-	var _SearchJsx2 = _interopRequireDefault(_SearchJsx);
-
-	var OptionsView = (function (_React$Component) {
-	    function OptionsView(props) {
-	        _classCallCheck(this, OptionsView);
-
-	        _get(Object.getPrototypeOf(OptionsView.prototype), 'constructor', this).call(this, props);
-
-	        this._onSearchClick = this._onSearchClick.bind(this);
-	    }
-
-	    _inherits(OptionsView, _React$Component);
-
-	    _createClass(OptionsView, [{
-	        key: '_onSearchClick',
-	        value: function _onSearchClick(e) {
-	            e.currentTarget.style.visibility = 'hidden';
-	            var el = this.refs['tools-search'].getDOMNode();
-
-	            React.render(React.createElement(_SearchJsx2['default'], { el: el, li: e.currentTarget }), el);
-
-	            el.getElementsByTagName('input')[0].focus();
-	        }
-	    }, {
-	        key: '_onFilterClick',
-	        value: function _onFilterClick(e) {
-	            var menuWrapper = document.getElementById('group-by');
-
-	            React.render(React.createElement(_GroupsJsx2['default'], { target: e.target, el: menuWrapper }), menuWrapper);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return React.createElement(
-	                'div',
-	                { className: _GridStyleCss2['default']['options-wrapper'] },
-	                React.createElement('div', { id: 'group-by', className: _GridStyleCss2['default']['group-by'] }),
-	                React.createElement('div', { className: _GridStyleCss2['default']['tools-search'], ref: 'tools-search' }),
-	                React.createElement(
-	                    'ul',
-	                    { className: _GridStyleCss2['default']['options-tools'] },
-	                    React.createElement(
-	                        'li',
-	                        { onClick: this._onSearchClick },
-	                        React.createElement('img', { src: './icons/search.png' })
-	                    ),
-	                    React.createElement(
-	                        'li',
-	                        { onClick: this._onFilterClick },
-	                        React.createElement('img', { src: './icons/filter-variant.png' })
-	                    ),
-	                    React.createElement(
-	                        'li',
-	                        null,
-	                        React.createElement('img', { src: './icons/settings.png' })
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return OptionsView;
-	})(React.Component);
-
-	exports['default'] = OptionsView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// removed by extract-text-webpack-plugin
-	module.exports = {"wrapper":"GridStyle__wrapper___2GPIa","table":"GridStyle__table___1hfrk","body":"GridStyle__body___3fMzu","row":"GridStyle__row___25tH_","group":"GridStyle__group___3GIS0","head":"GridStyle__head___2E1A4","cell":"GridStyle__cell___nHb5Q","header":"GridStyle__header___5Kszw","title":"GridStyle__title___1qH-h","group-by-header":"GridStyle__group-by-header___1w9CU","options":"GridStyle__options___3Xxx3","cell-valign-middle":"GridStyle__cell-valign-middle___VjDQk","cell-valign-bottom":"GridStyle__cell-valign-bottom___1bXVW","cell-min":"GridStyle__cell-min___2PDoq","cell-max":"GridStyle__cell-max___wXFkb","column-sort":"GridStyle__column-sort___1kRVc","cell-nowrap":"GridStyle__cell-nowrap___1AC-S","cell-align-center":"GridStyle__cell-align-center___2MEAH","cell-align-right":"GridStyle__cell-align-right___1VhSM","cell-highlight":"GridStyle__cell-highlight___3mcBR","highlight":"GridStyle__highlight___yiNAP","cell-100px":"GridStyle__cell-100px___3LsNv","asc":"GridStyle__asc___20KVi","desc":"GridStyle__desc___19MPa","footer":"GridStyle__footer___3SKuL","ul":"GridStyle__ul___7Ryif","li":"GridStyle__li___Y2ezh","dots-vertical":"GridStyle__dots-vertical___3-Jus","caret":"GridStyle__caret___2WrVL","menu-wrapper":"GridStyle__menu-wrapper___2dzHZ","rows-per-page":"GridStyle__rows-per-page___1y7Um","group-by":"GridStyle__group-by___O3qZl","menu-hdr":"GridStyle__menu-hdr___1J_7i","selected":"GridStyle__selected___3eyuf","options-wrapper":"GridStyle__options-wrapper___InRhA","options-tools":"GridStyle__options-tools___2D5V3","tools-search":"GridStyle__tools-search___1xKWy","w-0":"GridStyle__w-0___3iPqO","w-1":"GridStyle__w-1___1EdTA","w-2":"GridStyle__w-2___g3RIZ","w-3":"GridStyle__w-3___25drh","w-4":"GridStyle__w-4___3rlJH"};
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _flux = __webpack_require__(25);
-
-	exports['default'] = new _flux.Dispatcher();
-	module.exports = exports['default'];
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	var constants = {
-		CHANGE: "CHANGE",
-		FETCH_COLUMNS: "FETCH_COLUMNS",
-		FETCH_ROWS: "FETCH_ROWS",
-		COL_SORT: "COL_SORT",
-		MOVE_PAGE: "MOVE_PAGE",
-		ROWS_PER_PAGE: "ROWS_PER_PAGE",
-		BOOTSTRAP: "BOOTSTRAP",
-		SET_GROUP: "SET_GROUP",
-		SEARCHING: "SEARCHING"
-	};
-
-	exports["default"] = constants;
-	module.exports = exports["default"];
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _superagent = __webpack_require__(27);
-
-	var _superagent2 = _interopRequireDefault(_superagent);
-
-	var _q = __webpack_require__(26);
-
-	var _q2 = _interopRequireDefault(_q);
-
-	exports['default'] = {
-		bootstrap: function bootstrap(uri) {
-			var deferred = _q2['default'].defer();
-
-			_superagent2['default'].get(uri).end(function (err, result) {
-				if (result.body) {
-					deferred.resolve(result.body);
-				}
-			});
-
-			return deferred.promise;
-		},
-
-		fetch: function fetch(uri) {
-			var deferred = _q2['default'].defer();
-
-			var req = _superagent2['default'].get(uri),
-			    headers = _store2['default'].getOptions().request.headers;
-
-			(headers || []).map(function (item) {
-				return _.pairs(item).map(function (val) {
-					req.set(val[0], val[1]);
-				});
-			});
-
-			req.end(function (err, result) {
-				if (result.body) {
-					deferred.resolve(result.body);
-				}
-			});
-
-			return deferred.promise;
-		}
-	};
-	module.exports = exports['default'];
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _actions = __webpack_require__(3);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var GroupsMenu = (function (_React$Component) {
-		function GroupsMenu(props) {
-			_classCallCheck(this, GroupsMenu);
-
-			_get(Object.getPrototypeOf(GroupsMenu.prototype), 'constructor', this).call(this, props);
-
-			this._onClick = this._onClick.bind(this);
-			this._onBlur = this._onBlur.bind(this);
-		}
-
-		_inherits(GroupsMenu, _React$Component);
-
-		_createClass(GroupsMenu, [{
-			key: '_onBlur',
-			value: function _onBlur() {
-				this.props.el.removeAttribute('style');
-				React.unmountComponentAtNode(this.props.el);
-			}
-		}, {
-			key: '_onClick',
-			value: function _onClick(e) {
-				var option = e.target.getAttribute('data-value');
-				_actions2['default'].setGroup(option);
-				this._onBlur();
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this = this;
-
-				var position = this.props.target.getBoundingClientRect();
-
-				this.props.el.style.position = 'fixed';
-				this.props.el.style.left = position.left - 90 + 'px';
-				this.props.el.style.top = position.top + 'px';
-				this.props.el.style.display = 'block';
-
-				var genClass = function genClass(item) {
-					var classes = [_GridStyleCss2['default'].li];
-
-					if (_store2['default'].getCurrentGroup() && item.name === _store2['default'].getCurrentGroup().name) {
-						classes.push(_GridStyleCss2['default'].selected);
-					} else if (!_store2['default'].getCurrentGroup() && item.name === 'None') {
-						classes.push(_GridStyleCss2['default'].selected);
-					}
-
-					return classes.join(' ');
-				};
-
-				var clickHandler = function clickHandler(e) {
-					document.removeEventListener('click', clickHandler);
-					_this._onBlur();
-				};
-
-				document.addEventListener('click', clickHandler);
-
-				var groups = [{ id: null, name: 'None' }];
-
-				_store2['default'].getGroups().forEach(function (item) {
-					groups.push(item);
-				});
-
-				return React.createElement(
-					'div',
-					{ className: _GridStyleCss2['default']['menu-wrapper'] },
-					React.createElement(
-						'ul',
-						{ className: _GridStyleCss2['default'].ul },
-						React.createElement(
-							'li',
-							{ className: _GridStyleCss2['default']['menu-hdr'] },
-							'Group By ...'
-						),
-						groups.map(function (item, i) {
-							return React.createElement(
-								'li',
-								{ key: i, className: genClass(item), 'data-value': item.id, onClick: _this._onClick },
-								item.name
-							);
-						})
-					)
-				);
-			}
-		}]);
-
-		return GroupsMenu;
-	})(React.Component);
-
-	exports['default'] = GroupsMenu;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _link = __webpack_require__(20);
-
-	var _link2 = _interopRequireDefault(_link);
-
-	var _img = __webpack_require__(21);
-
-	var _img2 = _interopRequireDefault(_img);
-
-	var _datetime = __webpack_require__(22);
-
-	var _datetime2 = _interopRequireDefault(_datetime);
-
-	var _number = __webpack_require__(23);
-
-	var _number2 = _interopRequireDefault(_number);
-
-	var _string = __webpack_require__(24);
-
-	var _string2 = _interopRequireDefault(_string);
-
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var highlight = function highlight(element, start, end) {
-	    var str = element;
-
-	    str = str.substr(0, start) + '<span class="' + _GridStyleCss2['default']['highlight'] + '">' + str.substr(start, end) + '</span>' + str.substr(start + end);
-
-	    return str;
-	};
-
-	var createMarkup = function createMarkup(el, position) {
-	    return {
-	        __html: highlight(el, position.start, position.end)
-	    };
-	};
-
-	exports['default'] = function (col, row) {
-
-	    switch (col.type.name) {
-	        case 'link':
-	            return (0, _link2['default'])(col, row);
-	            break;
-	        case 'image':
-	            return (0, _img2['default'])(col, row);
-	            break;
-	        case 'datetime':
-	            return (0, _datetime2['default'])(col, row);
-	            break;
-	        case 'array':
-	            return ARRAY(col, row);
-	            break;
-	        case 'number':
-	            return (0, _number2['default'])(col, row);
-	            break;
-	        case 'string':
-	            if (col.type.src) {
-	                return (0, _string2['default'])(col, row);
-	            } else {
-	                if (row.match && col.id === row.match) {
-	                    var el = row.data[col.id];
-	                    return React.createElement('div', { dangerouslySetInnerHTML: createMarkup(el, row.position) });
-	                }
-	                return row.data[col.id] || '-';
-	            }
-	            break;
-	        default:
-	            return row.data[col.id] || '-';
-	    }
-	};
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _cellTypesIndex = __webpack_require__(14);
-
-	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
-
-	var RowView = (function (_React$Component) {
-		function RowView(props) {
-			_classCallCheck(this, RowView);
-
-			_get(Object.getPrototypeOf(RowView.prototype), 'constructor', this).call(this, props);
-		}
-
-		_inherits(RowView, _React$Component);
-
-		_createClass(RowView, [{
-			key: 'render',
-			value: function render() {
-				var _this = this;
-
-				var genClass = function genClass(col, row) {
-					var classes = [_GridStyleCss2['default'].cell];
-
-					if (col.classes) {
-						col.classes.forEach(function (item) {
-							classes.push(_GridStyleCss2['default'][item]);
-						});
-					}
-
-					if (col.weight || col.weight === 0) {
-						classes.push(_GridStyleCss2['default']['w-' + col.weight]);
-					}
-
-					if (col.type.name === 'number') {
-						classes.push(_GridStyleCss2['default']['cell-align-right']);
-					}
-
-					if (row.match && col.id === row.match) {
-						classes.push(_GridStyleCss2['default']['cell-highlight']);
-					}
-
-					return classes.join(' ');
-				};
-
-				var genStyle = function genStyle(col) {
-					if (col.row_style) {
-						return col.row_style;
-					}
-				};
-
-				return React.createElement(
-					'div',
-					{ key: this.props.i, className: _GridStyleCss2['default'].row },
-					_store2['default'].getColumns().map(function (col, j) {
-						return React.createElement(
-							'div',
-							{
-								key: j,
-								'data-label': col.name,
-								className: genClass(col, _this.props.row),
-								style: genStyle(col) },
-							(0, _cellTypesIndex2['default'])(col, _this.props.row)
-						);
-					})
-				);
-			}
-		}]);
-
-		return RowView;
-	})(React.Component);
-
-	exports['default'] = RowView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _cellTypesIndex = __webpack_require__(14);
-
-	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
-
-	var RowGroupedView = (function (_React$Component) {
-		function RowGroupedView(props) {
-			_classCallCheck(this, RowGroupedView);
-
-			_get(Object.getPrototypeOf(RowGroupedView.prototype), 'constructor', this).call(this, props);
-		}
-
-		_inherits(RowGroupedView, _React$Component);
-
-		_createClass(RowGroupedView, [{
-			key: 'render',
-			value: function render() {
-
-				if (!this.props.group) {
-					return React.createElement('div', null);
-				}
-
-				var genRowClass = function genRowClass(col) {
-					var classes = [_GridStyleCss2['default'].row];
-					classes.push(_GridStyleCss2['default'].group);
-
-					return classes.join(' ');
-				};
-
-				var genClass = function genClass(col) {
-					var classes = [_GridStyleCss2['default'].cell];
-					classes.push(_GridStyleCss2['default'].group);
-
-					return classes.join(' ');
-				};
-
-				var col = _store2['default'].getColumn(this.props.group.id),
-				    row = this.props.row;
-
-				return React.createElement(
-					'div',
-					{ key: col.id, className: genRowClass() },
-					React.createElement(
-						'div',
-						{ className: _GridStyleCss2['default'].cell },
-						(0, _cellTypesIndex2['default'])(col, row)
-					)
-				);
-			}
-		}]);
-
-		return RowGroupedView;
-	})(React.Component);
-
-	exports['default'] = RowGroupedView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _actions = __webpack_require__(3);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var RowsPerPageView = (function (_React$Component) {
-		function RowsPerPageView(props) {
-			_classCallCheck(this, RowsPerPageView);
-
-			_get(Object.getPrototypeOf(RowsPerPageView.prototype), 'constructor', this).call(this, props);
-
-			this._onClick = this._onClick.bind(this);
-			this._onBlur = this._onBlur.bind(this);
-		}
-
-		_inherits(RowsPerPageView, _React$Component);
-
-		_createClass(RowsPerPageView, [{
-			key: '_onClick',
-			value: function _onClick(e) {
-				var option = e.target.getAttribute('data-value');
-				_actions2['default'].setRowsPerPage(option);
-				this._onBlur();
-			}
-		}, {
-			key: '_onBlur',
-			value: function _onBlur() {
-				this.props.el.removeAttribute('style');
-				React.unmountComponentAtNode(this.props.el);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this = this;
-
-				var position = this.props.target.getBoundingClientRect(),
-				    offsetTop = this.props.opts.paging_options.length * 48 - 48;
-
-				this.props.el.style.position = 'fixed';
-				this.props.el.style.left = position.left - 20 + 'px';
-				this.props.el.style.top = position.top - offsetTop + 'px';
-				this.props.el.style.display = 'block';
-
-				var genClass = function genClass(item) {
-					var classes = [_GridStyleCss2['default'].li];
-
-					if (item === _this.props.opts.rows_per_page) {
-						classes.push(_GridStyleCss2['default'].selected);
-					}
-
-					return classes.join(' ');
-				};
-
-				var clickHandler = function clickHandler(e) {
-					document.removeEventListener('click', clickHandler);
-					_this._onBlur();
-				};
-
-				document.addEventListener('click', clickHandler);
-
-				return React.createElement(
-					'div',
-					{ className: _GridStyleCss2['default']['menu-wrapper'] },
-					React.createElement(
-						'ul',
-						{ className: _GridStyleCss2['default'].ul },
-						this.props.opts.paging_options.map(function (item, i) {
-							return React.createElement(
-								'li',
-								{ key: i, className: genClass(item), 'data-value': item, onClick: _this._onClick },
-								item
-							);
-						})
-					)
-				);
-			}
-		}]);
-
-		return RowsPerPageView;
-	})(React.Component);
-
-	exports['default'] = RowsPerPageView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _actions = __webpack_require__(3);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var SearchView = (function (_React$Component) {
-	    function SearchView(props) {
-	        _classCallCheck(this, SearchView);
-
-	        _get(Object.getPrototypeOf(SearchView.prototype), 'constructor', this).call(this, props);
-
-	        this._onBlur = this._onBlur.bind(this);
-	        this._onFocus = this._onFocus.bind(this);
-	    }
-
-	    _inherits(SearchView, _React$Component);
-
-	    _createClass(SearchView, [{
-	        key: '_onBlur',
-	        value: function _onBlur(e) {
-	            if (!e.target.value) {
-	                this.props.li.style.visibility = 'visible';
-	                React.unmountComponentAtNode(this.props.el);
-	            }
-	        }
-	    }, {
-	        key: '_onFocus',
-	        value: function _onFocus(e) {
-	            var _this = this;
-
-	            console.log('focus');
-
-	            var keyHandler = function keyHandler(e) {
-	                var value = e.target.value;
-
-	                if (e.which === 13) {
-	                    console.log(value);
-	                    _actions2['default'].search(value);
-	                    // this._onBlur();
-	                }
-
-	                if (e.which === 27) {
-	                    _store2['default'].clearSearchRows();
-	                    _this._onBlur();
-	                }
-
-	                if (!value) {
-	                    _store2['default'].clearSearchRows();
-	                }
-	            };
-
-	            e.target.addEventListener('keyup', keyHandler);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return React.createElement('input', { type: 'text', onBlur: this._onBlur, onFocus: this._onFocus, required: true });
-	        }
-	    }]);
-
-	    return SearchView;
-	})(React.Component);
-
-	exports['default'] = SearchView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
 	//
@@ -2325,208 +1175,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 20 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-	    value: true
+	  value: true
 	});
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	var _flux = __webpack_require__(6);
 
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var highlight = function highlight(element, start, end) {
-	    var str = element;
-
-	    str = str.substr(0, start) + '<span class="' + _GridStyleCss2['default']['highlight'] + '">' + str.substr(start, end) + '</span>' + str.substr(start + end);
-
-	    return str;
-	};
-
-	var createMarkup = function createMarkup(el, position) {
-	    return {
-	        __html: highlight(el, position.start, position.end)
-	    };
-	};
-
-	exports['default'] = function (col, row) {
-	    var props = col.type.props;
-
-	    props.href = row.data[col.type.href];
-
-	    if (!props.href) {
-	        props.href = col.type.href.uri || col.type.href;
-	    }
-
-	    if (col.type.href.data) {
-	        (function () {
-	            var data = col.type.href.data,
-	                src = undefined;
-
-	            data.map(function (item) {
-	                if (item.indexOf('.') !== -1) {
-	                    (function () {
-	                        var keys = item.split('.'),
-	                            value = row.data;
-
-	                        keys.forEach(function (val) {
-	                            value = value[val];
-	                        });
-
-	                        src = value;
-	                        props.href = props.href.replace('{' + item + '}', src);
-	                    })();
-	                } else {
-	                    props.href = props.href.replace('{' + item + '}', row.data[item]);
-	                }
-	            });
-	        })();
-	    }
-
-	    var result = row.data[col.type.display];
-
-	    if (row.match && col.id === row.match) {
-	        var el = result;
-	        result = React.createElement('div', { dangerouslySetInnerHTML: createMarkup(el, row.position) });
-	    }
-
-	    return React.DOM.a(props, result);
-	};
-
+	exports['default'] = new _flux.Dispatcher();
 	module.exports = exports['default'];
 
 /***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	exports['default'] = function (col, row) {
-	    var props = col.type.props || {},
-	        src = row[col.type.src];
-
-	    props.href = row[col.type.href];
-
-	    if (col.type.src.indexOf('.') !== -1) {
-	        (function () {
-	            var keys = col.type.src.split('.'),
-	                value = row;
-
-	            keys.forEach(function (item) {
-	                value = value[item];
-	            });
-
-	            src = value;
-	        })();
-	    }
-
-	    props.src = src;
-
-	    return React.DOM.img(props, null);
-	};
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	exports['default'] = function (col, row) {
-	    var props = col.type.props,
-	        value = row[col.id];
-
-	    if (col.type.from_now) {
-	        return moment(value).fromNow();
-	    } else {
-	        return moment(value).format(col.type.format || _store2['default'].getOptions().default_date_format);
-	    }
-	};
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _numeral = __webpack_require__(29);
-
-	var _numeral2 = _interopRequireDefault(_numeral);
-
-	exports['default'] = function (col, row) {
-	    var props = col.type.props,
-	        value = row.data[col.id];
-
-	    return (0, _numeral2['default'])(value).format(col.type.format || _store2['default'].getOptions().number_format);
-	};
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	exports['default'] = function (col, row) {
-	    var src = row.data[col.type.src];
-
-	    if (!row.value && col.type.src.indexOf('.') !== -1) {
-	        (function () {
-	            var keys = col.type.src.split('.'),
-	                value = row.data;
-
-	            keys.forEach(function (item) {
-	                value = value[item];
-	            });
-
-	            src = value;
-	        })();
-	    }
-
-	    return src || '-';
-	};
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 25 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2538,11 +1202,1819 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(28)
+	module.exports.Dispatcher = __webpack_require__(7)
 
 
 /***/ },
-/* 26 */
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	 * Copyright (c) 2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule Dispatcher
+	 * @typechecks
+	 */
+
+	"use strict";
+
+	var invariant = __webpack_require__(8);
+
+	var _lastID = 1;
+	var _prefix = 'ID_';
+
+	/**
+	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
+	 * different from generic pub-sub systems in two ways:
+	 *
+	 *   1) Callbacks are not subscribed to particular events. Every payload is
+	 *      dispatched to every registered callback.
+	 *   2) Callbacks can be deferred in whole or part until other callbacks have
+	 *      been executed.
+	 *
+	 * For example, consider this hypothetical flight destination form, which
+	 * selects a default city when a country is selected:
+	 *
+	 *   var flightDispatcher = new Dispatcher();
+	 *
+	 *   // Keeps track of which country is selected
+	 *   var CountryStore = {country: null};
+	 *
+	 *   // Keeps track of which city is selected
+	 *   var CityStore = {city: null};
+	 *
+	 *   // Keeps track of the base flight price of the selected city
+	 *   var FlightPriceStore = {price: null}
+	 *
+	 * When a user changes the selected city, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'city-update',
+	 *     selectedCity: 'paris'
+	 *   });
+	 *
+	 * This payload is digested by `CityStore`:
+	 *
+	 *   flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'city-update') {
+	 *       CityStore.city = payload.selectedCity;
+	 *     }
+	 *   });
+	 *
+	 * When the user selects a country, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'country-update',
+	 *     selectedCountry: 'australia'
+	 *   });
+	 *
+	 * This payload is digested by both stores:
+	 *
+	 *    CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       CountryStore.country = payload.selectedCountry;
+	 *     }
+	 *   });
+	 *
+	 * When the callback to update `CountryStore` is registered, we save a reference
+	 * to the returned token. Using this token with `waitFor()`, we can guarantee
+	 * that `CountryStore` is updated before the callback that updates `CityStore`
+	 * needs to query its data.
+	 *
+	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       // `CountryStore.country` may not be updated.
+	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
+	 *       // `CountryStore.country` is now guaranteed to be updated.
+	 *
+	 *       // Select the default city for the new country
+	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
+	 *     }
+	 *   });
+	 *
+	 * The usage of `waitFor()` can be chained, for example:
+	 *
+	 *   FlightPriceStore.dispatchToken =
+	 *     flightDispatcher.register(function(payload) {
+	 *       switch (payload.actionType) {
+	 *         case 'country-update':
+	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
+	 *           FlightPriceStore.price =
+	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
+	 *           break;
+	 *
+	 *         case 'city-update':
+	 *           FlightPriceStore.price =
+	 *             FlightPriceStore(CountryStore.country, CityStore.city);
+	 *           break;
+	 *     }
+	 *   });
+	 *
+	 * The `country-update` payload will be guaranteed to invoke the stores'
+	 * registered callbacks in order: `CountryStore`, `CityStore`, then
+	 * `FlightPriceStore`.
+	 */
+
+	  function Dispatcher() {
+	    this.$Dispatcher_callbacks = {};
+	    this.$Dispatcher_isPending = {};
+	    this.$Dispatcher_isHandled = {};
+	    this.$Dispatcher_isDispatching = false;
+	    this.$Dispatcher_pendingPayload = null;
+	  }
+
+	  /**
+	   * Registers a callback to be invoked with every dispatched payload. Returns
+	   * a token that can be used with `waitFor()`.
+	   *
+	   * @param {function} callback
+	   * @return {string}
+	   */
+	  Dispatcher.prototype.register=function(callback) {
+	    var id = _prefix + _lastID++;
+	    this.$Dispatcher_callbacks[id] = callback;
+	    return id;
+	  };
+
+	  /**
+	   * Removes a callback based on its token.
+	   *
+	   * @param {string} id
+	   */
+	  Dispatcher.prototype.unregister=function(id) {
+	    invariant(
+	      this.$Dispatcher_callbacks[id],
+	      'Dispatcher.unregister(...): `%s` does not map to a registered callback.',
+	      id
+	    );
+	    delete this.$Dispatcher_callbacks[id];
+	  };
+
+	  /**
+	   * Waits for the callbacks specified to be invoked before continuing execution
+	   * of the current callback. This method should only be used by a callback in
+	   * response to a dispatched payload.
+	   *
+	   * @param {array<string>} ids
+	   */
+	  Dispatcher.prototype.waitFor=function(ids) {
+	    invariant(
+	      this.$Dispatcher_isDispatching,
+	      'Dispatcher.waitFor(...): Must be invoked while dispatching.'
+	    );
+	    for (var ii = 0; ii < ids.length; ii++) {
+	      var id = ids[ii];
+	      if (this.$Dispatcher_isPending[id]) {
+	        invariant(
+	          this.$Dispatcher_isHandled[id],
+	          'Dispatcher.waitFor(...): Circular dependency detected while ' +
+	          'waiting for `%s`.',
+	          id
+	        );
+	        continue;
+	      }
+	      invariant(
+	        this.$Dispatcher_callbacks[id],
+	        'Dispatcher.waitFor(...): `%s` does not map to a registered callback.',
+	        id
+	      );
+	      this.$Dispatcher_invokeCallback(id);
+	    }
+	  };
+
+	  /**
+	   * Dispatches a payload to all registered callbacks.
+	   *
+	   * @param {object} payload
+	   */
+	  Dispatcher.prototype.dispatch=function(payload) {
+	    invariant(
+	      !this.$Dispatcher_isDispatching,
+	      'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.'
+	    );
+	    this.$Dispatcher_startDispatching(payload);
+	    try {
+	      for (var id in this.$Dispatcher_callbacks) {
+	        if (this.$Dispatcher_isPending[id]) {
+	          continue;
+	        }
+	        this.$Dispatcher_invokeCallback(id);
+	      }
+	    } finally {
+	      this.$Dispatcher_stopDispatching();
+	    }
+	  };
+
+	  /**
+	   * Is this Dispatcher currently dispatching.
+	   *
+	   * @return {boolean}
+	   */
+	  Dispatcher.prototype.isDispatching=function() {
+	    return this.$Dispatcher_isDispatching;
+	  };
+
+	  /**
+	   * Call the callback stored with the given id. Also do some internal
+	   * bookkeeping.
+	   *
+	   * @param {string} id
+	   * @internal
+	   */
+	  Dispatcher.prototype.$Dispatcher_invokeCallback=function(id) {
+	    this.$Dispatcher_isPending[id] = true;
+	    this.$Dispatcher_callbacks[id](this.$Dispatcher_pendingPayload);
+	    this.$Dispatcher_isHandled[id] = true;
+	  };
+
+	  /**
+	   * Set up bookkeeping needed when dispatching.
+	   *
+	   * @param {object} payload
+	   * @internal
+	   */
+	  Dispatcher.prototype.$Dispatcher_startDispatching=function(payload) {
+	    for (var id in this.$Dispatcher_callbacks) {
+	      this.$Dispatcher_isPending[id] = false;
+	      this.$Dispatcher_isHandled[id] = false;
+	    }
+	    this.$Dispatcher_pendingPayload = payload;
+	    this.$Dispatcher_isDispatching = true;
+	  };
+
+	  /**
+	   * Clear bookkeeping used for dispatching.
+	   *
+	   * @internal
+	   */
+	  Dispatcher.prototype.$Dispatcher_stopDispatching=function() {
+	    this.$Dispatcher_pendingPayload = null;
+	    this.$Dispatcher_isDispatching = false;
+	  };
+
+
+	module.exports = Dispatcher;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright (c) 2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule invariant
+	 */
+
+	"use strict";
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var invariant = function(condition, format, a, b, c, d, e, f) {
+	  if (false) {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error(
+	        'Minified exception occurred; use the non-minified dev environment ' +
+	        'for the full error message and additional helpful warnings.'
+	      );
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(
+	        'Invariant Violation: ' +
+	        format.replace(/%s/g, function() { return args[argIndex++]; })
+	      );
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+
+	module.exports = invariant;
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var constants = {
+		CHANGE: "CHANGE",
+		FETCH_COLUMNS: "FETCH_COLUMNS",
+		FETCH_ROWS: "FETCH_ROWS",
+		COL_SORT: "COL_SORT",
+		MOVE_PAGE: "MOVE_PAGE",
+		ROWS_PER_PAGE: "ROWS_PER_PAGE",
+		BOOTSTRAP: "BOOTSTRAP",
+		SET_GROUP: "SET_GROUP",
+		SEARCHING: "SEARCHING"
+	};
+
+	exports["default"] = constants;
+	module.exports = exports["default"];
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _dispatcher = __webpack_require__(5);
+
+	var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+	var _constants = __webpack_require__(9);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
+	var _api = __webpack_require__(11);
+
+	var _api2 = _interopRequireDefault(_api);
+
+	exports['default'] = {
+		bootstrap: function bootstrap(uri) {
+			_api2['default'].bootstrap(uri).then(function (data) {
+				_dispatcher2['default'].dispatch({
+					type: _constants2['default'].BOOTSTRAP,
+					data: data
+				});
+			});
+		},
+
+		fetchRows: function fetchRows(uri) {
+			_api2['default'].fetch(uri).then(function (data) {
+				_dispatcher2['default'].dispatch({
+					type: _constants2['default'].FETCH_ROWS,
+					data: data
+				});
+			});
+		},
+
+		sortRows: function sortRows(column) {
+			_dispatcher2['default'].dispatch({
+				type: _constants2['default'].COL_SORT,
+				data: column
+			});
+		},
+
+		movePage: function movePage(direction) {
+			_dispatcher2['default'].dispatch({
+				type: _constants2['default'].MOVE_PAGE,
+				data: direction
+			});
+		},
+
+		setRowsPerPage: function setRowsPerPage(rows) {
+			_dispatcher2['default'].dispatch({
+				type: _constants2['default'].ROWS_PER_PAGE,
+				data: rows
+			});
+		},
+
+		setGroup: function setGroup(id) {
+			_dispatcher2['default'].dispatch({
+				type: _constants2['default'].SET_GROUP,
+				data: id
+			});
+		},
+
+		search: function search(q) {
+			_dispatcher2['default'].dispatch({
+				type: _constants2['default'].SEARCHING,
+				data: q
+			});
+		}
+
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _store = __webpack_require__(3);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _superagent = __webpack_require__(12);
+
+	var _superagent2 = _interopRequireDefault(_superagent);
+
+	var _q = __webpack_require__(15);
+
+	var _q2 = _interopRequireDefault(_q);
+
+	exports['default'] = {
+		bootstrap: function bootstrap(uri) {
+			var deferred = _q2['default'].defer();
+
+			_superagent2['default'].get(uri).end(function (err, result) {
+				if (result.body) {
+					deferred.resolve(result.body);
+				}
+			});
+
+			return deferred.promise;
+		},
+
+		fetch: function fetch(uri) {
+			var deferred = _q2['default'].defer();
+
+			var req = _superagent2['default'].get(uri),
+			    headers = _store2['default'].getOptions().request.headers;
+
+			(headers || []).map(function (item) {
+				return _.pairs(item).map(function (val) {
+					req.set(val[0], val[1]);
+				});
+			});
+
+			req.end(function (err, result) {
+				if (result.body) {
+					deferred.resolve(result.body.Items);
+				}
+			});
+
+			return deferred.promise;
+		}
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Module dependencies.
+	 */
+
+	var Emitter = __webpack_require__(13);
+	var reduce = __webpack_require__(14);
+
+	/**
+	 * Root reference for iframes.
+	 */
+
+	var root = 'undefined' == typeof window
+	  ? (this || self)
+	  : window;
+
+	/**
+	 * Noop.
+	 */
+
+	function noop(){};
+
+	/**
+	 * Check if `obj` is a host object,
+	 * we don't want to serialize these :)
+	 *
+	 * TODO: future proof, move to compoent land
+	 *
+	 * @param {Object} obj
+	 * @return {Boolean}
+	 * @api private
+	 */
+
+	function isHost(obj) {
+	  var str = {}.toString.call(obj);
+
+	  switch (str) {
+	    case '[object File]':
+	    case '[object Blob]':
+	    case '[object FormData]':
+	      return true;
+	    default:
+	      return false;
+	  }
+	}
+
+	/**
+	 * Determine XHR.
+	 */
+
+	request.getXHR = function () {
+	  if (root.XMLHttpRequest
+	      && (!root.location || 'file:' != root.location.protocol
+	          || !root.ActiveXObject)) {
+	    return new XMLHttpRequest;
+	  } else {
+	    try { return new ActiveXObject('Microsoft.XMLHTTP'); } catch(e) {}
+	    try { return new ActiveXObject('Msxml2.XMLHTTP.6.0'); } catch(e) {}
+	    try { return new ActiveXObject('Msxml2.XMLHTTP.3.0'); } catch(e) {}
+	    try { return new ActiveXObject('Msxml2.XMLHTTP'); } catch(e) {}
+	  }
+	  return false;
+	};
+
+	/**
+	 * Removes leading and trailing whitespace, added to support IE.
+	 *
+	 * @param {String} s
+	 * @return {String}
+	 * @api private
+	 */
+
+	var trim = ''.trim
+	  ? function(s) { return s.trim(); }
+	  : function(s) { return s.replace(/(^\s*|\s*$)/g, ''); };
+
+	/**
+	 * Check if `obj` is an object.
+	 *
+	 * @param {Object} obj
+	 * @return {Boolean}
+	 * @api private
+	 */
+
+	function isObject(obj) {
+	  return obj === Object(obj);
+	}
+
+	/**
+	 * Serialize the given `obj`.
+	 *
+	 * @param {Object} obj
+	 * @return {String}
+	 * @api private
+	 */
+
+	function serialize(obj) {
+	  if (!isObject(obj)) return obj;
+	  var pairs = [];
+	  for (var key in obj) {
+	    if (null != obj[key]) {
+	      pairs.push(encodeURIComponent(key)
+	        + '=' + encodeURIComponent(obj[key]));
+	    }
+	  }
+	  return pairs.join('&');
+	}
+
+	/**
+	 * Expose serialization method.
+	 */
+
+	 request.serializeObject = serialize;
+
+	 /**
+	  * Parse the given x-www-form-urlencoded `str`.
+	  *
+	  * @param {String} str
+	  * @return {Object}
+	  * @api private
+	  */
+
+	function parseString(str) {
+	  var obj = {};
+	  var pairs = str.split('&');
+	  var parts;
+	  var pair;
+
+	  for (var i = 0, len = pairs.length; i < len; ++i) {
+	    pair = pairs[i];
+	    parts = pair.split('=');
+	    obj[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
+	  }
+
+	  return obj;
+	}
+
+	/**
+	 * Expose parser.
+	 */
+
+	request.parseString = parseString;
+
+	/**
+	 * Default MIME type map.
+	 *
+	 *     superagent.types.xml = 'application/xml';
+	 *
+	 */
+
+	request.types = {
+	  html: 'text/html',
+	  json: 'application/json',
+	  xml: 'application/xml',
+	  urlencoded: 'application/x-www-form-urlencoded',
+	  'form': 'application/x-www-form-urlencoded',
+	  'form-data': 'application/x-www-form-urlencoded'
+	};
+
+	/**
+	 * Default serialization map.
+	 *
+	 *     superagent.serialize['application/xml'] = function(obj){
+	 *       return 'generated xml here';
+	 *     };
+	 *
+	 */
+
+	 request.serialize = {
+	   'application/x-www-form-urlencoded': serialize,
+	   'application/json': JSON.stringify
+	 };
+
+	 /**
+	  * Default parsers.
+	  *
+	  *     superagent.parse['application/xml'] = function(str){
+	  *       return { object parsed from str };
+	  *     };
+	  *
+	  */
+
+	request.parse = {
+	  'application/x-www-form-urlencoded': parseString,
+	  'application/json': JSON.parse
+	};
+
+	/**
+	 * Parse the given header `str` into
+	 * an object containing the mapped fields.
+	 *
+	 * @param {String} str
+	 * @return {Object}
+	 * @api private
+	 */
+
+	function parseHeader(str) {
+	  var lines = str.split(/\r?\n/);
+	  var fields = {};
+	  var index;
+	  var line;
+	  var field;
+	  var val;
+
+	  lines.pop(); // trailing CRLF
+
+	  for (var i = 0, len = lines.length; i < len; ++i) {
+	    line = lines[i];
+	    index = line.indexOf(':');
+	    field = line.slice(0, index).toLowerCase();
+	    val = trim(line.slice(index + 1));
+	    fields[field] = val;
+	  }
+
+	  return fields;
+	}
+
+	/**
+	 * Return the mime type for the given `str`.
+	 *
+	 * @param {String} str
+	 * @return {String}
+	 * @api private
+	 */
+
+	function type(str){
+	  return str.split(/ *; */).shift();
+	};
+
+	/**
+	 * Return header field parameters.
+	 *
+	 * @param {String} str
+	 * @return {Object}
+	 * @api private
+	 */
+
+	function params(str){
+	  return reduce(str.split(/ *; */), function(obj, str){
+	    var parts = str.split(/ *= */)
+	      , key = parts.shift()
+	      , val = parts.shift();
+
+	    if (key && val) obj[key] = val;
+	    return obj;
+	  }, {});
+	};
+
+	/**
+	 * Initialize a new `Response` with the given `xhr`.
+	 *
+	 *  - set flags (.ok, .error, etc)
+	 *  - parse header
+	 *
+	 * Examples:
+	 *
+	 *  Aliasing `superagent` as `request` is nice:
+	 *
+	 *      request = superagent;
+	 *
+	 *  We can use the promise-like API, or pass callbacks:
+	 *
+	 *      request.get('/').end(function(res){});
+	 *      request.get('/', function(res){});
+	 *
+	 *  Sending data can be chained:
+	 *
+	 *      request
+	 *        .post('/user')
+	 *        .send({ name: 'tj' })
+	 *        .end(function(res){});
+	 *
+	 *  Or passed to `.send()`:
+	 *
+	 *      request
+	 *        .post('/user')
+	 *        .send({ name: 'tj' }, function(res){});
+	 *
+	 *  Or passed to `.post()`:
+	 *
+	 *      request
+	 *        .post('/user', { name: 'tj' })
+	 *        .end(function(res){});
+	 *
+	 * Or further reduced to a single call for simple cases:
+	 *
+	 *      request
+	 *        .post('/user', { name: 'tj' }, function(res){});
+	 *
+	 * @param {XMLHTTPRequest} xhr
+	 * @param {Object} options
+	 * @api private
+	 */
+
+	function Response(req, options) {
+	  options = options || {};
+	  this.req = req;
+	  this.xhr = this.req.xhr;
+	  // responseText is accessible only if responseType is '' or 'text' and on older browsers
+	  this.text = ((this.req.method !='HEAD' && (this.xhr.responseType === '' || this.xhr.responseType === 'text')) || typeof this.xhr.responseType === 'undefined')
+	     ? this.xhr.responseText
+	     : null;
+	  this.statusText = this.req.xhr.statusText;
+	  this.setStatusProperties(this.xhr.status);
+	  this.header = this.headers = parseHeader(this.xhr.getAllResponseHeaders());
+	  // getAllResponseHeaders sometimes falsely returns "" for CORS requests, but
+	  // getResponseHeader still works. so we get content-type even if getting
+	  // other headers fails.
+	  this.header['content-type'] = this.xhr.getResponseHeader('content-type');
+	  this.setHeaderProperties(this.header);
+	  this.body = this.req.method != 'HEAD'
+	    ? this.parseBody(this.text ? this.text : this.xhr.response)
+	    : null;
+	}
+
+	/**
+	 * Get case-insensitive `field` value.
+	 *
+	 * @param {String} field
+	 * @return {String}
+	 * @api public
+	 */
+
+	Response.prototype.get = function(field){
+	  return this.header[field.toLowerCase()];
+	};
+
+	/**
+	 * Set header related properties:
+	 *
+	 *   - `.type` the content type without params
+	 *
+	 * A response of "Content-Type: text/plain; charset=utf-8"
+	 * will provide you with a `.type` of "text/plain".
+	 *
+	 * @param {Object} header
+	 * @api private
+	 */
+
+	Response.prototype.setHeaderProperties = function(header){
+	  // content-type
+	  var ct = this.header['content-type'] || '';
+	  this.type = type(ct);
+
+	  // params
+	  var obj = params(ct);
+	  for (var key in obj) this[key] = obj[key];
+	};
+
+	/**
+	 * Parse the given body `str`.
+	 *
+	 * Used for auto-parsing of bodies. Parsers
+	 * are defined on the `superagent.parse` object.
+	 *
+	 * @param {String} str
+	 * @return {Mixed}
+	 * @api private
+	 */
+
+	Response.prototype.parseBody = function(str){
+	  var parse = request.parse[this.type];
+	  return parse && str && (str.length || str instanceof Object)
+	    ? parse(str)
+	    : null;
+	};
+
+	/**
+	 * Set flags such as `.ok` based on `status`.
+	 *
+	 * For example a 2xx response will give you a `.ok` of __true__
+	 * whereas 5xx will be __false__ and `.error` will be __true__. The
+	 * `.clientError` and `.serverError` are also available to be more
+	 * specific, and `.statusType` is the class of error ranging from 1..5
+	 * sometimes useful for mapping respond colors etc.
+	 *
+	 * "sugar" properties are also defined for common cases. Currently providing:
+	 *
+	 *   - .noContent
+	 *   - .badRequest
+	 *   - .unauthorized
+	 *   - .notAcceptable
+	 *   - .notFound
+	 *
+	 * @param {Number} status
+	 * @api private
+	 */
+
+	Response.prototype.setStatusProperties = function(status){
+	  // handle IE9 bug: http://stackoverflow.com/questions/10046972/msie-returns-status-code-of-1223-for-ajax-request
+	  if (status === 1223) {
+	    status = 204;
+	  }
+
+	  var type = status / 100 | 0;
+
+	  // status / class
+	  this.status = status;
+	  this.statusType = type;
+
+	  // basics
+	  this.info = 1 == type;
+	  this.ok = 2 == type;
+	  this.clientError = 4 == type;
+	  this.serverError = 5 == type;
+	  this.error = (4 == type || 5 == type)
+	    ? this.toError()
+	    : false;
+
+	  // sugar
+	  this.accepted = 202 == status;
+	  this.noContent = 204 == status;
+	  this.badRequest = 400 == status;
+	  this.unauthorized = 401 == status;
+	  this.notAcceptable = 406 == status;
+	  this.notFound = 404 == status;
+	  this.forbidden = 403 == status;
+	};
+
+	/**
+	 * Return an `Error` representative of this response.
+	 *
+	 * @return {Error}
+	 * @api public
+	 */
+
+	Response.prototype.toError = function(){
+	  var req = this.req;
+	  var method = req.method;
+	  var url = req.url;
+
+	  var msg = 'cannot ' + method + ' ' + url + ' (' + this.status + ')';
+	  var err = new Error(msg);
+	  err.status = this.status;
+	  err.method = method;
+	  err.url = url;
+
+	  return err;
+	};
+
+	/**
+	 * Expose `Response`.
+	 */
+
+	request.Response = Response;
+
+	/**
+	 * Initialize a new `Request` with the given `method` and `url`.
+	 *
+	 * @param {String} method
+	 * @param {String} url
+	 * @api public
+	 */
+
+	function Request(method, url) {
+	  var self = this;
+	  Emitter.call(this);
+	  this._query = this._query || [];
+	  this.method = method;
+	  this.url = url;
+	  this.header = {};
+	  this._header = {};
+	  this.on('end', function(){
+	    var err = null;
+	    var res = null;
+
+	    try {
+	      res = new Response(self);
+	    } catch(e) {
+	      err = new Error('Parser is unable to parse the response');
+	      err.parse = true;
+	      err.original = e;
+	      return self.callback(err);
+	    }
+
+	    self.emit('response', res);
+
+	    if (err) {
+	      return self.callback(err, res);
+	    }
+
+	    if (res.status >= 200 && res.status < 300) {
+	      return self.callback(err, res);
+	    }
+
+	    var new_err = new Error(res.statusText || 'Unsuccessful HTTP response');
+	    new_err.original = err;
+	    new_err.response = res;
+	    new_err.status = res.status;
+
+	    self.callback(err || new_err, res);
+	  });
+	}
+
+	/**
+	 * Mixin `Emitter`.
+	 */
+
+	Emitter(Request.prototype);
+
+	/**
+	 * Allow for extension
+	 */
+
+	Request.prototype.use = function(fn) {
+	  fn(this);
+	  return this;
+	}
+
+	/**
+	 * Set timeout to `ms`.
+	 *
+	 * @param {Number} ms
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.timeout = function(ms){
+	  this._timeout = ms;
+	  return this;
+	};
+
+	/**
+	 * Clear previous timeout.
+	 *
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.clearTimeout = function(){
+	  this._timeout = 0;
+	  clearTimeout(this._timer);
+	  return this;
+	};
+
+	/**
+	 * Abort the request, and clear potential timeout.
+	 *
+	 * @return {Request}
+	 * @api public
+	 */
+
+	Request.prototype.abort = function(){
+	  if (this.aborted) return;
+	  this.aborted = true;
+	  this.xhr.abort();
+	  this.clearTimeout();
+	  this.emit('abort');
+	  return this;
+	};
+
+	/**
+	 * Set header `field` to `val`, or multiple fields with one object.
+	 *
+	 * Examples:
+	 *
+	 *      req.get('/')
+	 *        .set('Accept', 'application/json')
+	 *        .set('X-API-Key', 'foobar')
+	 *        .end(callback);
+	 *
+	 *      req.get('/')
+	 *        .set({ Accept: 'application/json', 'X-API-Key': 'foobar' })
+	 *        .end(callback);
+	 *
+	 * @param {String|Object} field
+	 * @param {String} val
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.set = function(field, val){
+	  if (isObject(field)) {
+	    for (var key in field) {
+	      this.set(key, field[key]);
+	    }
+	    return this;
+	  }
+	  this._header[field.toLowerCase()] = val;
+	  this.header[field] = val;
+	  return this;
+	};
+
+	/**
+	 * Remove header `field`.
+	 *
+	 * Example:
+	 *
+	 *      req.get('/')
+	 *        .unset('User-Agent')
+	 *        .end(callback);
+	 *
+	 * @param {String} field
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.unset = function(field){
+	  delete this._header[field.toLowerCase()];
+	  delete this.header[field];
+	  return this;
+	};
+
+	/**
+	 * Get case-insensitive header `field` value.
+	 *
+	 * @param {String} field
+	 * @return {String}
+	 * @api private
+	 */
+
+	Request.prototype.getHeader = function(field){
+	  return this._header[field.toLowerCase()];
+	};
+
+	/**
+	 * Set Content-Type to `type`, mapping values from `request.types`.
+	 *
+	 * Examples:
+	 *
+	 *      superagent.types.xml = 'application/xml';
+	 *
+	 *      request.post('/')
+	 *        .type('xml')
+	 *        .send(xmlstring)
+	 *        .end(callback);
+	 *
+	 *      request.post('/')
+	 *        .type('application/xml')
+	 *        .send(xmlstring)
+	 *        .end(callback);
+	 *
+	 * @param {String} type
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.type = function(type){
+	  this.set('Content-Type', request.types[type] || type);
+	  return this;
+	};
+
+	/**
+	 * Set Accept to `type`, mapping values from `request.types`.
+	 *
+	 * Examples:
+	 *
+	 *      superagent.types.json = 'application/json';
+	 *
+	 *      request.get('/agent')
+	 *        .accept('json')
+	 *        .end(callback);
+	 *
+	 *      request.get('/agent')
+	 *        .accept('application/json')
+	 *        .end(callback);
+	 *
+	 * @param {String} accept
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.accept = function(type){
+	  this.set('Accept', request.types[type] || type);
+	  return this;
+	};
+
+	/**
+	 * Set Authorization field value with `user` and `pass`.
+	 *
+	 * @param {String} user
+	 * @param {String} pass
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.auth = function(user, pass){
+	  var str = btoa(user + ':' + pass);
+	  this.set('Authorization', 'Basic ' + str);
+	  return this;
+	};
+
+	/**
+	* Add query-string `val`.
+	*
+	* Examples:
+	*
+	*   request.get('/shoes')
+	*     .query('size=10')
+	*     .query({ color: 'blue' })
+	*
+	* @param {Object|String} val
+	* @return {Request} for chaining
+	* @api public
+	*/
+
+	Request.prototype.query = function(val){
+	  if ('string' != typeof val) val = serialize(val);
+	  if (val) this._query.push(val);
+	  return this;
+	};
+
+	/**
+	 * Write the field `name` and `val` for "multipart/form-data"
+	 * request bodies.
+	 *
+	 * ``` js
+	 * request.post('/upload')
+	 *   .field('foo', 'bar')
+	 *   .end(callback);
+	 * ```
+	 *
+	 * @param {String} name
+	 * @param {String|Blob|File} val
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.field = function(name, val){
+	  if (!this._formData) this._formData = new root.FormData();
+	  this._formData.append(name, val);
+	  return this;
+	};
+
+	/**
+	 * Queue the given `file` as an attachment to the specified `field`,
+	 * with optional `filename`.
+	 *
+	 * ``` js
+	 * request.post('/upload')
+	 *   .attach(new Blob(['<a id="a"><b id="b">hey!</b></a>'], { type: "text/html"}))
+	 *   .end(callback);
+	 * ```
+	 *
+	 * @param {String} field
+	 * @param {Blob|File} file
+	 * @param {String} filename
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.attach = function(field, file, filename){
+	  if (!this._formData) this._formData = new root.FormData();
+	  this._formData.append(field, file, filename);
+	  return this;
+	};
+
+	/**
+	 * Send `data`, defaulting the `.type()` to "json" when
+	 * an object is given.
+	 *
+	 * Examples:
+	 *
+	 *       // querystring
+	 *       request.get('/search')
+	 *         .end(callback)
+	 *
+	 *       // multiple data "writes"
+	 *       request.get('/search')
+	 *         .send({ search: 'query' })
+	 *         .send({ range: '1..5' })
+	 *         .send({ order: 'desc' })
+	 *         .end(callback)
+	 *
+	 *       // manual json
+	 *       request.post('/user')
+	 *         .type('json')
+	 *         .send('{"name":"tj"})
+	 *         .end(callback)
+	 *
+	 *       // auto json
+	 *       request.post('/user')
+	 *         .send({ name: 'tj' })
+	 *         .end(callback)
+	 *
+	 *       // manual x-www-form-urlencoded
+	 *       request.post('/user')
+	 *         .type('form')
+	 *         .send('name=tj')
+	 *         .end(callback)
+	 *
+	 *       // auto x-www-form-urlencoded
+	 *       request.post('/user')
+	 *         .type('form')
+	 *         .send({ name: 'tj' })
+	 *         .end(callback)
+	 *
+	 *       // defaults to x-www-form-urlencoded
+	  *      request.post('/user')
+	  *        .send('name=tobi')
+	  *        .send('species=ferret')
+	  *        .end(callback)
+	 *
+	 * @param {String|Object} data
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.send = function(data){
+	  var obj = isObject(data);
+	  var type = this.getHeader('Content-Type');
+
+	  // merge
+	  if (obj && isObject(this._data)) {
+	    for (var key in data) {
+	      this._data[key] = data[key];
+	    }
+	  } else if ('string' == typeof data) {
+	    if (!type) this.type('form');
+	    type = this.getHeader('Content-Type');
+	    if ('application/x-www-form-urlencoded' == type) {
+	      this._data = this._data
+	        ? this._data + '&' + data
+	        : data;
+	    } else {
+	      this._data = (this._data || '') + data;
+	    }
+	  } else {
+	    this._data = data;
+	  }
+
+	  if (!obj || isHost(data)) return this;
+	  if (!type) this.type('json');
+	  return this;
+	};
+
+	/**
+	 * Invoke the callback with `err` and `res`
+	 * and handle arity check.
+	 *
+	 * @param {Error} err
+	 * @param {Response} res
+	 * @api private
+	 */
+
+	Request.prototype.callback = function(err, res){
+	  var fn = this._callback;
+	  this.clearTimeout();
+	  fn(err, res);
+	};
+
+	/**
+	 * Invoke callback with x-domain error.
+	 *
+	 * @api private
+	 */
+
+	Request.prototype.crossDomainError = function(){
+	  var err = new Error('Origin is not allowed by Access-Control-Allow-Origin');
+	  err.crossDomain = true;
+	  this.callback(err);
+	};
+
+	/**
+	 * Invoke callback with timeout error.
+	 *
+	 * @api private
+	 */
+
+	Request.prototype.timeoutError = function(){
+	  var timeout = this._timeout;
+	  var err = new Error('timeout of ' + timeout + 'ms exceeded');
+	  err.timeout = timeout;
+	  this.callback(err);
+	};
+
+	/**
+	 * Enable transmission of cookies with x-domain requests.
+	 *
+	 * Note that for this to work the origin must not be
+	 * using "Access-Control-Allow-Origin" with a wildcard,
+	 * and also must set "Access-Control-Allow-Credentials"
+	 * to "true".
+	 *
+	 * @api public
+	 */
+
+	Request.prototype.withCredentials = function(){
+	  this._withCredentials = true;
+	  return this;
+	};
+
+	/**
+	 * Initiate request, invoking callback `fn(res)`
+	 * with an instanceof `Response`.
+	 *
+	 * @param {Function} fn
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.end = function(fn){
+	  var self = this;
+	  var xhr = this.xhr = request.getXHR();
+	  var query = this._query.join('&');
+	  var timeout = this._timeout;
+	  var data = this._formData || this._data;
+
+	  // store callback
+	  this._callback = fn || noop;
+
+	  // state change
+	  xhr.onreadystatechange = function(){
+	    if (4 != xhr.readyState) return;
+
+	    // In IE9, reads to any property (e.g. status) off of an aborted XHR will
+	    // result in the error "Could not complete the operation due to error c00c023f"
+	    var status;
+	    try { status = xhr.status } catch(e) { status = 0; }
+
+	    if (0 == status) {
+	      if (self.timedout) return self.timeoutError();
+	      if (self.aborted) return;
+	      return self.crossDomainError();
+	    }
+	    self.emit('end');
+	  };
+
+	  // progress
+	  var handleProgress = function(e){
+	    if (e.total > 0) {
+	      e.percent = e.loaded / e.total * 100;
+	    }
+	    self.emit('progress', e);
+	  };
+	  if (this.hasListeners('progress')) {
+	    xhr.onprogress = handleProgress;
+	  }
+	  try {
+	    if (xhr.upload && this.hasListeners('progress')) {
+	      xhr.upload.onprogress = handleProgress;
+	    }
+	  } catch(e) {
+	    // Accessing xhr.upload fails in IE from a web worker, so just pretend it doesn't exist.
+	    // Reported here:
+	    // https://connect.microsoft.com/IE/feedback/details/837245/xmlhttprequest-upload-throws-invalid-argument-when-used-from-web-worker-context
+	  }
+
+	  // timeout
+	  if (timeout && !this._timer) {
+	    this._timer = setTimeout(function(){
+	      self.timedout = true;
+	      self.abort();
+	    }, timeout);
+	  }
+
+	  // querystring
+	  if (query) {
+	    query = request.serializeObject(query);
+	    this.url += ~this.url.indexOf('?')
+	      ? '&' + query
+	      : '?' + query;
+	  }
+
+	  // initiate request
+	  xhr.open(this.method, this.url, true);
+
+	  // CORS
+	  if (this._withCredentials) xhr.withCredentials = true;
+
+	  // body
+	  if ('GET' != this.method && 'HEAD' != this.method && 'string' != typeof data && !isHost(data)) {
+	    // serialize stuff
+	    var serialize = request.serialize[this.getHeader('Content-Type')];
+	    if (serialize) data = serialize(data);
+	  }
+
+	  // set header fields
+	  for (var field in this.header) {
+	    if (null == this.header[field]) continue;
+	    xhr.setRequestHeader(field, this.header[field]);
+	  }
+
+	  // send stuff
+	  this.emit('request', this);
+	  xhr.send(data);
+	  return this;
+	};
+
+	/**
+	 * Expose `Request`.
+	 */
+
+	request.Request = Request;
+
+	/**
+	 * Issue a request:
+	 *
+	 * Examples:
+	 *
+	 *    request('GET', '/users').end(callback)
+	 *    request('/users').end(callback)
+	 *    request('/users', callback)
+	 *
+	 * @param {String} method
+	 * @param {String|Function} url or callback
+	 * @return {Request}
+	 * @api public
+	 */
+
+	function request(method, url) {
+	  // callback
+	  if ('function' == typeof url) {
+	    return new Request('GET', method).end(url);
+	  }
+
+	  // url first
+	  if (1 == arguments.length) {
+	    return new Request('GET', method);
+	  }
+
+	  return new Request(method, url);
+	}
+
+	/**
+	 * GET `url` with optional callback `fn(res)`.
+	 *
+	 * @param {String} url
+	 * @param {Mixed|Function} data or fn
+	 * @param {Function} fn
+	 * @return {Request}
+	 * @api public
+	 */
+
+	request.get = function(url, data, fn){
+	  var req = request('GET', url);
+	  if ('function' == typeof data) fn = data, data = null;
+	  if (data) req.query(data);
+	  if (fn) req.end(fn);
+	  return req;
+	};
+
+	/**
+	 * HEAD `url` with optional callback `fn(res)`.
+	 *
+	 * @param {String} url
+	 * @param {Mixed|Function} data or fn
+	 * @param {Function} fn
+	 * @return {Request}
+	 * @api public
+	 */
+
+	request.head = function(url, data, fn){
+	  var req = request('HEAD', url);
+	  if ('function' == typeof data) fn = data, data = null;
+	  if (data) req.send(data);
+	  if (fn) req.end(fn);
+	  return req;
+	};
+
+	/**
+	 * DELETE `url` with optional callback `fn(res)`.
+	 *
+	 * @param {String} url
+	 * @param {Function} fn
+	 * @return {Request}
+	 * @api public
+	 */
+
+	request.del = function(url, fn){
+	  var req = request('DELETE', url);
+	  if (fn) req.end(fn);
+	  return req;
+	};
+
+	/**
+	 * PATCH `url` with optional `data` and callback `fn(res)`.
+	 *
+	 * @param {String} url
+	 * @param {Mixed} data
+	 * @param {Function} fn
+	 * @return {Request}
+	 * @api public
+	 */
+
+	request.patch = function(url, data, fn){
+	  var req = request('PATCH', url);
+	  if ('function' == typeof data) fn = data, data = null;
+	  if (data) req.send(data);
+	  if (fn) req.end(fn);
+	  return req;
+	};
+
+	/**
+	 * POST `url` with optional `data` and callback `fn(res)`.
+	 *
+	 * @param {String} url
+	 * @param {Mixed} data
+	 * @param {Function} fn
+	 * @return {Request}
+	 * @api public
+	 */
+
+	request.post = function(url, data, fn){
+	  var req = request('POST', url);
+	  if ('function' == typeof data) fn = data, data = null;
+	  if (data) req.send(data);
+	  if (fn) req.end(fn);
+	  return req;
+	};
+
+	/**
+	 * PUT `url` with optional `data` and callback `fn(res)`.
+	 *
+	 * @param {String} url
+	 * @param {Mixed|Function} data or fn
+	 * @param {Function} fn
+	 * @return {Request}
+	 * @api public
+	 */
+
+	request.put = function(url, data, fn){
+	  var req = request('PUT', url);
+	  if ('function' == typeof data) fn = data, data = null;
+	  if (data) req.send(data);
+	  if (fn) req.end(fn);
+	  return req;
+	};
+
+	/**
+	 * Expose `request`.
+	 */
+
+	module.exports = request;
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Expose `Emitter`.
+	 */
+
+	module.exports = Emitter;
+
+	/**
+	 * Initialize a new `Emitter`.
+	 *
+	 * @api public
+	 */
+
+	function Emitter(obj) {
+	  if (obj) return mixin(obj);
+	};
+
+	/**
+	 * Mixin the emitter properties.
+	 *
+	 * @param {Object} obj
+	 * @return {Object}
+	 * @api private
+	 */
+
+	function mixin(obj) {
+	  for (var key in Emitter.prototype) {
+	    obj[key] = Emitter.prototype[key];
+	  }
+	  return obj;
+	}
+
+	/**
+	 * Listen on the given `event` with `fn`.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+
+	Emitter.prototype.on =
+	Emitter.prototype.addEventListener = function(event, fn){
+	  this._callbacks = this._callbacks || {};
+	  (this._callbacks[event] = this._callbacks[event] || [])
+	    .push(fn);
+	  return this;
+	};
+
+	/**
+	 * Adds an `event` listener that will be invoked a single
+	 * time then automatically removed.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+
+	Emitter.prototype.once = function(event, fn){
+	  var self = this;
+	  this._callbacks = this._callbacks || {};
+
+	  function on() {
+	    self.off(event, on);
+	    fn.apply(this, arguments);
+	  }
+
+	  on.fn = fn;
+	  this.on(event, on);
+	  return this;
+	};
+
+	/**
+	 * Remove the given callback for `event` or all
+	 * registered callbacks.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+
+	Emitter.prototype.off =
+	Emitter.prototype.removeListener =
+	Emitter.prototype.removeAllListeners =
+	Emitter.prototype.removeEventListener = function(event, fn){
+	  this._callbacks = this._callbacks || {};
+
+	  // all
+	  if (0 == arguments.length) {
+	    this._callbacks = {};
+	    return this;
+	  }
+
+	  // specific event
+	  var callbacks = this._callbacks[event];
+	  if (!callbacks) return this;
+
+	  // remove all handlers
+	  if (1 == arguments.length) {
+	    delete this._callbacks[event];
+	    return this;
+	  }
+
+	  // remove specific handler
+	  var cb;
+	  for (var i = 0; i < callbacks.length; i++) {
+	    cb = callbacks[i];
+	    if (cb === fn || cb.fn === fn) {
+	      callbacks.splice(i, 1);
+	      break;
+	    }
+	  }
+	  return this;
+	};
+
+	/**
+	 * Emit `event` with the given args.
+	 *
+	 * @param {String} event
+	 * @param {Mixed} ...
+	 * @return {Emitter}
+	 */
+
+	Emitter.prototype.emit = function(event){
+	  this._callbacks = this._callbacks || {};
+	  var args = [].slice.call(arguments, 1)
+	    , callbacks = this._callbacks[event];
+
+	  if (callbacks) {
+	    callbacks = callbacks.slice(0);
+	    for (var i = 0, len = callbacks.length; i < len; ++i) {
+	      callbacks[i].apply(this, args);
+	    }
+	  }
+
+	  return this;
+	};
+
+	/**
+	 * Return array of callbacks for `event`.
+	 *
+	 * @param {String} event
+	 * @return {Array}
+	 * @api public
+	 */
+
+	Emitter.prototype.listeners = function(event){
+	  this._callbacks = this._callbacks || {};
+	  return this._callbacks[event] || [];
+	};
+
+	/**
+	 * Check if this emitter has `event` handlers.
+	 *
+	 * @param {String} event
+	 * @return {Boolean}
+	 * @api public
+	 */
+
+	Emitter.prototype.hasListeners = function(event){
+	  return !! this.listeners(event).length;
+	};
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Reduce `arr` with `fn`.
+	 *
+	 * @param {Array} arr
+	 * @param {Function} fn
+	 * @param {Mixed} initial
+	 *
+	 * TODO: combatible error handling?
+	 */
+
+	module.exports = function(arr, fn, initial){  
+	  var idx = 0;
+	  var len = arr.length;
+	  var curr = arguments.length == 3
+	    ? initial
+	    : arr[idx++];
+
+	  while (idx < len) {
+	    curr = fn.call(null, curr, arr[idx], ++idx, arr);
+	  }
+	  
+	  return curr;
+	};
+
+/***/ },
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process, setImmediate) {// vim:ts=4:sts=4:sw=4:
@@ -4594,1395 +5066,556 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	});
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30), __webpack_require__(31).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16), __webpack_require__(17).setImmediate))
 
 /***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module dependencies.
-	 */
-
-	var Emitter = __webpack_require__(34);
-	var reduce = __webpack_require__(33);
-
-	/**
-	 * Root reference for iframes.
-	 */
-
-	var root = 'undefined' == typeof window
-	  ? (this || self)
-	  : window;
-
-	/**
-	 * Noop.
-	 */
-
-	function noop(){};
-
-	/**
-	 * Check if `obj` is a host object,
-	 * we don't want to serialize these :)
-	 *
-	 * TODO: future proof, move to compoent land
-	 *
-	 * @param {Object} obj
-	 * @return {Boolean}
-	 * @api private
-	 */
-
-	function isHost(obj) {
-	  var str = {}.toString.call(obj);
-
-	  switch (str) {
-	    case '[object File]':
-	    case '[object Blob]':
-	    case '[object FormData]':
-	      return true;
-	    default:
-	      return false;
-	  }
-	}
-
-	/**
-	 * Determine XHR.
-	 */
-
-	request.getXHR = function () {
-	  if (root.XMLHttpRequest
-	      && (!root.location || 'file:' != root.location.protocol
-	          || !root.ActiveXObject)) {
-	    return new XMLHttpRequest;
-	  } else {
-	    try { return new ActiveXObject('Microsoft.XMLHTTP'); } catch(e) {}
-	    try { return new ActiveXObject('Msxml2.XMLHTTP.6.0'); } catch(e) {}
-	    try { return new ActiveXObject('Msxml2.XMLHTTP.3.0'); } catch(e) {}
-	    try { return new ActiveXObject('Msxml2.XMLHTTP'); } catch(e) {}
-	  }
-	  return false;
-	};
-
-	/**
-	 * Removes leading and trailing whitespace, added to support IE.
-	 *
-	 * @param {String} s
-	 * @return {String}
-	 * @api private
-	 */
-
-	var trim = ''.trim
-	  ? function(s) { return s.trim(); }
-	  : function(s) { return s.replace(/(^\s*|\s*$)/g, ''); };
-
-	/**
-	 * Check if `obj` is an object.
-	 *
-	 * @param {Object} obj
-	 * @return {Boolean}
-	 * @api private
-	 */
-
-	function isObject(obj) {
-	  return obj === Object(obj);
-	}
-
-	/**
-	 * Serialize the given `obj`.
-	 *
-	 * @param {Object} obj
-	 * @return {String}
-	 * @api private
-	 */
-
-	function serialize(obj) {
-	  if (!isObject(obj)) return obj;
-	  var pairs = [];
-	  for (var key in obj) {
-	    if (null != obj[key]) {
-	      pairs.push(encodeURIComponent(key)
-	        + '=' + encodeURIComponent(obj[key]));
-	    }
-	  }
-	  return pairs.join('&');
-	}
-
-	/**
-	 * Expose serialization method.
-	 */
-
-	 request.serializeObject = serialize;
-
-	 /**
-	  * Parse the given x-www-form-urlencoded `str`.
-	  *
-	  * @param {String} str
-	  * @return {Object}
-	  * @api private
-	  */
-
-	function parseString(str) {
-	  var obj = {};
-	  var pairs = str.split('&');
-	  var parts;
-	  var pair;
-
-	  for (var i = 0, len = pairs.length; i < len; ++i) {
-	    pair = pairs[i];
-	    parts = pair.split('=');
-	    obj[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
-	  }
-
-	  return obj;
-	}
-
-	/**
-	 * Expose parser.
-	 */
-
-	request.parseString = parseString;
-
-	/**
-	 * Default MIME type map.
-	 *
-	 *     superagent.types.xml = 'application/xml';
-	 *
-	 */
-
-	request.types = {
-	  html: 'text/html',
-	  json: 'application/json',
-	  xml: 'application/xml',
-	  urlencoded: 'application/x-www-form-urlencoded',
-	  'form': 'application/x-www-form-urlencoded',
-	  'form-data': 'application/x-www-form-urlencoded'
-	};
-
-	/**
-	 * Default serialization map.
-	 *
-	 *     superagent.serialize['application/xml'] = function(obj){
-	 *       return 'generated xml here';
-	 *     };
-	 *
-	 */
-
-	 request.serialize = {
-	   'application/x-www-form-urlencoded': serialize,
-	   'application/json': JSON.stringify
-	 };
-
-	 /**
-	  * Default parsers.
-	  *
-	  *     superagent.parse['application/xml'] = function(str){
-	  *       return { object parsed from str };
-	  *     };
-	  *
-	  */
-
-	request.parse = {
-	  'application/x-www-form-urlencoded': parseString,
-	  'application/json': JSON.parse
-	};
-
-	/**
-	 * Parse the given header `str` into
-	 * an object containing the mapped fields.
-	 *
-	 * @param {String} str
-	 * @return {Object}
-	 * @api private
-	 */
-
-	function parseHeader(str) {
-	  var lines = str.split(/\r?\n/);
-	  var fields = {};
-	  var index;
-	  var line;
-	  var field;
-	  var val;
-
-	  lines.pop(); // trailing CRLF
-
-	  for (var i = 0, len = lines.length; i < len; ++i) {
-	    line = lines[i];
-	    index = line.indexOf(':');
-	    field = line.slice(0, index).toLowerCase();
-	    val = trim(line.slice(index + 1));
-	    fields[field] = val;
-	  }
-
-	  return fields;
-	}
-
-	/**
-	 * Return the mime type for the given `str`.
-	 *
-	 * @param {String} str
-	 * @return {String}
-	 * @api private
-	 */
-
-	function type(str){
-	  return str.split(/ *; */).shift();
-	};
-
-	/**
-	 * Return header field parameters.
-	 *
-	 * @param {String} str
-	 * @return {Object}
-	 * @api private
-	 */
-
-	function params(str){
-	  return reduce(str.split(/ *; */), function(obj, str){
-	    var parts = str.split(/ *= */)
-	      , key = parts.shift()
-	      , val = parts.shift();
-
-	    if (key && val) obj[key] = val;
-	    return obj;
-	  }, {});
-	};
-
-	/**
-	 * Initialize a new `Response` with the given `xhr`.
-	 *
-	 *  - set flags (.ok, .error, etc)
-	 *  - parse header
-	 *
-	 * Examples:
-	 *
-	 *  Aliasing `superagent` as `request` is nice:
-	 *
-	 *      request = superagent;
-	 *
-	 *  We can use the promise-like API, or pass callbacks:
-	 *
-	 *      request.get('/').end(function(res){});
-	 *      request.get('/', function(res){});
-	 *
-	 *  Sending data can be chained:
-	 *
-	 *      request
-	 *        .post('/user')
-	 *        .send({ name: 'tj' })
-	 *        .end(function(res){});
-	 *
-	 *  Or passed to `.send()`:
-	 *
-	 *      request
-	 *        .post('/user')
-	 *        .send({ name: 'tj' }, function(res){});
-	 *
-	 *  Or passed to `.post()`:
-	 *
-	 *      request
-	 *        .post('/user', { name: 'tj' })
-	 *        .end(function(res){});
-	 *
-	 * Or further reduced to a single call for simple cases:
-	 *
-	 *      request
-	 *        .post('/user', { name: 'tj' }, function(res){});
-	 *
-	 * @param {XMLHTTPRequest} xhr
-	 * @param {Object} options
-	 * @api private
-	 */
-
-	function Response(req, options) {
-	  options = options || {};
-	  this.req = req;
-	  this.xhr = this.req.xhr;
-	  // responseText is accessible only if responseType is '' or 'text' and on older browsers
-	  this.text = ((this.req.method !='HEAD' && (this.xhr.responseType === '' || this.xhr.responseType === 'text')) || typeof this.xhr.responseType === 'undefined')
-	     ? this.xhr.responseText
-	     : null;
-	  this.statusText = this.req.xhr.statusText;
-	  this.setStatusProperties(this.xhr.status);
-	  this.header = this.headers = parseHeader(this.xhr.getAllResponseHeaders());
-	  // getAllResponseHeaders sometimes falsely returns "" for CORS requests, but
-	  // getResponseHeader still works. so we get content-type even if getting
-	  // other headers fails.
-	  this.header['content-type'] = this.xhr.getResponseHeader('content-type');
-	  this.setHeaderProperties(this.header);
-	  this.body = this.req.method != 'HEAD'
-	    ? this.parseBody(this.text ? this.text : this.xhr.response)
-	    : null;
-	}
-
-	/**
-	 * Get case-insensitive `field` value.
-	 *
-	 * @param {String} field
-	 * @return {String}
-	 * @api public
-	 */
-
-	Response.prototype.get = function(field){
-	  return this.header[field.toLowerCase()];
-	};
-
-	/**
-	 * Set header related properties:
-	 *
-	 *   - `.type` the content type without params
-	 *
-	 * A response of "Content-Type: text/plain; charset=utf-8"
-	 * will provide you with a `.type` of "text/plain".
-	 *
-	 * @param {Object} header
-	 * @api private
-	 */
-
-	Response.prototype.setHeaderProperties = function(header){
-	  // content-type
-	  var ct = this.header['content-type'] || '';
-	  this.type = type(ct);
-
-	  // params
-	  var obj = params(ct);
-	  for (var key in obj) this[key] = obj[key];
-	};
-
-	/**
-	 * Parse the given body `str`.
-	 *
-	 * Used for auto-parsing of bodies. Parsers
-	 * are defined on the `superagent.parse` object.
-	 *
-	 * @param {String} str
-	 * @return {Mixed}
-	 * @api private
-	 */
-
-	Response.prototype.parseBody = function(str){
-	  var parse = request.parse[this.type];
-	  return parse && str && (str.length || str instanceof Object)
-	    ? parse(str)
-	    : null;
-	};
-
-	/**
-	 * Set flags such as `.ok` based on `status`.
-	 *
-	 * For example a 2xx response will give you a `.ok` of __true__
-	 * whereas 5xx will be __false__ and `.error` will be __true__. The
-	 * `.clientError` and `.serverError` are also available to be more
-	 * specific, and `.statusType` is the class of error ranging from 1..5
-	 * sometimes useful for mapping respond colors etc.
-	 *
-	 * "sugar" properties are also defined for common cases. Currently providing:
-	 *
-	 *   - .noContent
-	 *   - .badRequest
-	 *   - .unauthorized
-	 *   - .notAcceptable
-	 *   - .notFound
-	 *
-	 * @param {Number} status
-	 * @api private
-	 */
-
-	Response.prototype.setStatusProperties = function(status){
-	  // handle IE9 bug: http://stackoverflow.com/questions/10046972/msie-returns-status-code-of-1223-for-ajax-request
-	  if (status === 1223) {
-	    status = 204;
-	  }
-
-	  var type = status / 100 | 0;
-
-	  // status / class
-	  this.status = status;
-	  this.statusType = type;
-
-	  // basics
-	  this.info = 1 == type;
-	  this.ok = 2 == type;
-	  this.clientError = 4 == type;
-	  this.serverError = 5 == type;
-	  this.error = (4 == type || 5 == type)
-	    ? this.toError()
-	    : false;
-
-	  // sugar
-	  this.accepted = 202 == status;
-	  this.noContent = 204 == status;
-	  this.badRequest = 400 == status;
-	  this.unauthorized = 401 == status;
-	  this.notAcceptable = 406 == status;
-	  this.notFound = 404 == status;
-	  this.forbidden = 403 == status;
-	};
-
-	/**
-	 * Return an `Error` representative of this response.
-	 *
-	 * @return {Error}
-	 * @api public
-	 */
-
-	Response.prototype.toError = function(){
-	  var req = this.req;
-	  var method = req.method;
-	  var url = req.url;
-
-	  var msg = 'cannot ' + method + ' ' + url + ' (' + this.status + ')';
-	  var err = new Error(msg);
-	  err.status = this.status;
-	  err.method = method;
-	  err.url = url;
-
-	  return err;
-	};
-
-	/**
-	 * Expose `Response`.
-	 */
-
-	request.Response = Response;
-
-	/**
-	 * Initialize a new `Request` with the given `method` and `url`.
-	 *
-	 * @param {String} method
-	 * @param {String} url
-	 * @api public
-	 */
-
-	function Request(method, url) {
-	  var self = this;
-	  Emitter.call(this);
-	  this._query = this._query || [];
-	  this.method = method;
-	  this.url = url;
-	  this.header = {};
-	  this._header = {};
-	  this.on('end', function(){
-	    var err = null;
-	    var res = null;
-
-	    try {
-	      res = new Response(self);
-	    } catch(e) {
-	      err = new Error('Parser is unable to parse the response');
-	      err.parse = true;
-	      err.original = e;
-	      return self.callback(err);
-	    }
-
-	    self.emit('response', res);
-
-	    if (err) {
-	      return self.callback(err, res);
-	    }
-
-	    if (res.status >= 200 && res.status < 300) {
-	      return self.callback(err, res);
-	    }
-
-	    var new_err = new Error(res.statusText || 'Unsuccessful HTTP response');
-	    new_err.original = err;
-	    new_err.response = res;
-	    new_err.status = res.status;
-
-	    self.callback(err || new_err, res);
-	  });
-	}
-
-	/**
-	 * Mixin `Emitter`.
-	 */
-
-	Emitter(Request.prototype);
-
-	/**
-	 * Allow for extension
-	 */
-
-	Request.prototype.use = function(fn) {
-	  fn(this);
-	  return this;
-	}
-
-	/**
-	 * Set timeout to `ms`.
-	 *
-	 * @param {Number} ms
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	Request.prototype.timeout = function(ms){
-	  this._timeout = ms;
-	  return this;
-	};
-
-	/**
-	 * Clear previous timeout.
-	 *
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	Request.prototype.clearTimeout = function(){
-	  this._timeout = 0;
-	  clearTimeout(this._timer);
-	  return this;
-	};
-
-	/**
-	 * Abort the request, and clear potential timeout.
-	 *
-	 * @return {Request}
-	 * @api public
-	 */
-
-	Request.prototype.abort = function(){
-	  if (this.aborted) return;
-	  this.aborted = true;
-	  this.xhr.abort();
-	  this.clearTimeout();
-	  this.emit('abort');
-	  return this;
-	};
-
-	/**
-	 * Set header `field` to `val`, or multiple fields with one object.
-	 *
-	 * Examples:
-	 *
-	 *      req.get('/')
-	 *        .set('Accept', 'application/json')
-	 *        .set('X-API-Key', 'foobar')
-	 *        .end(callback);
-	 *
-	 *      req.get('/')
-	 *        .set({ Accept: 'application/json', 'X-API-Key': 'foobar' })
-	 *        .end(callback);
-	 *
-	 * @param {String|Object} field
-	 * @param {String} val
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	Request.prototype.set = function(field, val){
-	  if (isObject(field)) {
-	    for (var key in field) {
-	      this.set(key, field[key]);
-	    }
-	    return this;
-	  }
-	  this._header[field.toLowerCase()] = val;
-	  this.header[field] = val;
-	  return this;
-	};
-
-	/**
-	 * Remove header `field`.
-	 *
-	 * Example:
-	 *
-	 *      req.get('/')
-	 *        .unset('User-Agent')
-	 *        .end(callback);
-	 *
-	 * @param {String} field
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	Request.prototype.unset = function(field){
-	  delete this._header[field.toLowerCase()];
-	  delete this.header[field];
-	  return this;
-	};
-
-	/**
-	 * Get case-insensitive header `field` value.
-	 *
-	 * @param {String} field
-	 * @return {String}
-	 * @api private
-	 */
-
-	Request.prototype.getHeader = function(field){
-	  return this._header[field.toLowerCase()];
-	};
-
-	/**
-	 * Set Content-Type to `type`, mapping values from `request.types`.
-	 *
-	 * Examples:
-	 *
-	 *      superagent.types.xml = 'application/xml';
-	 *
-	 *      request.post('/')
-	 *        .type('xml')
-	 *        .send(xmlstring)
-	 *        .end(callback);
-	 *
-	 *      request.post('/')
-	 *        .type('application/xml')
-	 *        .send(xmlstring)
-	 *        .end(callback);
-	 *
-	 * @param {String} type
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	Request.prototype.type = function(type){
-	  this.set('Content-Type', request.types[type] || type);
-	  return this;
-	};
-
-	/**
-	 * Set Accept to `type`, mapping values from `request.types`.
-	 *
-	 * Examples:
-	 *
-	 *      superagent.types.json = 'application/json';
-	 *
-	 *      request.get('/agent')
-	 *        .accept('json')
-	 *        .end(callback);
-	 *
-	 *      request.get('/agent')
-	 *        .accept('application/json')
-	 *        .end(callback);
-	 *
-	 * @param {String} accept
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	Request.prototype.accept = function(type){
-	  this.set('Accept', request.types[type] || type);
-	  return this;
-	};
-
-	/**
-	 * Set Authorization field value with `user` and `pass`.
-	 *
-	 * @param {String} user
-	 * @param {String} pass
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	Request.prototype.auth = function(user, pass){
-	  var str = btoa(user + ':' + pass);
-	  this.set('Authorization', 'Basic ' + str);
-	  return this;
-	};
-
-	/**
-	* Add query-string `val`.
-	*
-	* Examples:
-	*
-	*   request.get('/shoes')
-	*     .query('size=10')
-	*     .query({ color: 'blue' })
-	*
-	* @param {Object|String} val
-	* @return {Request} for chaining
-	* @api public
-	*/
-
-	Request.prototype.query = function(val){
-	  if ('string' != typeof val) val = serialize(val);
-	  if (val) this._query.push(val);
-	  return this;
-	};
-
-	/**
-	 * Write the field `name` and `val` for "multipart/form-data"
-	 * request bodies.
-	 *
-	 * ``` js
-	 * request.post('/upload')
-	 *   .field('foo', 'bar')
-	 *   .end(callback);
-	 * ```
-	 *
-	 * @param {String} name
-	 * @param {String|Blob|File} val
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	Request.prototype.field = function(name, val){
-	  if (!this._formData) this._formData = new root.FormData();
-	  this._formData.append(name, val);
-	  return this;
-	};
-
-	/**
-	 * Queue the given `file` as an attachment to the specified `field`,
-	 * with optional `filename`.
-	 *
-	 * ``` js
-	 * request.post('/upload')
-	 *   .attach(new Blob(['<a id="a"><b id="b">hey!</b></a>'], { type: "text/html"}))
-	 *   .end(callback);
-	 * ```
-	 *
-	 * @param {String} field
-	 * @param {Blob|File} file
-	 * @param {String} filename
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	Request.prototype.attach = function(field, file, filename){
-	  if (!this._formData) this._formData = new root.FormData();
-	  this._formData.append(field, file, filename);
-	  return this;
-	};
-
-	/**
-	 * Send `data`, defaulting the `.type()` to "json" when
-	 * an object is given.
-	 *
-	 * Examples:
-	 *
-	 *       // querystring
-	 *       request.get('/search')
-	 *         .end(callback)
-	 *
-	 *       // multiple data "writes"
-	 *       request.get('/search')
-	 *         .send({ search: 'query' })
-	 *         .send({ range: '1..5' })
-	 *         .send({ order: 'desc' })
-	 *         .end(callback)
-	 *
-	 *       // manual json
-	 *       request.post('/user')
-	 *         .type('json')
-	 *         .send('{"name":"tj"})
-	 *         .end(callback)
-	 *
-	 *       // auto json
-	 *       request.post('/user')
-	 *         .send({ name: 'tj' })
-	 *         .end(callback)
-	 *
-	 *       // manual x-www-form-urlencoded
-	 *       request.post('/user')
-	 *         .type('form')
-	 *         .send('name=tj')
-	 *         .end(callback)
-	 *
-	 *       // auto x-www-form-urlencoded
-	 *       request.post('/user')
-	 *         .type('form')
-	 *         .send({ name: 'tj' })
-	 *         .end(callback)
-	 *
-	 *       // defaults to x-www-form-urlencoded
-	  *      request.post('/user')
-	  *        .send('name=tobi')
-	  *        .send('species=ferret')
-	  *        .end(callback)
-	 *
-	 * @param {String|Object} data
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	Request.prototype.send = function(data){
-	  var obj = isObject(data);
-	  var type = this.getHeader('Content-Type');
-
-	  // merge
-	  if (obj && isObject(this._data)) {
-	    for (var key in data) {
-	      this._data[key] = data[key];
-	    }
-	  } else if ('string' == typeof data) {
-	    if (!type) this.type('form');
-	    type = this.getHeader('Content-Type');
-	    if ('application/x-www-form-urlencoded' == type) {
-	      this._data = this._data
-	        ? this._data + '&' + data
-	        : data;
+/* 16 */
+/***/ function(module, exports) {
+
+	// shim for using process in browser
+
+	var process = module.exports = {};
+	var queue = [];
+	var draining = false;
+	var currentQueue;
+	var queueIndex = -1;
+
+	function cleanUpNextTick() {
+	    draining = false;
+	    if (currentQueue.length) {
+	        queue = currentQueue.concat(queue);
 	    } else {
-	      this._data = (this._data || '') + data;
+	        queueIndex = -1;
 	    }
-	  } else {
-	    this._data = data;
-	  }
-
-	  if (!obj || isHost(data)) return this;
-	  if (!type) this.type('json');
-	  return this;
-	};
-
-	/**
-	 * Invoke the callback with `err` and `res`
-	 * and handle arity check.
-	 *
-	 * @param {Error} err
-	 * @param {Response} res
-	 * @api private
-	 */
-
-	Request.prototype.callback = function(err, res){
-	  var fn = this._callback;
-	  this.clearTimeout();
-	  fn(err, res);
-	};
-
-	/**
-	 * Invoke callback with x-domain error.
-	 *
-	 * @api private
-	 */
-
-	Request.prototype.crossDomainError = function(){
-	  var err = new Error('Origin is not allowed by Access-Control-Allow-Origin');
-	  err.crossDomain = true;
-	  this.callback(err);
-	};
-
-	/**
-	 * Invoke callback with timeout error.
-	 *
-	 * @api private
-	 */
-
-	Request.prototype.timeoutError = function(){
-	  var timeout = this._timeout;
-	  var err = new Error('timeout of ' + timeout + 'ms exceeded');
-	  err.timeout = timeout;
-	  this.callback(err);
-	};
-
-	/**
-	 * Enable transmission of cookies with x-domain requests.
-	 *
-	 * Note that for this to work the origin must not be
-	 * using "Access-Control-Allow-Origin" with a wildcard,
-	 * and also must set "Access-Control-Allow-Credentials"
-	 * to "true".
-	 *
-	 * @api public
-	 */
-
-	Request.prototype.withCredentials = function(){
-	  this._withCredentials = true;
-	  return this;
-	};
-
-	/**
-	 * Initiate request, invoking callback `fn(res)`
-	 * with an instanceof `Response`.
-	 *
-	 * @param {Function} fn
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	Request.prototype.end = function(fn){
-	  var self = this;
-	  var xhr = this.xhr = request.getXHR();
-	  var query = this._query.join('&');
-	  var timeout = this._timeout;
-	  var data = this._formData || this._data;
-
-	  // store callback
-	  this._callback = fn || noop;
-
-	  // state change
-	  xhr.onreadystatechange = function(){
-	    if (4 != xhr.readyState) return;
-
-	    // In IE9, reads to any property (e.g. status) off of an aborted XHR will
-	    // result in the error "Could not complete the operation due to error c00c023f"
-	    var status;
-	    try { status = xhr.status } catch(e) { status = 0; }
-
-	    if (0 == status) {
-	      if (self.timedout) return self.timeoutError();
-	      if (self.aborted) return;
-	      return self.crossDomainError();
+	    if (queue.length) {
+	        drainQueue();
 	    }
-	    self.emit('end');
-	  };
-
-	  // progress
-	  var handleProgress = function(e){
-	    if (e.total > 0) {
-	      e.percent = e.loaded / e.total * 100;
-	    }
-	    self.emit('progress', e);
-	  };
-	  if (this.hasListeners('progress')) {
-	    xhr.onprogress = handleProgress;
-	  }
-	  try {
-	    if (xhr.upload && this.hasListeners('progress')) {
-	      xhr.upload.onprogress = handleProgress;
-	    }
-	  } catch(e) {
-	    // Accessing xhr.upload fails in IE from a web worker, so just pretend it doesn't exist.
-	    // Reported here:
-	    // https://connect.microsoft.com/IE/feedback/details/837245/xmlhttprequest-upload-throws-invalid-argument-when-used-from-web-worker-context
-	  }
-
-	  // timeout
-	  if (timeout && !this._timer) {
-	    this._timer = setTimeout(function(){
-	      self.timedout = true;
-	      self.abort();
-	    }, timeout);
-	  }
-
-	  // querystring
-	  if (query) {
-	    query = request.serializeObject(query);
-	    this.url += ~this.url.indexOf('?')
-	      ? '&' + query
-	      : '?' + query;
-	  }
-
-	  // initiate request
-	  xhr.open(this.method, this.url, true);
-
-	  // CORS
-	  if (this._withCredentials) xhr.withCredentials = true;
-
-	  // body
-	  if ('GET' != this.method && 'HEAD' != this.method && 'string' != typeof data && !isHost(data)) {
-	    // serialize stuff
-	    var serialize = request.serialize[this.getHeader('Content-Type')];
-	    if (serialize) data = serialize(data);
-	  }
-
-	  // set header fields
-	  for (var field in this.header) {
-	    if (null == this.header[field]) continue;
-	    xhr.setRequestHeader(field, this.header[field]);
-	  }
-
-	  // send stuff
-	  this.emit('request', this);
-	  xhr.send(data);
-	  return this;
-	};
-
-	/**
-	 * Expose `Request`.
-	 */
-
-	request.Request = Request;
-
-	/**
-	 * Issue a request:
-	 *
-	 * Examples:
-	 *
-	 *    request('GET', '/users').end(callback)
-	 *    request('/users').end(callback)
-	 *    request('/users', callback)
-	 *
-	 * @param {String} method
-	 * @param {String|Function} url or callback
-	 * @return {Request}
-	 * @api public
-	 */
-
-	function request(method, url) {
-	  // callback
-	  if ('function' == typeof url) {
-	    return new Request('GET', method).end(url);
-	  }
-
-	  // url first
-	  if (1 == arguments.length) {
-	    return new Request('GET', method);
-	  }
-
-	  return new Request(method, url);
 	}
 
-	/**
-	 * GET `url` with optional callback `fn(res)`.
-	 *
-	 * @param {String} url
-	 * @param {Mixed|Function} data or fn
-	 * @param {Function} fn
-	 * @return {Request}
-	 * @api public
-	 */
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    var timeout = setTimeout(cleanUpNextTick);
+	    draining = true;
 
-	request.get = function(url, data, fn){
-	  var req = request('GET', url);
-	  if ('function' == typeof data) fn = data, data = null;
-	  if (data) req.query(data);
-	  if (fn) req.end(fn);
-	  return req;
+	    var len = queue.length;
+	    while(len) {
+	        currentQueue = queue;
+	        queue = [];
+	        while (++queueIndex < len) {
+	            currentQueue[queueIndex].run();
+	        }
+	        queueIndex = -1;
+	        len = queue.length;
+	    }
+	    currentQueue = null;
+	    draining = false;
+	    clearTimeout(timeout);
+	}
+
+	process.nextTick = function (fun) {
+	    var args = new Array(arguments.length - 1);
+	    if (arguments.length > 1) {
+	        for (var i = 1; i < arguments.length; i++) {
+	            args[i - 1] = arguments[i];
+	        }
+	    }
+	    queue.push(new Item(fun, args));
+	    if (queue.length === 1 && !draining) {
+	        setTimeout(drainQueue, 0);
+	    }
 	};
 
-	/**
-	 * HEAD `url` with optional callback `fn(res)`.
-	 *
-	 * @param {String} url
-	 * @param {Mixed|Function} data or fn
-	 * @param {Function} fn
-	 * @return {Request}
-	 * @api public
-	 */
+	// v8 likes predictible objects
+	function Item(fun, array) {
+	    this.fun = fun;
+	    this.array = array;
+	}
+	Item.prototype.run = function () {
+	    this.fun.apply(null, this.array);
+	};
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
 
-	request.head = function(url, data, fn){
-	  var req = request('HEAD', url);
-	  if ('function' == typeof data) fn = data, data = null;
-	  if (data) req.send(data);
-	  if (fn) req.end(fn);
-	  return req;
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
 	};
 
-	/**
-	 * DELETE `url` with optional callback `fn(res)`.
-	 *
-	 * @param {String} url
-	 * @param {Function} fn
-	 * @return {Request}
-	 * @api public
-	 */
-
-	request.del = function(url, fn){
-	  var req = request('DELETE', url);
-	  if (fn) req.end(fn);
-	  return req;
+	// TODO(shtylman)
+	process.cwd = function () { return '/' };
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
 	};
-
-	/**
-	 * PATCH `url` with optional `data` and callback `fn(res)`.
-	 *
-	 * @param {String} url
-	 * @param {Mixed} data
-	 * @param {Function} fn
-	 * @return {Request}
-	 * @api public
-	 */
-
-	request.patch = function(url, data, fn){
-	  var req = request('PATCH', url);
-	  if ('function' == typeof data) fn = data, data = null;
-	  if (data) req.send(data);
-	  if (fn) req.end(fn);
-	  return req;
-	};
-
-	/**
-	 * POST `url` with optional `data` and callback `fn(res)`.
-	 *
-	 * @param {String} url
-	 * @param {Mixed} data
-	 * @param {Function} fn
-	 * @return {Request}
-	 * @api public
-	 */
-
-	request.post = function(url, data, fn){
-	  var req = request('POST', url);
-	  if ('function' == typeof data) fn = data, data = null;
-	  if (data) req.send(data);
-	  if (fn) req.end(fn);
-	  return req;
-	};
-
-	/**
-	 * PUT `url` with optional `data` and callback `fn(res)`.
-	 *
-	 * @param {String} url
-	 * @param {Mixed|Function} data or fn
-	 * @param {Function} fn
-	 * @return {Request}
-	 * @api public
-	 */
-
-	request.put = function(url, data, fn){
-	  var req = request('PUT', url);
-	  if ('function' == typeof data) fn = data, data = null;
-	  if (data) req.send(data);
-	  if (fn) req.end(fn);
-	  return req;
-	};
-
-	/**
-	 * Expose `request`.
-	 */
-
-	module.exports = request;
+	process.umask = function() { return 0; };
 
 
 /***/ },
-/* 28 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*
-	 * Copyright (c) 2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule Dispatcher
-	 * @typechecks
-	 */
+	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(16).nextTick;
+	var apply = Function.prototype.apply;
+	var slice = Array.prototype.slice;
+	var immediateIds = {};
+	var nextImmediateId = 0;
 
-	"use strict";
+	// DOM APIs, for completeness
 
-	var invariant = __webpack_require__(32);
+	exports.setTimeout = function() {
+	  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+	};
+	exports.setInterval = function() {
+	  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+	};
+	exports.clearTimeout =
+	exports.clearInterval = function(timeout) { timeout.close(); };
 
-	var _lastID = 1;
-	var _prefix = 'ID_';
+	function Timeout(id, clearFn) {
+	  this._id = id;
+	  this._clearFn = clearFn;
+	}
+	Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+	Timeout.prototype.close = function() {
+	  this._clearFn.call(window, this._id);
+	};
 
-	/**
-	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
-	 * different from generic pub-sub systems in two ways:
-	 *
-	 *   1) Callbacks are not subscribed to particular events. Every payload is
-	 *      dispatched to every registered callback.
-	 *   2) Callbacks can be deferred in whole or part until other callbacks have
-	 *      been executed.
-	 *
-	 * For example, consider this hypothetical flight destination form, which
-	 * selects a default city when a country is selected:
-	 *
-	 *   var flightDispatcher = new Dispatcher();
-	 *
-	 *   // Keeps track of which country is selected
-	 *   var CountryStore = {country: null};
-	 *
-	 *   // Keeps track of which city is selected
-	 *   var CityStore = {city: null};
-	 *
-	 *   // Keeps track of the base flight price of the selected city
-	 *   var FlightPriceStore = {price: null}
-	 *
-	 * When a user changes the selected city, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'city-update',
-	 *     selectedCity: 'paris'
-	 *   });
-	 *
-	 * This payload is digested by `CityStore`:
-	 *
-	 *   flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'city-update') {
-	 *       CityStore.city = payload.selectedCity;
-	 *     }
-	 *   });
-	 *
-	 * When the user selects a country, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'country-update',
-	 *     selectedCountry: 'australia'
-	 *   });
-	 *
-	 * This payload is digested by both stores:
-	 *
-	 *    CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       CountryStore.country = payload.selectedCountry;
-	 *     }
-	 *   });
-	 *
-	 * When the callback to update `CountryStore` is registered, we save a reference
-	 * to the returned token. Using this token with `waitFor()`, we can guarantee
-	 * that `CountryStore` is updated before the callback that updates `CityStore`
-	 * needs to query its data.
-	 *
-	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       // `CountryStore.country` may not be updated.
-	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
-	 *       // `CountryStore.country` is now guaranteed to be updated.
-	 *
-	 *       // Select the default city for the new country
-	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
-	 *     }
-	 *   });
-	 *
-	 * The usage of `waitFor()` can be chained, for example:
-	 *
-	 *   FlightPriceStore.dispatchToken =
-	 *     flightDispatcher.register(function(payload) {
-	 *       switch (payload.actionType) {
-	 *         case 'country-update':
-	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
-	 *           FlightPriceStore.price =
-	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
-	 *           break;
-	 *
-	 *         case 'city-update':
-	 *           FlightPriceStore.price =
-	 *             FlightPriceStore(CountryStore.country, CityStore.city);
-	 *           break;
-	 *     }
-	 *   });
-	 *
-	 * The `country-update` payload will be guaranteed to invoke the stores'
-	 * registered callbacks in order: `CountryStore`, `CityStore`, then
-	 * `FlightPriceStore`.
-	 */
+	// Does not start the time, just sets up the members needed.
+	exports.enroll = function(item, msecs) {
+	  clearTimeout(item._idleTimeoutId);
+	  item._idleTimeout = msecs;
+	};
 
-	  function Dispatcher() {
-	    this.$Dispatcher_callbacks = {};
-	    this.$Dispatcher_isPending = {};
-	    this.$Dispatcher_isHandled = {};
-	    this.$Dispatcher_isDispatching = false;
-	    this.$Dispatcher_pendingPayload = null;
+	exports.unenroll = function(item) {
+	  clearTimeout(item._idleTimeoutId);
+	  item._idleTimeout = -1;
+	};
+
+	exports._unrefActive = exports.active = function(item) {
+	  clearTimeout(item._idleTimeoutId);
+
+	  var msecs = item._idleTimeout;
+	  if (msecs >= 0) {
+	    item._idleTimeoutId = setTimeout(function onTimeout() {
+	      if (item._onTimeout)
+	        item._onTimeout();
+	    }, msecs);
 	  }
+	};
 
-	  /**
-	   * Registers a callback to be invoked with every dispatched payload. Returns
-	   * a token that can be used with `waitFor()`.
-	   *
-	   * @param {function} callback
-	   * @return {string}
-	   */
-	  Dispatcher.prototype.register=function(callback) {
-	    var id = _prefix + _lastID++;
-	    this.$Dispatcher_callbacks[id] = callback;
-	    return id;
-	  };
+	// That's not how node.js implements it but the exposed api is the same.
+	exports.setImmediate = typeof setImmediate === "function" ? setImmediate : function(fn) {
+	  var id = nextImmediateId++;
+	  var args = arguments.length < 2 ? false : slice.call(arguments, 1);
 
-	  /**
-	   * Removes a callback based on its token.
-	   *
-	   * @param {string} id
-	   */
-	  Dispatcher.prototype.unregister=function(id) {
-	    invariant(
-	      this.$Dispatcher_callbacks[id],
-	      'Dispatcher.unregister(...): `%s` does not map to a registered callback.',
-	      id
-	    );
-	    delete this.$Dispatcher_callbacks[id];
-	  };
+	  immediateIds[id] = true;
 
-	  /**
-	   * Waits for the callbacks specified to be invoked before continuing execution
-	   * of the current callback. This method should only be used by a callback in
-	   * response to a dispatched payload.
-	   *
-	   * @param {array<string>} ids
-	   */
-	  Dispatcher.prototype.waitFor=function(ids) {
-	    invariant(
-	      this.$Dispatcher_isDispatching,
-	      'Dispatcher.waitFor(...): Must be invoked while dispatching.'
-	    );
-	    for (var ii = 0; ii < ids.length; ii++) {
-	      var id = ids[ii];
-	      if (this.$Dispatcher_isPending[id]) {
-	        invariant(
-	          this.$Dispatcher_isHandled[id],
-	          'Dispatcher.waitFor(...): Circular dependency detected while ' +
-	          'waiting for `%s`.',
-	          id
-	        );
-	        continue;
+	  nextTick(function onNextTick() {
+	    if (immediateIds[id]) {
+	      // fn.call() is faster so we optimize for the common use-case
+	      // @see http://jsperf.com/call-apply-segu
+	      if (args) {
+	        fn.apply(null, args);
+	      } else {
+	        fn.call(null);
 	      }
-	      invariant(
-	        this.$Dispatcher_callbacks[id],
-	        'Dispatcher.waitFor(...): `%s` does not map to a registered callback.',
-	        id
-	      );
-	      this.$Dispatcher_invokeCallback(id);
+	      // Prevent ids from leaking
+	      exports.clearImmediate(id);
 	    }
-	  };
+	  });
 
-	  /**
-	   * Dispatches a payload to all registered callbacks.
-	   *
-	   * @param {object} payload
-	   */
-	  Dispatcher.prototype.dispatch=function(payload) {
-	    invariant(
-	      !this.$Dispatcher_isDispatching,
-	      'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.'
-	    );
-	    this.$Dispatcher_startDispatching(payload);
-	    try {
-	      for (var id in this.$Dispatcher_callbacks) {
-	        if (this.$Dispatcher_isPending[id]) {
-	          continue;
-	        }
-	        this.$Dispatcher_invokeCallback(id);
-	      }
-	    } finally {
-	      this.$Dispatcher_stopDispatching();
-	    }
-	  };
+	  return id;
+	};
 
-	  /**
-	   * Is this Dispatcher currently dispatching.
-	   *
-	   * @return {boolean}
-	   */
-	  Dispatcher.prototype.isDispatching=function() {
-	    return this.$Dispatcher_isDispatching;
-	  };
-
-	  /**
-	   * Call the callback stored with the given id. Also do some internal
-	   * bookkeeping.
-	   *
-	   * @param {string} id
-	   * @internal
-	   */
-	  Dispatcher.prototype.$Dispatcher_invokeCallback=function(id) {
-	    this.$Dispatcher_isPending[id] = true;
-	    this.$Dispatcher_callbacks[id](this.$Dispatcher_pendingPayload);
-	    this.$Dispatcher_isHandled[id] = true;
-	  };
-
-	  /**
-	   * Set up bookkeeping needed when dispatching.
-	   *
-	   * @param {object} payload
-	   * @internal
-	   */
-	  Dispatcher.prototype.$Dispatcher_startDispatching=function(payload) {
-	    for (var id in this.$Dispatcher_callbacks) {
-	      this.$Dispatcher_isPending[id] = false;
-	      this.$Dispatcher_isHandled[id] = false;
-	    }
-	    this.$Dispatcher_pendingPayload = payload;
-	    this.$Dispatcher_isDispatching = true;
-	  };
-
-	  /**
-	   * Clear bookkeeping used for dispatching.
-	   *
-	   * @internal
-	   */
-	  Dispatcher.prototype.$Dispatcher_stopDispatching=function() {
-	    this.$Dispatcher_pendingPayload = null;
-	    this.$Dispatcher_isDispatching = false;
-	  };
-
-
-	module.exports = Dispatcher;
-
+	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
+	  delete immediateIds[id];
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17).setImmediate, __webpack_require__(17).clearImmediate))
 
 /***/ },
-/* 29 */
+/* 18 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	var utils = {};
+
+	var componentDidMount = function componentDidMount(ctx) {
+		var rootNode = React.findDOMNode(ctx),
+		    hasNextProps = false,
+		    nextProps = {},
+		    parentNode = rootNode.parentNode;
+
+		Object.keys(parentNode.attributes).forEach(function (key) {
+			var namedNode = undefined;
+
+			if (key !== 'length') {
+				hasNextProps = true;
+				namedNode = parentNode.attributes[key];
+				nextProps[namedNode.name] = namedNode.value;
+			}
+		});
+
+		if (hasNextProps) {
+			ctx._updateState(nextProps);
+		}
+
+		ctx.setState({ element: ctx.props.element });
+	};
+
+	utils.componentDidMount = componentDidMount;
+
+	exports['default'] = utils;
+	module.exports = exports['default'];
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"wrapper":"GridStyle__wrapper___2GPIa","table":"GridStyle__table___1hfrk","body":"GridStyle__body___3fMzu","row":"GridStyle__row___25tH_","group":"GridStyle__group___3GIS0","head":"GridStyle__head___2E1A4","cell":"GridStyle__cell___nHb5Q","header":"GridStyle__header___5Kszw","title":"GridStyle__title___1qH-h","group-by-header":"GridStyle__group-by-header___1w9CU","options":"GridStyle__options___3Xxx3","cell-valign-middle":"GridStyle__cell-valign-middle___VjDQk","cell-valign-bottom":"GridStyle__cell-valign-bottom___1bXVW","cell-min":"GridStyle__cell-min___2PDoq","cell-max":"GridStyle__cell-max___wXFkb","column-sort":"GridStyle__column-sort___1kRVc","cell-nowrap":"GridStyle__cell-nowrap___1AC-S","cell-align-center":"GridStyle__cell-align-center___2MEAH","cell-align-right":"GridStyle__cell-align-right___1VhSM","cell-highlight":"GridStyle__cell-highlight___3mcBR","highlight":"GridStyle__highlight___yiNAP","cell-100px":"GridStyle__cell-100px___3LsNv","asc":"GridStyle__asc___20KVi","desc":"GridStyle__desc___19MPa","footer":"GridStyle__footer___3SKuL","ul":"GridStyle__ul___7Ryif","li":"GridStyle__li___Y2ezh","dots-vertical":"GridStyle__dots-vertical___3-Jus","caret":"GridStyle__caret___2WrVL","menu-wrapper":"GridStyle__menu-wrapper___2dzHZ","rows-per-page":"GridStyle__rows-per-page___1y7Um","group-by":"GridStyle__group-by___O3qZl","menu-hdr":"GridStyle__menu-hdr___1J_7i","selected":"GridStyle__selected___3eyuf","options-wrapper":"GridStyle__options-wrapper___InRhA","options-tools":"GridStyle__options-tools___2D5V3","tools-search":"GridStyle__tools-search___1xKWy","w-0":"GridStyle__w-0___3iPqO","w-1":"GridStyle__w-1___1EdTA","w-2":"GridStyle__w-2___g3RIZ","w-3":"GridStyle__w-3___25drh","w-4":"GridStyle__w-4___3rlJH"};
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _store = __webpack_require__(3);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(10);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _GridStyleCss = __webpack_require__(19);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var GroupsMenu = (function (_React$Component) {
+		function GroupsMenu(props) {
+			_classCallCheck(this, GroupsMenu);
+
+			_get(Object.getPrototypeOf(GroupsMenu.prototype), 'constructor', this).call(this, props);
+
+			this._onClick = this._onClick.bind(this);
+			this._onBlur = this._onBlur.bind(this);
+		}
+
+		_inherits(GroupsMenu, _React$Component);
+
+		_createClass(GroupsMenu, [{
+			key: '_onBlur',
+			value: function _onBlur() {
+				this.props.el.removeAttribute('style');
+				React.unmountComponentAtNode(this.props.el);
+			}
+		}, {
+			key: '_onClick',
+			value: function _onClick(e) {
+				var option = e.target.getAttribute('data-value');
+				_actions2['default'].setGroup(option);
+				this._onBlur();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this = this;
+
+				var position = this.props.target.getBoundingClientRect();
+
+				this.props.el.style.position = 'fixed';
+				this.props.el.style.left = position.left - 90 + 'px';
+				this.props.el.style.top = position.top + 'px';
+				this.props.el.style.display = 'block';
+
+				var genClass = function genClass(item) {
+					var classes = [_GridStyleCss2['default'].li];
+
+					if (_store2['default'].getCurrentGroup() && item.name === _store2['default'].getCurrentGroup().name) {
+						classes.push(_GridStyleCss2['default'].selected);
+					} else if (!_store2['default'].getCurrentGroup() && item.name === 'None') {
+						classes.push(_GridStyleCss2['default'].selected);
+					}
+
+					return classes.join(' ');
+				};
+
+				var clickHandler = function clickHandler(e) {
+					document.removeEventListener('click', clickHandler);
+					_this._onBlur();
+				};
+
+				document.addEventListener('click', clickHandler);
+
+				var groups = [{ id: null, name: 'None' }];
+
+				_store2['default'].getGroups().forEach(function (item) {
+					groups.push(item);
+				});
+
+				return React.createElement(
+					'div',
+					{ className: _GridStyleCss2['default']['menu-wrapper'] },
+					React.createElement(
+						'ul',
+						{ className: _GridStyleCss2['default'].ul },
+						React.createElement(
+							'li',
+							{ className: _GridStyleCss2['default']['menu-hdr'] },
+							'Group By ...'
+						),
+						groups.map(function (item, i) {
+							return React.createElement(
+								'li',
+								{ key: i, className: genClass(item), 'data-value': item.id, onClick: _this._onClick },
+								item.name
+							);
+						})
+					)
+				);
+			}
+		}]);
+
+		return GroupsMenu;
+	})(React.Component);
+
+	exports['default'] = GroupsMenu;
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _store = __webpack_require__(3);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(10);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _utils = __webpack_require__(18);
+
+	var _utils2 = _interopRequireDefault(_utils);
+
+	var _GridStyleCss = __webpack_require__(19);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _cellTypesIndex = __webpack_require__(22);
+
+	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
+
+	var _RowJsx = __webpack_require__(29);
+
+	var _RowJsx2 = _interopRequireDefault(_RowJsx);
+
+	var _RowGroupedJsx = __webpack_require__(30);
+
+	var _RowGroupedJsx2 = _interopRequireDefault(_RowGroupedJsx);
+
+	var RowsView = (function (_React$Component) {
+		function RowsView(props) {
+			_classCallCheck(this, RowsView);
+
+			_get(Object.getPrototypeOf(RowsView.prototype), 'constructor', this).call(this, props);
+		}
+
+		_inherits(RowsView, _React$Component);
+
+		_createClass(RowsView, [{
+			key: 'render',
+			value: function render() {
+				return React.createElement(
+					'div',
+					{ className: _GridStyleCss2['default'].body },
+					this.props.rows.map(function (item, i) {
+						{
+							if (item.is_group) {
+								return React.createElement(_RowGroupedJsx2['default'], { key: i, row: item, group: _store2['default'].getCurrentGroup() });
+							} else {
+								return React.createElement(_RowJsx2['default'], { key: i, i: i, row: item });
+							}
+						}
+					})
+				);
+			}
+		}]);
+
+		return RowsView;
+	})(React.Component);
+
+	exports['default'] = RowsView;
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _link = __webpack_require__(25);
+
+	var _link2 = _interopRequireDefault(_link);
+
+	var _img = __webpack_require__(26);
+
+	var _img2 = _interopRequireDefault(_img);
+
+	var _datetime = __webpack_require__(27);
+
+	var _datetime2 = _interopRequireDefault(_datetime);
+
+	var _number = __webpack_require__(23);
+
+	var _number2 = _interopRequireDefault(_number);
+
+	var _string = __webpack_require__(28);
+
+	var _string2 = _interopRequireDefault(_string);
+
+	var _GridStyleCss = __webpack_require__(19);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var highlight = function highlight(element, start, end) {
+	    var str = element;
+
+	    str = str.substr(0, start) + '<span class="' + _GridStyleCss2['default']['highlight'] + '">' + str.substr(start, end) + '</span>' + str.substr(start + end);
+
+	    return str;
+	};
+
+	var createMarkup = function createMarkup(el, position) {
+	    return {
+	        __html: highlight(el, position.start, position.end)
+	    };
+	};
+
+	exports['default'] = function (col, row) {
+
+	    switch (col.type.name) {
+	        case 'link':
+	            return (0, _link2['default'])(col, row);
+	            break;
+	        case 'image':
+	            return (0, _img2['default'])(col, row);
+	            break;
+	        case 'datetime':
+	            return (0, _datetime2['default'])(col, row);
+	            break;
+	        case 'array':
+	            return ARRAY(col, row);
+	            break;
+	        case 'number':
+	            return (0, _number2['default'])(col, row);
+	            break;
+	        case 'string':
+	            if (col.type.src) {
+	                return (0, _string2['default'])(col, row);
+	            } else {
+	                if (row.match && col.id === row.match) {
+	                    var el = row.data[col.id];
+	                    return React.createElement('div', { dangerouslySetInnerHTML: createMarkup(el, row.position) });
+	                }
+	                return row.data[col.id] || '-';
+	            }
+	            break;
+	        default:
+	            return row.data[col.id] || '-';
+	    }
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _store = __webpack_require__(3);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _numeral = __webpack_require__(24);
+
+	var _numeral2 = _interopRequireDefault(_numeral);
+
+	exports['default'] = function (col, row) {
+	    var props = col.type.props,
+	        value = row.data[col.id];
+
+	    return (0, _numeral2['default'])(value).format(col.type.format || _store2['default'].getOptions().number_format);
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -6667,504 +6300,820 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _GridStyleCss = __webpack_require__(19);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var highlight = function highlight(element, start, end) {
+	    var str = element;
+
+	    str = str.substr(0, start) + '<span class="' + _GridStyleCss2['default']['highlight'] + '">' + str.substr(start, end) + '</span>' + str.substr(start + end);
+
+	    return str;
+	};
+
+	var createMarkup = function createMarkup(el, position) {
+	    return {
+	        __html: highlight(el, position.start, position.end)
+	    };
+	};
+
+	exports['default'] = function (col, row) {
+	    var props = col.type.props;
+
+	    props.href = row.data[col.type.href];
+
+	    if (!props.href) {
+	        props.href = col.type.href.uri || col.type.href;
+	    }
+
+	    if (col.type.href.data) {
+	        (function () {
+	            var data = col.type.href.data,
+	                src = undefined;
+
+	            data.map(function (item) {
+	                if (item.indexOf('.') !== -1) {
+	                    (function () {
+	                        var keys = item.split('.'),
+	                            value = row.data;
+
+	                        keys.forEach(function (val) {
+	                            value = value[val];
+	                        });
+
+	                        src = value;
+	                        props.href = props.href.replace('{' + item + '}', src);
+	                    })();
+	                } else {
+	                    props.href = props.href.replace('{' + item + '}', row.data[item]);
+	                }
+	            });
+	        })();
+	    }
+
+	    var result = row.data[col.type.display];
+
+	    if (row.match && col.id === row.match) {
+	        var el = result;
+	        result = React.createElement('div', { dangerouslySetInnerHTML: createMarkup(el, row.position) });
+	    }
+
+	    return React.DOM.a(props, result);
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (col, row) {
+	    var props = col.type.props || {},
+	        src = row[col.type.src];
+
+	    props.href = row[col.type.href];
+
+	    if (col.type.src.indexOf('.') !== -1) {
+	        (function () {
+	            var keys = col.type.src.split('.'),
+	                value = row;
+
+	            keys.forEach(function (item) {
+	                value = value[item];
+	            });
+
+	            src = value;
+	        })();
+	    }
+
+	    props.src = src;
+
+	    return React.DOM.img(props, null);
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _store = __webpack_require__(3);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	exports['default'] = function (col, row) {
+	    var props = col.type.props,
+	        value = row.data[col.id];
+
+	    if (col.type.from_now) {
+	        return moment(value).fromNow();
+	    } else {
+	        return moment(value).format(col.type.format || _store2['default'].getOptions().default_date_format);
+	    }
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 28 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	exports['default'] = function (col, row) {
+	    var src = row.data[col.type.src];
+
+	    if (!row.value && col.type.src.indexOf('.') !== -1) {
+	        (function () {
+	            var keys = col.type.src.split('.'),
+	                value = row.data;
+
+	            keys.forEach(function (item) {
+	                value = value[item];
+	            });
+
+	            src = value;
+	        })();
+	    }
+
+	    return src || '-';
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _store = __webpack_require__(3);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _GridStyleCss = __webpack_require__(19);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _cellTypesIndex = __webpack_require__(22);
+
+	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
+
+	var RowView = (function (_React$Component) {
+		function RowView(props) {
+			_classCallCheck(this, RowView);
+
+			_get(Object.getPrototypeOf(RowView.prototype), 'constructor', this).call(this, props);
+		}
+
+		_inherits(RowView, _React$Component);
+
+		_createClass(RowView, [{
+			key: 'render',
+			value: function render() {
+				var _this = this;
+
+				var genClass = function genClass(col, row) {
+					var classes = [_GridStyleCss2['default'].cell];
+
+					if (col.classes) {
+						col.classes.forEach(function (item) {
+							classes.push(_GridStyleCss2['default'][item]);
+						});
+					}
+
+					if (col.weight || col.weight === 0) {
+						classes.push(_GridStyleCss2['default']['w-' + col.weight]);
+					}
+
+					if (col.type.name === 'number') {
+						classes.push(_GridStyleCss2['default']['cell-align-right']);
+					}
+
+					if (row.match && col.id === row.match) {}
+
+					return classes.join(' ');
+				};
+
+				var genStyle = function genStyle(col) {
+					if (col.row_style) {
+						return col.row_style;
+					}
+				};
+
+				return React.createElement(
+					'div',
+					{ key: this.props.i, className: _GridStyleCss2['default'].row },
+					_store2['default'].getColumns().map(function (col, j) {
+						return React.createElement(
+							'div',
+							{
+								key: j,
+								'data-label': col.name,
+								className: genClass(col, _this.props.row),
+								style: genStyle(col) },
+							(0, _cellTypesIndex2['default'])(col, _this.props.row)
+						);
+					})
+				);
+			}
+		}]);
+
+		return RowView;
+	})(React.Component);
+
+	exports['default'] = RowView;
+	;
+	module.exports = exports['default'];
+
+	// classes.push(styles['cell-highlight']);
+
+/***/ },
 /* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// shim for using process in browser
+	'use strict';
 
-	var process = module.exports = {};
-	var queue = [];
-	var draining = false;
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
 
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    draining = true;
-	    var currentQueue;
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        var i = -1;
-	        while (++i < len) {
-	            currentQueue[i]();
-	        }
-	        len = queue.length;
-	    }
-	    draining = false;
-	}
-	process.nextTick = function (fun) {
-	    queue.push(fun);
-	    if (!draining) {
-	        setTimeout(drainQueue, 0);
-	    }
-	};
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-	function noop() {}
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	// TODO(shtylman)
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
+	var _store = __webpack_require__(3);
 
+	var _store2 = _interopRequireDefault(_store);
+
+	var _GridStyleCss = __webpack_require__(19);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _cellTypesIndex = __webpack_require__(22);
+
+	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
+
+	var RowGroupedView = (function (_React$Component) {
+		function RowGroupedView(props) {
+			_classCallCheck(this, RowGroupedView);
+
+			_get(Object.getPrototypeOf(RowGroupedView.prototype), 'constructor', this).call(this, props);
+		}
+
+		_inherits(RowGroupedView, _React$Component);
+
+		_createClass(RowGroupedView, [{
+			key: 'render',
+			value: function render() {
+
+				if (!this.props.group) {
+					return React.createElement('div', null);
+				}
+
+				var genRowClass = function genRowClass(col) {
+					var classes = [_GridStyleCss2['default'].row];
+					classes.push(_GridStyleCss2['default'].group);
+
+					return classes.join(' ');
+				};
+
+				var genClass = function genClass(col) {
+					var classes = [_GridStyleCss2['default'].cell];
+					classes.push(_GridStyleCss2['default'].group);
+
+					return classes.join(' ');
+				};
+
+				var col = _store2['default'].getColumn(this.props.group.id),
+				    row = this.props.row;
+
+				return React.createElement(
+					'div',
+					{ key: col.id, className: genRowClass() },
+					React.createElement(
+						'div',
+						{ className: _GridStyleCss2['default'].cell },
+						(0, _cellTypesIndex2['default'])(col, row)
+					)
+				);
+			}
+		}]);
+
+		return RowGroupedView;
+	})(React.Component);
+
+	exports['default'] = RowGroupedView;
+	;
+	module.exports = exports['default'];
 
 /***/ },
 /* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(35).nextTick;
-	var apply = Function.prototype.apply;
-	var slice = Array.prototype.slice;
-	var immediateIds = {};
-	var nextImmediateId = 0;
+	'use strict';
 
-	// DOM APIs, for completeness
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
 
-	exports.setTimeout = function() {
-	  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
-	};
-	exports.setInterval = function() {
-	  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
-	};
-	exports.clearTimeout =
-	exports.clearInterval = function(timeout) { timeout.close(); };
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function Timeout(id, clearFn) {
-	  this._id = id;
-	  this._clearFn = clearFn;
-	}
-	Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-	Timeout.prototype.close = function() {
-	  this._clearFn.call(window, this._id);
-	};
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-	// Does not start the time, just sets up the members needed.
-	exports.enroll = function(item, msecs) {
-	  clearTimeout(item._idleTimeoutId);
-	  item._idleTimeout = msecs;
-	};
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	exports.unenroll = function(item) {
-	  clearTimeout(item._idleTimeoutId);
-	  item._idleTimeout = -1;
-	};
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	exports._unrefActive = exports.active = function(item) {
-	  clearTimeout(item._idleTimeoutId);
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	  var msecs = item._idleTimeout;
-	  if (msecs >= 0) {
-	    item._idleTimeoutId = setTimeout(function onTimeout() {
-	      if (item._onTimeout)
-	        item._onTimeout();
-	    }, msecs);
-	  }
-	};
+	var _store = __webpack_require__(3);
 
-	// That's not how node.js implements it but the exposed api is the same.
-	exports.setImmediate = typeof setImmediate === "function" ? setImmediate : function(fn) {
-	  var id = nextImmediateId++;
-	  var args = arguments.length < 2 ? false : slice.call(arguments, 1);
+	var _store2 = _interopRequireDefault(_store);
 
-	  immediateIds[id] = true;
+	var _actions = __webpack_require__(10);
 
-	  nextTick(function onNextTick() {
-	    if (immediateIds[id]) {
-	      // fn.call() is faster so we optimize for the common use-case
-	      // @see http://jsperf.com/call-apply-segu
-	      if (args) {
-	        fn.apply(null, args);
-	      } else {
-	        fn.call(null);
-	      }
-	      // Prevent ids from leaking
-	      exports.clearImmediate(id);
-	    }
-	  });
+	var _actions2 = _interopRequireDefault(_actions);
 
-	  return id;
-	};
+	var _utils = __webpack_require__(18);
 
-	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
-	  delete immediateIds[id];
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31).setImmediate, __webpack_require__(31).clearImmediate))
+	var _utils2 = _interopRequireDefault(_utils);
+
+	var _GridStyleCss = __webpack_require__(19);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _RowsPerPageJsx = __webpack_require__(32);
+
+	var _RowsPerPageJsx2 = _interopRequireDefault(_RowsPerPageJsx);
+
+	var FooterView = (function (_React$Component) {
+		function FooterView(props) {
+			_classCallCheck(this, FooterView);
+
+			_get(Object.getPrototypeOf(FooterView.prototype), 'constructor', this).call(this, props);
+			this.state = _store2['default'].getOptions();
+
+			this._onClick = this._onClick.bind(this);
+			this._onRowsPerPageClick = this._onRowsPerPageClick.bind(this);
+		}
+
+		_inherits(FooterView, _React$Component);
+
+		_createClass(FooterView, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				_store2['default'].addChangeListener(this._onChange.bind(this));
+			}
+		}, {
+			key: 'componentWillUnmount',
+			value: function componentWillUnmount() {
+				_store2['default'].addRemoveListener(this._onChange.bind(this));
+			}
+		}, {
+			key: '_onChange',
+			value: function _onChange() {
+				this.setState(_store2['default'].getOptions());
+			}
+		}, {
+			key: '_onClick',
+			value: function _onClick(e) {
+				var target = e.currentTarget.getAttribute('data-direction'),
+				    direction = target === 'forward' ? 'forward' : 'back';
+
+				if (direction === 'back' && this.state.paging_from === 1) {
+					return;
+				}
+
+				var next_rows = (this.state.current_page + 1) * this.state.rows_per_page + this.state.rows_per_page;
+
+				if (direction === 'forward' && next_rows - this.state.rows_per_page >= _store2['default'].getTotalRows()) {
+					return;
+				}
+
+				_actions2['default'].movePage(direction);
+			}
+		}, {
+			key: '_onRowsPerPageClick',
+			value: function _onRowsPerPageClick(e) {
+				var menuWrapper = document.getElementById('rows-per-page');
+
+				React.render(React.createElement(_RowsPerPageJsx2['default'], { opts: this.state, target: e.target, el: menuWrapper }), menuWrapper);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				return React.createElement(
+					'div',
+					{ className: _GridStyleCss2['default'].footer },
+					React.createElement('div', { id: 'rows-per-page', className: _GridStyleCss2['default']['rows-per-page'] }),
+					React.createElement(
+						'ul',
+						{ className: _GridStyleCss2['default'].ul },
+						React.createElement(
+							'li',
+							{ className: _GridStyleCss2['default'].li },
+							'Rows per page:'
+						),
+						React.createElement(
+							'li',
+							{ className: _GridStyleCss2['default'].li, onClick: this._onRowsPerPageClick },
+							React.createElement(
+								'b',
+								null,
+								this.state.rows_per_page
+							),
+							React.createElement('img', { className: _GridStyleCss2['default'].caret, src: './icons/menu-down.png' })
+						),
+						React.createElement(
+							'li',
+							{ className: _GridStyleCss2['default'].li },
+							this.state.paging_from,
+							' - ',
+							this.state.paging_to,
+							' of ',
+							_store2['default'].getTotalRows()
+						),
+						React.createElement(
+							'li',
+							{ className: _GridStyleCss2['default'].li, 'data-direction': 'back', onClick: this._onClick },
+							React.createElement('img', { src: './icons/chevron-left.png' })
+						),
+						React.createElement(
+							'li',
+							{ className: _GridStyleCss2['default'].li, 'data-direction': 'forward', onClick: this._onClick },
+							React.createElement('img', { src: './icons/chevron-right.png' })
+						)
+					)
+				);
+			}
+		}]);
+
+		return FooterView;
+	})(React.Component);
+
+	exports['default'] = FooterView;
+	;
+	module.exports = exports['default'];
 
 /***/ },
 /* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright (c) 2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule invariant
-	 */
+	'use strict';
 
-	"use strict";
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
 
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var invariant = function(condition, format, a, b, c, d, e, f) {
-	  if (false) {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error(
-	        'Minified exception occurred; use the non-minified dev environment ' +
-	        'for the full error message and additional helpful warnings.'
-	      );
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(
-	        'Invariant Violation: ' +
-	        format.replace(/%s/g, function() { return args[argIndex++]; })
-	      );
-	    }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	};
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	module.exports = invariant;
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
+	var _actions = __webpack_require__(10);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _GridStyleCss = __webpack_require__(19);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var RowsPerPageView = (function (_React$Component) {
+		function RowsPerPageView(props) {
+			_classCallCheck(this, RowsPerPageView);
+
+			_get(Object.getPrototypeOf(RowsPerPageView.prototype), 'constructor', this).call(this, props);
+
+			this._onClick = this._onClick.bind(this);
+			this._onBlur = this._onBlur.bind(this);
+		}
+
+		_inherits(RowsPerPageView, _React$Component);
+
+		_createClass(RowsPerPageView, [{
+			key: '_onClick',
+			value: function _onClick(e) {
+				var option = e.target.getAttribute('data-value');
+				_actions2['default'].setRowsPerPage(option);
+				this._onBlur();
+			}
+		}, {
+			key: '_onBlur',
+			value: function _onBlur() {
+				this.props.el.removeAttribute('style');
+				React.unmountComponentAtNode(this.props.el);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this = this;
+
+				var position = this.props.target.getBoundingClientRect(),
+				    offsetTop = this.props.opts.paging_options.length * 48 - 48;
+
+				this.props.el.style.position = 'fixed';
+				this.props.el.style.left = position.left - 20 + 'px';
+				this.props.el.style.top = position.top - offsetTop + 'px';
+				this.props.el.style.display = 'block';
+
+				var genClass = function genClass(item) {
+					var classes = [_GridStyleCss2['default'].li];
+
+					if (item === _this.props.opts.rows_per_page) {
+						classes.push(_GridStyleCss2['default'].selected);
+					}
+
+					return classes.join(' ');
+				};
+
+				var clickHandler = function clickHandler(e) {
+					document.removeEventListener('click', clickHandler);
+					_this._onBlur();
+				};
+
+				document.addEventListener('click', clickHandler);
+
+				return React.createElement(
+					'div',
+					{ className: _GridStyleCss2['default']['menu-wrapper'] },
+					React.createElement(
+						'ul',
+						{ className: _GridStyleCss2['default'].ul },
+						this.props.opts.paging_options.map(function (item, i) {
+							return React.createElement(
+								'li',
+								{ key: i, className: genClass(item), 'data-value': item, onClick: _this._onClick },
+								item
+							);
+						})
+					)
+				);
+			}
+		}]);
+
+		return RowsPerPageView;
+	})(React.Component);
+
+	exports['default'] = RowsPerPageView;
+	;
+	module.exports = exports['default'];
 
 /***/ },
 /* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
-	/**
-	 * Reduce `arr` with `fn`.
-	 *
-	 * @param {Array} arr
-	 * @param {Function} fn
-	 * @param {Mixed} initial
-	 *
-	 * TODO: combatible error handling?
-	 */
+	'use strict';
 
-	module.exports = function(arr, fn, initial){  
-	  var idx = 0;
-	  var len = arr.length;
-	  var curr = arguments.length == 3
-	    ? initial
-	    : arr[idx++];
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
 
-	  while (idx < len) {
-	    curr = fn.call(null, curr, arr[idx], ++idx, arr);
-	  }
-	  
-	  return curr;
-	};
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _store = __webpack_require__(3);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(10);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _utils = __webpack_require__(18);
+
+	var _utils2 = _interopRequireDefault(_utils);
+
+	var _GridStyleCss = __webpack_require__(19);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _GroupsJsx = __webpack_require__(20);
+
+	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
+
+	var _SearchJsx = __webpack_require__(34);
+
+	var _SearchJsx2 = _interopRequireDefault(_SearchJsx);
+
+	var OptionsView = (function (_React$Component) {
+	    function OptionsView(props) {
+	        _classCallCheck(this, OptionsView);
+
+	        _get(Object.getPrototypeOf(OptionsView.prototype), 'constructor', this).call(this, props);
+
+	        this._onSearchClick = this._onSearchClick.bind(this);
+	    }
+
+	    _inherits(OptionsView, _React$Component);
+
+	    _createClass(OptionsView, [{
+	        key: '_onSearchClick',
+	        value: function _onSearchClick(e) {
+	            e.currentTarget.style.visibility = 'hidden';
+	            var el = this.refs['tools-search'].getDOMNode();
+
+	            React.render(React.createElement(_SearchJsx2['default'], { el: el, li: e.currentTarget }), el);
+
+	            el.getElementsByTagName('input')[0].focus();
+	        }
+	    }, {
+	        key: '_onFilterClick',
+	        value: function _onFilterClick(e) {
+	            var menuWrapper = document.getElementById('group-by');
+
+	            React.render(React.createElement(_GroupsJsx2['default'], { target: e.target, el: menuWrapper }), menuWrapper);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return React.createElement(
+	                'div',
+	                { className: _GridStyleCss2['default']['options-wrapper'] },
+	                React.createElement('div', { id: 'group-by', className: _GridStyleCss2['default']['group-by'] }),
+	                React.createElement('div', { className: _GridStyleCss2['default']['tools-search'], ref: 'tools-search' }),
+	                React.createElement(
+	                    'ul',
+	                    { className: _GridStyleCss2['default']['options-tools'] },
+	                    React.createElement(
+	                        'li',
+	                        { onClick: this._onSearchClick },
+	                        React.createElement('img', { src: './icons/search.png' })
+	                    ),
+	                    React.createElement(
+	                        'li',
+	                        { onClick: this._onFilterClick },
+	                        React.createElement('img', { src: './icons/filter-variant.png' })
+	                    ),
+	                    React.createElement(
+	                        'li',
+	                        null,
+	                        React.createElement('img', { src: './icons/settings.png' })
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return OptionsView;
+	})(React.Component);
+
+	exports['default'] = OptionsView;
+	;
+	module.exports = exports['default'];
 
 /***/ },
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
-	/**
-	 * Expose `Emitter`.
-	 */
+	'use strict';
 
-	module.exports = Emitter;
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
 
-	/**
-	 * Initialize a new `Emitter`.
-	 *
-	 * @api public
-	 */
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function Emitter(obj) {
-	  if (obj) return mixin(obj);
-	};
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-	/**
-	 * Mixin the emitter properties.
-	 *
-	 * @param {Object} obj
-	 * @return {Object}
-	 * @api private
-	 */
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	function mixin(obj) {
-	  for (var key in Emitter.prototype) {
-	    obj[key] = Emitter.prototype[key];
-	  }
-	  return obj;
-	}
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	/**
-	 * Listen on the given `event` with `fn`.
-	 *
-	 * @param {String} event
-	 * @param {Function} fn
-	 * @return {Emitter}
-	 * @api public
-	 */
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	Emitter.prototype.on =
-	Emitter.prototype.addEventListener = function(event, fn){
-	  this._callbacks = this._callbacks || {};
-	  (this._callbacks[event] = this._callbacks[event] || [])
-	    .push(fn);
-	  return this;
-	};
+	var _actions = __webpack_require__(10);
 
-	/**
-	 * Adds an `event` listener that will be invoked a single
-	 * time then automatically removed.
-	 *
-	 * @param {String} event
-	 * @param {Function} fn
-	 * @return {Emitter}
-	 * @api public
-	 */
+	var _actions2 = _interopRequireDefault(_actions);
 
-	Emitter.prototype.once = function(event, fn){
-	  var self = this;
-	  this._callbacks = this._callbacks || {};
+	var _store = __webpack_require__(3);
 
-	  function on() {
-	    self.off(event, on);
-	    fn.apply(this, arguments);
-	  }
+	var _store2 = _interopRequireDefault(_store);
 
-	  on.fn = fn;
-	  this.on(event, on);
-	  return this;
-	};
+	var _GridStyleCss = __webpack_require__(19);
 
-	/**
-	 * Remove the given callback for `event` or all
-	 * registered callbacks.
-	 *
-	 * @param {String} event
-	 * @param {Function} fn
-	 * @return {Emitter}
-	 * @api public
-	 */
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	Emitter.prototype.off =
-	Emitter.prototype.removeListener =
-	Emitter.prototype.removeAllListeners =
-	Emitter.prototype.removeEventListener = function(event, fn){
-	  this._callbacks = this._callbacks || {};
+	var SearchView = (function (_React$Component) {
+	    function SearchView(props) {
+	        _classCallCheck(this, SearchView);
 
-	  // all
-	  if (0 == arguments.length) {
-	    this._callbacks = {};
-	    return this;
-	  }
+	        _get(Object.getPrototypeOf(SearchView.prototype), 'constructor', this).call(this, props);
 
-	  // specific event
-	  var callbacks = this._callbacks[event];
-	  if (!callbacks) return this;
-
-	  // remove all handlers
-	  if (1 == arguments.length) {
-	    delete this._callbacks[event];
-	    return this;
-	  }
-
-	  // remove specific handler
-	  var cb;
-	  for (var i = 0; i < callbacks.length; i++) {
-	    cb = callbacks[i];
-	    if (cb === fn || cb.fn === fn) {
-	      callbacks.splice(i, 1);
-	      break;
+	        this._onBlur = this._onBlur.bind(this);
+	        this._onFocus = this._onFocus.bind(this);
 	    }
-	  }
-	  return this;
-	};
 
-	/**
-	 * Emit `event` with the given args.
-	 *
-	 * @param {String} event
-	 * @param {Mixed} ...
-	 * @return {Emitter}
-	 */
+	    _inherits(SearchView, _React$Component);
 
-	Emitter.prototype.emit = function(event){
-	  this._callbacks = this._callbacks || {};
-	  var args = [].slice.call(arguments, 1)
-	    , callbacks = this._callbacks[event];
-
-	  if (callbacks) {
-	    callbacks = callbacks.slice(0);
-	    for (var i = 0, len = callbacks.length; i < len; ++i) {
-	      callbacks[i].apply(this, args);
-	    }
-	  }
-
-	  return this;
-	};
-
-	/**
-	 * Return array of callbacks for `event`.
-	 *
-	 * @param {String} event
-	 * @return {Array}
-	 * @api public
-	 */
-
-	Emitter.prototype.listeners = function(event){
-	  this._callbacks = this._callbacks || {};
-	  return this._callbacks[event] || [];
-	};
-
-	/**
-	 * Check if this emitter has `event` handlers.
-	 *
-	 * @param {String} event
-	 * @return {Boolean}
-	 * @api public
-	 */
-
-	Emitter.prototype.hasListeners = function(event){
-	  return !! this.listeners(event).length;
-	};
-
-
-/***/ },
-/* 35 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// shim for using process in browser
-
-	var process = module.exports = {};
-	var queue = [];
-	var draining = false;
-	var currentQueue;
-	var queueIndex = -1;
-
-	function cleanUpNextTick() {
-	    draining = false;
-	    if (currentQueue.length) {
-	        queue = currentQueue.concat(queue);
-	    } else {
-	        queueIndex = -1;
-	    }
-	    if (queue.length) {
-	        drainQueue();
-	    }
-	}
-
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    var timeout = setTimeout(cleanUpNextTick);
-	    draining = true;
-
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        while (++queueIndex < len) {
-	            currentQueue[queueIndex].run();
+	    _createClass(SearchView, [{
+	        key: '_onBlur',
+	        value: function _onBlur(e) {
+	            if (!e.target.value) {
+	                this.props.li.style.visibility = 'visible';
+	                React.unmountComponentAtNode(this.props.el);
+	            }
 	        }
-	        queueIndex = -1;
-	        len = queue.length;
-	    }
-	    currentQueue = null;
-	    draining = false;
-	    clearTimeout(timeout);
-	}
+	    }, {
+	        key: '_onFocus',
+	        value: function _onFocus(e) {
+	            var _this = this;
 
-	process.nextTick = function (fun) {
-	    var args = new Array(arguments.length - 1);
-	    if (arguments.length > 1) {
-	        for (var i = 1; i < arguments.length; i++) {
-	            args[i - 1] = arguments[i];
+	            var keyHandler = function keyHandler(e) {
+	                var value = e.target.value;
+
+	                if (e.which === 13) {
+	                    _actions2['default'].search(value);
+	                    _this._onBlur(e);
+	                }
+
+	                if (e.which === 27) {
+	                    _store2['default'].clearSearchRows();
+	                    _this._onBlur(e);
+	                }
+
+	                if (!value) {
+	                    _store2['default'].clearSearchRows();
+	                }
+	            };
+
+	            e.target.addEventListener('keyup', keyHandler);
 	        }
-	    }
-	    queue.push(new Item(fun, args));
-	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
-	    }
-	};
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return React.createElement('input', { type: 'text', onBlur: this._onBlur, onFocus: this._onFocus, required: true });
+	        }
+	    }]);
 
-	// v8 likes predictible objects
-	function Item(fun, array) {
-	    this.fun = fun;
-	    this.array = array;
-	}
-	Item.prototype.run = function () {
-	    this.fun.apply(null, this.array);
-	};
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
+	    return SearchView;
+	})(React.Component);
 
-	function noop() {}
-
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-
-	// TODO(shtylman)
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
-
+	exports['default'] = SearchView;
+	;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ])

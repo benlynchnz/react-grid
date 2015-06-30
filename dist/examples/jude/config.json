@@ -62,6 +62,7 @@
             "sortable": true,
 			"ascending": true,
             "can_group": true,
+			"allow_search": true,
             "classes": ["cell-valign-middle"],
             "weight": 0,
 			"type": {
@@ -74,6 +75,7 @@
             "name": "Ref",
             "sortable": true,
 			"ascending": true,
+            "allow_search": true,
             "classes": ["cell-valign-middle"],
             "weight": 2,
 			"type": {

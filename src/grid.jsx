@@ -39,7 +39,7 @@ export default class GridView extends React.Component {
 	_onChange() {
 		console.log('change');
 		if (Store.isReady()) {
-			let rows = Store.getSearchRows() ? Store.getSearchRows() : Store.getRows();
+			let rows = Store.getRows();
 
 			this.setState({
 				columns: Store.getColumns(),

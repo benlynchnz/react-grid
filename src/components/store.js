@@ -26,7 +26,8 @@ class Store extends EventEmitter {
 	}
 
 	getTotalRows() {
-		return _rows.length;
+		let total = _search_results ? _search_results : _rows;
+		return total.length;
 	}
 
 	setPage(direction) {
@@ -165,7 +166,8 @@ class Store extends EventEmitter {
 	}
 
 	sortRows() {
-		let result = _.chain(_rows)
+		let rows = _search_results ? _search_results : _rows;
+		let result = _.chain(rows)
 			.sortBy(_sortIndex)
 			.value();
 
@@ -202,22 +204,29 @@ class Store extends EventEmitter {
 			result = map;
 		}
 
-		_sorted_rows = result;
+		if (_search_results) {
+			_search_results = result;
+		} else {
+			_sorted_rows = result;
+		}
 	}
 
-	getRows(use_search) {
-		let _data = use_search ? _search_results : _sorted_rows,
+	getRows() {
+		let __data = _search_results ? _search_results : _sorted_rows,
 			start = (_opts.current_page * _opts.rows_per_page),
 			end = start === 0 ? _opts.rows_per_page : (start + _opts.rows_per_page),
-			rows = _.slice(_data, start, end),
+			rows = _.slice(__data, start, end),
 			current_group = rows[0];
-
 
 		// Get all the raw data rows
 		let data = rows.map((item) => {
-			return {
-				is_group: false,
-				data: item
+			if (!item.match) { // fix this
+				return {
+					is_group: false,
+					data: item
+				}
+			} else {
+				return item;
 			}
 		});
 
@@ -237,6 +246,10 @@ class Store extends EventEmitter {
 					current_group = item.data;
 				}
 			});
+		}
+
+		if (end > this.getTotalRows()) {
+			end = this.getTotalRows();
 		}
 
 		this.setPaging(start, end);
@@ -275,10 +288,6 @@ class Store extends EventEmitter {
 		return _isAsc;
 	}
 
-	getSearchRows() {
-		return _search_results;
-	}
-
 	clearSearchRows() {
 		_search_results = null;
 		this.emitChange();
@@ -294,19 +303,25 @@ class Store extends EventEmitter {
 		_.forEach(_rows, ((item) => {
 
 			_.forEach(columns, ((col) => {
+				if (!item[col.id]) {
+					return;
+				}
+
 				let field = item[col.id].toLowerCase();
 
 				if (field.indexOf(q) !== -1) {
-					matches.push({
-						is_group: false,
-						match: col.id,
-						position: {
-							start: field.indexOf(q),
-							end: q.length
-						},
-						term: q,
-						data: item
-					});
+					if (!_.findWhere(matches, { data: item })) {
+						matches.push({
+							is_group: false,
+							match: col.id,
+							position: {
+								start: field.indexOf(q),
+								end: q.length
+							},
+							term: q,
+							data: item
+						});
+					}
 				}
 			}));
 		}));

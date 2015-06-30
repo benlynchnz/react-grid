@@ -23,20 +23,17 @@ export default class SearchView extends React.Component {
     }
 
     _onFocus(e) {
-        console.log('focus');
-
         let keyHandler = (e) => {
             let value = e.target.value;
 
             if (e.which === 13) {
-                console.log(value);
                 Actions.search(value);
-                // this._onBlur();
+                this._onBlur(e);
             }
 
             if (e.which === 27) {
                 Store.clearSearchRows();
-                this._onBlur();
+                this._onBlur(e);
             }
 
             if (!value) {
