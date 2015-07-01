@@ -11,11 +11,11 @@ let highlight = (element, start, end) => {
     var str = element;
 
     str = str.substr(0, start) +
-        '<span class="'+styles['highlight']+'">' +
+        '<span class="'+styles['search-highlight']+'">' +
         str.substr(start, end) +
         '</span>' +
         str.substr(start + end);
-        
+
     return str;
 };
 

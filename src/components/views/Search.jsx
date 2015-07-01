@@ -13,12 +13,15 @@ export default class SearchView extends React.Component {
 
         this._onBlur = this._onBlur.bind(this);
         this._onFocus = this._onFocus.bind(this);
+        this._onSearchClear = this._onSearchClear.bind(this);
     }
 
     _onBlur(e) {
-        if (!e.target.value) {
+        if (!e || !e.target.value) {
             this.props.li.style.visibility = 'visible';
 		    React.unmountComponentAtNode(this.props.el);
+        } else {
+
         }
     }
 
@@ -44,9 +47,19 @@ export default class SearchView extends React.Component {
         e.target.addEventListener('keyup', keyHandler);
     }
 
+    _onSearchClear() {
+        Store.clearSearchRows();
+        this._onBlur();
+    }
+
     render() {
         return (
-            <input type="text" onBlur={this._onBlur} onFocus={this._onFocus} required />
+            <div className={styles['input-container']}>
+                <input type="text" onBlur={this._onBlur} onFocus={this._onFocus} required />
+                <span className={styles['highlight']}></span>
+                <span className={styles['bar']}></span>
+                <img src="./icons/close.png" onClick={this._onSearchClear}/>
+            </div>
         );
     }
 

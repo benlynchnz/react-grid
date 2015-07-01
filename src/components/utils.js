@@ -27,4 +27,14 @@ let componentDidMount = (ctx) => {
 
 utils.componentDidMount = componentDidMount;
 
+let dispatch = (action, payload) => {
+    let event = new CustomEvent('render', {
+        'detail': {action, payload}
+    });
+
+    document.dispatchEvent(event);
+}
+
+utils.dispatch = dispatch;
+
 export default utils;

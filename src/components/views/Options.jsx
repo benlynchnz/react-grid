@@ -18,6 +18,10 @@ export default class OptionsView extends React.Component {
         this._onSearchClick = this._onSearchClick.bind(this);
     }
 
+    componentDidMount() {
+        utils.dispatch('render');
+    }
+
     _onSearchClick(e) {
         e.currentTarget.style.visibility = 'hidden';
         let el = this.refs['tools-search'].getDOMNode();
@@ -37,7 +41,15 @@ export default class OptionsView extends React.Component {
         return (
             <div className={styles['options-wrapper']}>
                 <div id="group-by" className={styles['group-by']}></div>
-                <div className={styles['tools-search']} ref="tools-search"></div>
+                <div ref="tools-search"></div>
+                <div className={styles['options-dates']}>
+                        <div
+                            id="myDatePicker2"
+                            data-range="true"
+                            data-default-range="This month"
+                            className="react-datepicker">
+                        </div>
+                </div>
                 <ul className={styles['options-tools']}>
                     <li onClick={this._onSearchClick}><img src="./icons/search.png" /></li>
                     <li onClick={this._onFilterClick}><img src="./icons/filter-variant.png" /></li>

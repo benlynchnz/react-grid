@@ -203,7 +203,7 @@
 	background-color: rgba(46,204,113,1);
 }
 
-.cell .highlight {
+.cell .search-highlight {
 	font-weight: 800;
 }
 
@@ -356,6 +356,26 @@
 	border-top: 1px solid #ddd;
 }
 
+.options-dates {
+	float: left;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+}
+
+.options-dates li {
+	float: left;
+	padding-right: 24px;
+	opacity: 0.56;
+	cursor: pointer;
+}
+
+.options-tools input {
+	/*position: absolute;*/
+	cursor: pointer;
+	/*right: 300px;*/
+}
+
 .options-tools {
 	float: right;
 	margin: 0;
@@ -366,16 +386,105 @@
 .options-tools li {
 	float: left;
 	padding-right: 24px;
-	opacity: 0.56;
 	cursor: pointer;
 }
 
-.options-tools li:hover {
+.options-tools img {
+	opacity: 0.56;
+}
+
+.options-tools img:hover {
 	opacity: 1;
 }
 
 .options-tools li:last-child {
 	padding-right: 0;
+}
+
+.input-container {
+	display: inline-block;
+	position: absolute;
+	right: 160px;
+	margin-top: -8px;
+	float: left;
+}
+
+
+.input-container img {
+	position: absolute;
+	bottom: 8px;
+	right: 0px;
+	width: 24px;
+	height: 24px;
+	opacity: 0.56;
+	cursor: pointer;
+}
+
+.input-container img:hover {
+	opacity: 1;
+}
+
+input {
+	font-size: 18px;
+	padding: 10px 10px 10px 5px;
+	display: block;
+	background-color: transparent;
+	width: 300px;
+	border: none;
+	color: rgba(0,0,0,1);
+}
+
+input:focus {
+	outline: none;
+}
+
+.bar  {
+	position: relative;
+	display: block;
+	width:300px;
+}
+
+.bar:before,
+.bar:after   {
+	content: '';
+	height: 2px;
+	width: 0;
+	bottom: 1px;
+	position: absolute;
+	background: #3498DB;
+	transition: 0.2s ease all;
+}
+
+.bar:before {
+	left: 50%;
+}
+
+.bar:after {
+	right: 50%;
+}
+
+input:focus ~ .bar:before,
+input:focus ~ .bar:after {
+	width: 50%;
+}
+
+.highlight {
+	position: absolute;
+	height: 60%;
+	width: 100px;
+	top: 25%;
+	left: 0;
+	pointer-events: none;
+	opacity: 0.5;
+}
+
+input:focus ~ .highlight {
+	animation: inputHighlighter 0.3s ease;
+}
+
+@keyframes inputHighlighter {
+  from  { background: #3498DB; }
+  to    { width:0; background: transparent; }
 }
 
 .tools-search {
@@ -386,20 +495,12 @@
 	float: left;
 }
 
-input {
-	font-size: 18px;
-	padding: 10px 10px 10px 5px;
-	display: block;
-	background-color: transparent;
-	width: 300px;
-	border: none;
-	border-bottom: 1px solid #757575;
-}
 
-input:focus {
+
+/*input:focus {
 	outline: none;
 	border-bottom: 2px solid #2E88C5;
-}
+}*/
 
 .w-0 {}
 .w-1 {}
