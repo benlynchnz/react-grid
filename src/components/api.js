@@ -14,6 +14,10 @@ export default {
 				if (result.body) {
 					deferred.resolve(result.body);
 				}
+
+				if (result.text) {
+					deferred.resolve(JSON.parse(result.text));
+				}
 			});
 
 		return deferred.promise;

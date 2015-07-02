@@ -183,7 +183,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_onChange',
 			value: function _onChange() {
-				console.log('change');
 				if (_componentsStore2['default'].isReady()) {
 					var rows = _componentsStore2['default'].getRows();
 
@@ -1033,15 +1032,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _cellTypesIndex = __webpack_require__(14);
+	var _cellTypesIndex = __webpack_require__(15);
 
 	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
 
-	var _RowJsx = __webpack_require__(15);
+	var _RowJsx = __webpack_require__(16);
 
 	var _RowJsx2 = _interopRequireDefault(_RowJsx);
 
-	var _RowGroupedJsx = __webpack_require__(16);
+	var _RowGroupedJsx = __webpack_require__(17);
 
 	var _RowGroupedJsx2 = _interopRequireDefault(_RowGroupedJsx);
 
@@ -1116,7 +1115,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _RowsPerPageJsx = __webpack_require__(17);
+	var _RowsPerPageJsx = __webpack_require__(18);
 
 	var _RowsPerPageJsx2 = _interopRequireDefault(_RowsPerPageJsx);
 
@@ -1269,7 +1268,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
 
-	var _SearchJsx = __webpack_require__(18);
+	var _SearchJsx = __webpack_require__(14);
 
 	var _SearchJsx2 = _interopRequireDefault(_SearchJsx);
 
@@ -1319,8 +1318,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    { className: _GridStyleCss2['default']['options-dates'] },
 	                    React.createElement('div', {
 	                        id: 'myDatePicker2',
-	                        'data-range': 'true',
-	                        'data-default-range': 'This month',
 	                        className: 'react-datepicker' })
 	                ),
 	                React.createElement(
@@ -1430,6 +1427,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			_superagent2['default'].get(uri).end(function (err, result) {
 				if (result.body) {
 					deferred.resolve(result.body);
+				}
+
+				if (result.text) {
+					deferred.resolve(JSON.parse(result.text));
 				}
 			});
 
@@ -1593,6 +1594,111 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _actions = __webpack_require__(3);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _GridStyleCss = __webpack_require__(9);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var SearchView = (function (_React$Component) {
+	    function SearchView(props) {
+	        _classCallCheck(this, SearchView);
+
+	        _get(Object.getPrototypeOf(SearchView.prototype), 'constructor', this).call(this, props);
+
+	        this._onBlur = this._onBlur.bind(this);
+	        this._onFocus = this._onFocus.bind(this);
+	        this._onSearchClear = this._onSearchClear.bind(this);
+	    }
+
+	    _inherits(SearchView, _React$Component);
+
+	    _createClass(SearchView, [{
+	        key: '_onBlur',
+	        value: function _onBlur(e) {
+	            if (!e || !e.target.value) {
+	                this.props.li.style.visibility = 'visible';
+	                React.unmountComponentAtNode(this.props.el);
+	            } else {}
+	        }
+	    }, {
+	        key: '_onFocus',
+	        value: function _onFocus(e) {
+	            var _this = this;
+
+	            var keyHandler = function keyHandler(e) {
+	                var value = e.target.value;
+
+	                if (e.which === 13) {
+	                    _actions2['default'].search(value);
+	                    _this._onBlur(e);
+	                }
+
+	                if (e.which === 27) {
+	                    _store2['default'].clearSearchRows();
+	                    _this._onBlur(e);
+	                }
+
+	                if (!value) {
+	                    _store2['default'].clearSearchRows();
+	                }
+	            };
+
+	            e.target.addEventListener('keyup', keyHandler);
+	        }
+	    }, {
+	        key: '_onSearchClear',
+	        value: function _onSearchClear() {
+	            _store2['default'].clearSearchRows();
+	            this._onBlur();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return React.createElement(
+	                'div',
+	                { className: _GridStyleCss2['default']['input-container'] },
+	                React.createElement('input', { type: 'text', onBlur: this._onBlur, onFocus: this._onFocus, required: true }),
+	                React.createElement('span', { className: _GridStyleCss2['default']['highlight'] }),
+	                React.createElement('span', { className: _GridStyleCss2['default']['bar'] }),
+	                React.createElement('img', { src: './icons/close.png', onClick: this._onSearchClear })
+	            );
+	        }
+	    }]);
+
+	    return SearchView;
+	})(React.Component);
+
+	exports['default'] = SearchView;
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var _link = __webpack_require__(20);
@@ -1670,7 +1776,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1697,7 +1803,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _cellTypesIndex = __webpack_require__(14);
+	var _cellTypesIndex = __webpack_require__(15);
 
 	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
 
@@ -1771,7 +1877,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// classes.push(styles['cell-highlight']);
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1798,7 +1904,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _cellTypesIndex = __webpack_require__(14);
+	var _cellTypesIndex = __webpack_require__(15);
 
 	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
 
@@ -1856,7 +1962,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1960,111 +2066,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(React.Component);
 
 	exports['default'] = RowsPerPageView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _actions = __webpack_require__(3);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _GridStyleCss = __webpack_require__(9);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var SearchView = (function (_React$Component) {
-	    function SearchView(props) {
-	        _classCallCheck(this, SearchView);
-
-	        _get(Object.getPrototypeOf(SearchView.prototype), 'constructor', this).call(this, props);
-
-	        this._onBlur = this._onBlur.bind(this);
-	        this._onFocus = this._onFocus.bind(this);
-	        this._onSearchClear = this._onSearchClear.bind(this);
-	    }
-
-	    _inherits(SearchView, _React$Component);
-
-	    _createClass(SearchView, [{
-	        key: '_onBlur',
-	        value: function _onBlur(e) {
-	            if (!e || !e.target.value) {
-	                this.props.li.style.visibility = 'visible';
-	                React.unmountComponentAtNode(this.props.el);
-	            } else {}
-	        }
-	    }, {
-	        key: '_onFocus',
-	        value: function _onFocus(e) {
-	            var _this = this;
-
-	            var keyHandler = function keyHandler(e) {
-	                var value = e.target.value;
-
-	                if (e.which === 13) {
-	                    _actions2['default'].search(value);
-	                    _this._onBlur(e);
-	                }
-
-	                if (e.which === 27) {
-	                    _store2['default'].clearSearchRows();
-	                    _this._onBlur(e);
-	                }
-
-	                if (!value) {
-	                    _store2['default'].clearSearchRows();
-	                }
-	            };
-
-	            e.target.addEventListener('keyup', keyHandler);
-	        }
-	    }, {
-	        key: '_onSearchClear',
-	        value: function _onSearchClear() {
-	            _store2['default'].clearSearchRows();
-	            this._onBlur();
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return React.createElement(
-	                'div',
-	                { className: _GridStyleCss2['default']['input-container'] },
-	                React.createElement('input', { type: 'text', onBlur: this._onBlur, onFocus: this._onFocus, required: true }),
-	                React.createElement('span', { className: _GridStyleCss2['default']['highlight'] }),
-	                React.createElement('span', { className: _GridStyleCss2['default']['bar'] }),
-	                React.createElement('img', { src: './icons/close.png', onClick: this._onSearchClear })
-	            );
-	        }
-	    }]);
-
-	    return SearchView;
-	})(React.Component);
-
-	exports['default'] = SearchView;
 	;
 	module.exports = exports['default'];
 
@@ -4645,7 +4646,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	});
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30), __webpack_require__(31).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31), __webpack_require__(30).setImmediate))
 
 /***/ },
 /* 27 */
@@ -6721,70 +6722,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// shim for using process in browser
-
-	var process = module.exports = {};
-	var queue = [];
-	var draining = false;
-
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    draining = true;
-	    var currentQueue;
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        var i = -1;
-	        while (++i < len) {
-	            currentQueue[i]();
-	        }
-	        len = queue.length;
-	    }
-	    draining = false;
-	}
-	process.nextTick = function (fun) {
-	    queue.push(fun);
-	    if (!draining) {
-	        setTimeout(drainQueue, 0);
-	    }
-	};
-
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-
-	function noop() {}
-
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-
-	// TODO(shtylman)
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
-
-
-/***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(35).nextTick;
 	var apply = Function.prototype.apply;
 	var slice = Array.prototype.slice;
@@ -6861,7 +6798,71 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31).setImmediate, __webpack_require__(31).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30).setImmediate, __webpack_require__(30).clearImmediate))
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// shim for using process in browser
+
+	var process = module.exports = {};
+	var queue = [];
+	var draining = false;
+
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    draining = true;
+	    var currentQueue;
+	    var len = queue.length;
+	    while(len) {
+	        currentQueue = queue;
+	        queue = [];
+	        var i = -1;
+	        while (++i < len) {
+	            currentQueue[i]();
+	        }
+	        len = queue.length;
+	    }
+	    draining = false;
+	}
+	process.nextTick = function (fun) {
+	    queue.push(fun);
+	    if (!draining) {
+	        setTimeout(drainQueue, 0);
+	    }
+	};
+
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	// TODO(shtylman)
+	process.cwd = function () { return '/' };
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function() { return 0; };
+
 
 /***/ },
 /* 32 */

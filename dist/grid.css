@@ -1,5 +1,5 @@
 .GridStyle__wrapper___2GPIa {
-	box-shadow: 0 2px 5px rgba(0,0,0,0.26);
+	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 0.26);
 }
 
 .GridStyle__table___1hfrk {
@@ -39,7 +39,7 @@
 	position: relative;
 
 	text-align: left;
-	color: rgba(0,0,0,0.87);
+	color: hsla(0, 0%, 0%, 0.87);
 	font-size: 13px;
 	padding: 0 24px;
 	line-height: 48px;
@@ -56,17 +56,18 @@
 .GridStyle__group___3GIS0 .GridStyle__cell___nHb5Q {
 	font-weight: 500;
 	font-size: 15px;
-	color: rgba(0,0,0,0.87);
+	color: hsla(0, 0%, 0%, 0.87);
 }
 
 .GridStyle__header___5Kszw {
 	background-color: #fff;
 	line-height: 56px;
+	padding-top: 24px;
 }
 
 .GridStyle__header___5Kszw .GridStyle__cell___nHb5Q {
 	font-weight: 600;
-	color: rgba(0,0,0,0.54);
+	color: hsla(0, 0%, 0%, 0.54);
 	font-size: 12px;
 	line-height: 56px;
 	-webkit-touch-callout: none;
@@ -86,7 +87,7 @@
 .GridStyle__title___1qH-h .GridStyle__group-by-header___1w9CU {
 	font-size: 80%;
 	margin-left: 6px;
-	color: rgba(0,0,0,0.56);
+	color: hsla(0, 0%, 0%, 0.56);
 }
 
 .GridStyle__options___3Xxx3 {
@@ -154,7 +155,7 @@
 }
 
 .GridStyle__cell___nHb5Q.GridStyle__column-sort___1kRVc {
-	color: rgba(0,0,0,0.87);
+	color: hsla(0, 0%, 0%, 0.87);
 }
 
 .GridStyle__cell___nHb5Q.GridStyle__cell-nowrap___1AC-S {
@@ -257,7 +258,7 @@
 .GridStyle__options___3Xxx3 .GridStyle__li___Y2ezh {
 	float: left;
 	margin-right: 30px;
-	color: rgba(0,0,0,0.56);
+	color: hsla(0, 0%, 0%, 0.56);
 	font-size: 13px;
 	line-height: 56px;
 }
@@ -275,7 +276,7 @@
 .GridStyle__footer___3SKuL .GridStyle__li___Y2ezh {
 	float: left;
 	margin-right: 30px;
-	color: rgba(0,0,0,0.56);
+	color: hsla(0, 0%, 0%, 0.56);
 	font-size: 13px;
 	line-height: 56px;
 }
@@ -301,7 +302,7 @@
 	width: auto;
 	background-color: #fcfcfc;
 	border: 1px solid #eee;
-	box-shadow: 0 2px 5px rgba(0,0,0,0.26);
+	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 0.26);
 }
 
 .GridStyle__rows-per-page___1y7Um {
@@ -320,7 +321,7 @@
 	min-width: 100px;
 	text-align: left;
 	padding: 0 15px;
-	color: rgba(0,0,0,0.87);
+	color: hsla(0, 0%, 0%, 0.87);
 	font-weight: 400;
 	float: none;
 	cursor: pointer;
@@ -333,7 +334,7 @@
 
 .GridStyle__menu-wrapper___2dzHZ .GridStyle__menu-hdr___1J_7i {
 	line-height: 48px;
-	color: rgba(0,0,0,0.87);
+	color: hsla(0, 0%, 0%, 0.87);
 	border-bottom: 1px solid #ddd;
 	font-weight: 400;
 	text-align: left;
@@ -431,7 +432,7 @@ input {
 	background-color: transparent;
 	width: 300px;
 	border: none;
-	color: rgba(0,0,0,1);
+	color: hsla(0, 0%, 0%, 1);
 }
 
 input:focus {
@@ -442,6 +443,7 @@ input:focus {
 	position: relative;
 	display: block;
 	width:300px;
+	border-bottom: 1px solid #ddd;
 }
 
 .GridStyle__bar___1eATB:before,
@@ -462,6 +464,12 @@ input:focus {
 
 .GridStyle__bar___1eATB:after {
 	right: 50%;
+}
+
+input:focus ~ .GridStyle__bar___1eATB {
+	border-bottom: transparent;
+	-webkit-transition: 0.2s ease all;
+	        transition: 0.2s ease all;
 }
 
 input:focus ~ .GridStyle__bar___1eATB:before,
@@ -501,13 +509,6 @@ input:focus ~ .GridStyle__highlight___yiNAP {
 	margin-top: -15px;
 	float: left;
 }
-
-
-
-/*input:focus {
-	outline: none;
-	border-bottom: 2px solid #2E88C5;
-}*/
 
 .GridStyle__w-0___3iPqO {}
 .GridStyle__w-1___1EdTA {}

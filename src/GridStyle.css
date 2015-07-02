@@ -1,5 +1,5 @@
 .wrapper {
-	box-shadow: 0 2px 5px rgba(0,0,0,0.26);
+	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 0.26);
 }
 
 .table {
@@ -39,7 +39,7 @@
 	position: relative;
 
 	text-align: left;
-	color: rgba(0,0,0,0.87);
+	color: hsla(0, 0%, 0%, 0.87);
 	font-size: 13px;
 	padding: 0 24px;
 	line-height: 48px;
@@ -56,17 +56,18 @@
 .group .cell {
 	font-weight: 500;
 	font-size: 15px;
-	color: rgba(0,0,0,0.87);
+	color: hsla(0, 0%, 0%, 0.87);
 }
 
 .header {
 	background-color: #fff;
 	line-height: 56px;
+	padding-top: 24px;
 }
 
 .header .cell {
 	font-weight: 600;
-	color: rgba(0,0,0,0.54);
+	color: hsla(0, 0%, 0%, 0.54);
 	font-size: 12px;
 	line-height: 56px;
 	-webkit-touch-callout: none;
@@ -86,7 +87,7 @@
 .title .group-by-header {
 	font-size: 80%;
 	margin-left: 6px;
-	color: rgba(0,0,0,0.56);
+	color: hsla(0, 0%, 0%, 0.56);
 }
 
 .options {
@@ -154,7 +155,7 @@
 }
 
 .cell.column-sort {
-	color: rgba(0,0,0,0.87);
+	color: hsla(0, 0%, 0%, 0.87);
 }
 
 .cell.cell-nowrap {
@@ -257,7 +258,7 @@
 .options .li {
 	float: left;
 	margin-right: 30px;
-	color: rgba(0,0,0,0.56);
+	color: hsla(0, 0%, 0%, 0.56);
 	font-size: 13px;
 	line-height: 56px;
 }
@@ -275,7 +276,7 @@
 .footer .li {
 	float: left;
 	margin-right: 30px;
-	color: rgba(0,0,0,0.56);
+	color: hsla(0, 0%, 0%, 0.56);
 	font-size: 13px;
 	line-height: 56px;
 }
@@ -301,7 +302,7 @@
 	width: auto;
 	background-color: #fcfcfc;
 	border: 1px solid #eee;
-	box-shadow: 0 2px 5px rgba(0,0,0,0.26);
+	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 0.26);
 }
 
 .rows-per-page {
@@ -320,7 +321,7 @@
 	min-width: 100px;
 	text-align: left;
 	padding: 0 15px;
-	color: rgba(0,0,0,0.87);
+	color: hsla(0, 0%, 0%, 0.87);
 	font-weight: 400;
 	float: none;
 	cursor: pointer;
@@ -333,7 +334,7 @@
 
 .menu-wrapper .menu-hdr {
 	line-height: 48px;
-	color: rgba(0,0,0,0.87);
+	color: hsla(0, 0%, 0%, 0.87);
 	border-bottom: 1px solid #ddd;
 	font-weight: 400;
 	text-align: left;
@@ -431,7 +432,7 @@ input {
 	background-color: transparent;
 	width: 300px;
 	border: none;
-	color: rgba(0,0,0,1);
+	color: hsla(0, 0%, 0%, 1);
 }
 
 input:focus {
@@ -442,6 +443,7 @@ input:focus {
 	position: relative;
 	display: block;
 	width:300px;
+	border-bottom: 1px solid #ddd;
 }
 
 .bar:before,
@@ -461,6 +463,11 @@ input:focus {
 
 .bar:after {
 	right: 50%;
+}
+
+input:focus ~ .bar {
+	border-bottom: transparent;
+	transition: 0.2s ease all;
 }
 
 input:focus ~ .bar:before,
@@ -494,13 +501,6 @@ input:focus ~ .highlight {
 	margin-top: -15px;
 	float: left;
 }
-
-
-
-/*input:focus {
-	outline: none;
-	border-bottom: 2px solid #2E88C5;
-}*/
 
 .w-0 {}
 .w-1 {}

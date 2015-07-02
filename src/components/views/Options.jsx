@@ -45,8 +45,6 @@ export default class OptionsView extends React.Component {
                 <div className={styles['options-dates']}>
                         <div
                             id="myDatePicker2"
-                            data-range="true"
-                            data-default-range="This month"
                             className="react-datepicker">
                         </div>
                 </div>
