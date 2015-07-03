@@ -54,6 +54,13 @@ export default {
 			type: Constants.SEARCHING,
 			data: q
 		});
+	},
+
+	setDate: (date) => {
+		AppDispatcher.dispatch({
+			type: Constants.DATE_SELECTED,
+			data: date
+		});
 	}
 
 }

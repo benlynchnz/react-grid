@@ -23,14 +23,14 @@ export default class RowGroupedView extends React.Component {
 			classes.push(styles.group);
 
 			return classes.join(' ');
-		}
+		};
 
 		let genClass = (col) => {
 			let classes = [styles.cell];
 			classes.push(styles.group);
 
 			return classes.join(' ');
-		}
+		};
 
 		let col = Store.getColumn(this.props.group.id),
 			row = this.props.row;

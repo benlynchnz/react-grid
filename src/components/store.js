@@ -5,6 +5,7 @@ import Actions from './actions';
 
 let _columns = [],
 	_rows = [],
+	_raw_data = [],
 	_sorted_rows = [],
 	_search_results = null,
 	_sortIndex = null,
@@ -293,6 +294,16 @@ class Store extends EventEmitter {
 		this.emitChange();
 	}
 
+	setDate(date) {
+		let rows = _raw_data;
+
+		_search_results = _.filter(rows, ((item) => {
+			return moment(item.created_at).endOf('day').toISOString() === date;
+		}));
+
+		this.sortRows();
+	}
+
 	searchRows(q) {
 		let columns = _.filter(_columns, ((item) => {
 			return item.allow_search;
@@ -356,7 +367,12 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 			break;
 
 		case Constants.FETCH_ROWS:
-			_rows = payload.data;
+			_rows = payload.data.map((item) => {
+				let rand = _.random(0, 20);
+				item.created_at = moment().subtract(rand, 'days').toISOString();
+				return item;
+			});
+			_raw_data = _rows;
 			_Store.sortRows();
 			_Store.setReady(true);
 			_Store.emitChange();
@@ -383,6 +399,11 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 
 		case Constants.SEARCHING:
 			_Store.searchRows(payload.data);
+			break;
+
+		case Constants.DATE_SELECTED:
+			_Store.setDate(payload.data);
+			_Store.emitChange();
 			break;
 
 		default:
