@@ -411,6 +411,7 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 		case Constants.SET_GROUP:
 			_Store.setGroup(payload.data);
 			_Store.emitChange();
+			break;
 
 		case Constants.SEARCHING:
 			_Store.searchRows(payload.data);

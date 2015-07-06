@@ -8,6 +8,8 @@
         "strict": [2, "global"]
     },
     "globals": {
-        "React": true
+        "React": true,
+        "_": true,
+        "moment": true
     }
 }
