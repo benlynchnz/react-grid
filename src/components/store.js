@@ -11,6 +11,7 @@ let _columns = [],
 	_sortIndex = null,
 	_isAsc = true,
 	_opts = {},
+	_custom_data_uri = null,
 	_groups = [],
 	_groupBy = null,
 	_isReady = false;
@@ -23,7 +24,7 @@ class Store extends EventEmitter {
 		this.setDefaultColumnSort();
 		this.setGroups();
 
-		Actions.fetchRows(_opts.request.uri);
+		Actions.fetchRows(this.getDataURI());
 	}
 
 	getTotalRows() {
@@ -344,6 +345,16 @@ class Store extends EventEmitter {
 		this.emitChange();
 	}
 
+	setDataURI(uri) {
+		_custom_data_uri = uri;
+	}
+
+	getDataURI() {
+		let uri = _custom_data_uri ? _custom_data_uri : _opts.request.uri;
+
+		return uri;
+	}
+
 	emitChange() {
 		this.emit(Constants.CHANGE);
 	}
@@ -364,6 +375,10 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 
 		case Constants.BOOTSTRAP:
 			_Store.bootstrap(payload.data);
+			break;
+
+		case Constants.SET_DATA_URI:
+			_Store.setDataURI(payload.data);
 			break;
 
 		case Constants.FETCH_ROWS:

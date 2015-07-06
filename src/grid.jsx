@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import Store from './components/store';
 import Actions from './components/actions';
@@ -49,10 +49,14 @@ export default class GridView extends React.Component {
 	}
 
 	_updateState(props) {
-		if (props['config']) {
-			Actions.bootstrap(props['config']);
+		if (props.config) {
+			Actions.bootstrap(props.config);
 		} else {
-			throw new Error('no config.json defined');
+			throw new Error("no config.json defined");
+		}
+
+		if (props["request-data"]) {
+			Actions.setDataURI(props["request-data"]);
 		}
 	}
 

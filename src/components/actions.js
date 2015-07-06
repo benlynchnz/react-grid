@@ -61,6 +61,13 @@ export default {
 			type: Constants.DATE_SELECTED,
 			data: date
 		});
+	},
+
+	setDataURI: (uri) => {
+		AppDispatcher.dispatch({
+			type: Constants.SET_DATA_URI,
+			data: uri
+		});
 	}
 
 }

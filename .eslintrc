@@ -1,3 +1,13 @@
 {
-    "parser": "babel-eslint"
+    "parser": "babel-eslint",
+    "ecmaFeatures": {
+        "blockBindings": true,
+        "jsx": true
+    },
+    "rules": {
+        "strict": [2, "global"]
+    },
+    "globals": {
+        "React": true
+    }
 }

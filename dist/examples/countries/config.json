@@ -4,7 +4,6 @@
     "paging_options": [5, 10, 20, 50, 100, 250],
     "show_paging": true,
     "request": {
-        "uri": "https://restcountries.p.mashape.com/all",
         "headers": [
             {
                 "X-Mashape-Key": "DLhi4pkqMsmshJ9twnpplCqed27cp1QOesDjsnHv4oDHV4SKhF",
