@@ -6,6 +6,10 @@
   "scripts": {
     "test": "npm test"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/benlynchnz/react-grid.git"    
+  },
   "keywords": [
     "react",
     "web",
