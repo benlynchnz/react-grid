@@ -9,7 +9,7 @@ export default {
 				type: Constants.BOOTSTRAP,
 				data: data
 			});
-		})
+		});
 	},
 
 	fetchRows: (uri) => {
@@ -18,7 +18,7 @@ export default {
 				type: Constants.FETCH_ROWS,
 				data: data
 			});
-		})
+		});
 	},
 
 	sortRows: (column) => {
@@ -63,6 +63,13 @@ export default {
 		});
 	},
 
+	setDateRange: (dates) => {
+		AppDispatcher.dispatch({
+			type: Constants.DATE_RANGE_CHANGE,
+			data: dates
+		});
+	},
+
 	setDataURI: (uri) => {
 		AppDispatcher.dispatch({
 			type: Constants.SET_DATA_URI,
@@ -70,4 +77,4 @@ export default {
 		});
 	}
 
-}
+};

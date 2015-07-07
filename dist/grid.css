@@ -8,6 +8,12 @@
 .GridStyle__body___3fMzu {
 }
 
+.GridStyle__loading-wrapper___1QZpb {
+	background-color: #fff;
+	min-height: 100px;
+    text-align: center;
+}
+
 .GridStyle__body___3fMzu .GridStyle__row___25tH_:not(.GridStyle__group___3GIS0):first-child {
 	border-top: 1px solid #eee;
 }
@@ -19,6 +25,10 @@
   	width: 100%;
 	background-color: #fcfcfc;
 	border-bottom: 1px solid #eee;
+}
+
+.GridStyle__row___25tH_.GridStyle__loading___2PMTK {
+	opacity: 0.3;
 }
 
 .GridStyle__head___2E1A4 .GridStyle__row___25tH_ {
@@ -405,7 +415,6 @@
 .GridStyle__input-container___vpTCt {
 	display: inline-block;
 	position: absolute;
-	right: 160px;
 	margin-top: -8px;
 	float: left;
 }

@@ -2,10 +2,12 @@ import {EventEmitter} from 'events';
 import AppDispatcher from './dispatcher';
 import Constants from './constants';
 import Actions from './actions';
+import styles from '../GridStyle.css';
 
 let _columns = [],
 	_rows = [],
 	_raw_data = [],
+	_totalCount = 0,
 	_sorted_rows = [],
 	_search_results = null,
 	_sortIndex = null,
@@ -14,7 +16,11 @@ let _columns = [],
 	_custom_data_uri = null,
 	_groups = [],
 	_groupBy = null,
-	_isReady = false;
+	_isReady = false,
+	_isLoading = true;
+
+let _hasAllData = false,
+	_reqParams = {};
 
 class Store extends EventEmitter {
 
@@ -23,13 +29,69 @@ class Store extends EventEmitter {
 		this.setColumns(data.columns);
 		this.setDefaultColumnSort();
 		this.setGroups();
+		this.onBootstrapComplete();
+	}
 
-		Actions.fetchRows(this.getDataURI());
+	onBootstrapComplete() {
+		this.fetchRows();
+	}
+
+	fetchRows() {
+		let opts = this.getOptions();
+
+		if (opts.request && opts.request.required && opts.request.required.length) {
+			let params = _.keys(_reqParams);
+
+			let exists = _.every(opts.request.required, (item) => {
+				return params.indexOf(item) !== -1;
+			});
+
+			if (!exists) {
+				return;
+			}
+		};
+
+		let uri = this.getDataURI() + this.getQueryString();
+		Actions.fetchRows(uri);
+		this.setLoading(true);
 	}
 
 	getTotalRows() {
-		let total = _search_results ? _search_results : _rows;
-		return total.length;
+		let total;
+
+		if (_search_results) {
+			total = _search_results.length;
+		}
+
+		if (_totalCount) {
+			total = _totalCount;
+		} else {
+			total = _rows.length;
+		}
+
+		return total;
+	}
+
+	getQueryString() {
+		let params = [];
+
+		params.push('page=' + _opts.current_page);
+		params.push('per_page=' + _opts.rows_per_page);
+
+		if (_reqParams.query) {
+			params.push('q=' + _reqParams.query.q);
+		}
+
+		if (_reqParams.sort) {
+			params.push('sort=' + _reqParams.sort.field);
+		}
+
+		if (_reqParams.created) {
+			params.push('created[gte]=' + _reqParams.created.from);
+			params.push('created[lte]=' + _reqParams.created.to);
+		}
+
+		return '?' + params.join('&');
 	}
 
 	setPage(direction) {
@@ -42,6 +104,8 @@ class Store extends EventEmitter {
 		}
 
 		_opts.current_page = page;
+
+		this.fetchRows();
 	}
 
 	isReady() {
@@ -52,9 +116,19 @@ class Store extends EventEmitter {
 		_isReady = Boolean(bool);
 	}
 
+	isLoading() {
+		return _isLoading;
+	}
+
+	setLoading(bool) {
+		_isLoading = Boolean(bool);
+	}
+
 	setRowsPerPage(rows) {
 		_opts.rows_per_page = Number(rows);
 		_opts.current_page = 0;
+
+		this.fetchRows();
 	}
 
 	getOptions() {
@@ -70,6 +144,14 @@ class Store extends EventEmitter {
 		_opts.show_paging = data.show_paging;
 		_opts.current_page = 0;
 		_opts.request = data.request;
+
+		let hasDate = _.filter(data.columns, (item) => {
+			return item.type.name === 'datetime' && item.type.required;
+		});
+
+		if (hasDate.length) {
+			_opts.defaultDate = hasDate[0].type.default;
+		}
 	}
 
 	setColumns(data) {
@@ -164,6 +246,10 @@ class Store extends EventEmitter {
 
 		_sortIndex = column.id;
 
+		_reqParams.sort = {
+			field: _isAsc ? _sortIndex : '-' + _sortIndex
+		};
+
 		this.updateColumn(column);
 	}
 
@@ -214,11 +300,15 @@ class Store extends EventEmitter {
 	}
 
 	getRows() {
-		let __data = _search_results ? _search_results : _sorted_rows,
+		let __data = _search_results ? _search_results : _rows,
 			start = (_opts.current_page * _opts.rows_per_page),
 			end = start === 0 ? _opts.rows_per_page : (start + _opts.rows_per_page),
 			rows = _.slice(__data, start, end),
 			current_group = rows[0];
+
+		if (_rows.length < this.getTotalCount()) {
+			rows = __data;
+		}
 
 		// Get all the raw data rows
 		let data = rows.map((item) => {
@@ -282,8 +372,16 @@ class Store extends EventEmitter {
 		column.active_sort = true;
 		_sortIndex = column.id;
 
-		this.updateColumn(column);
-		this.sortRows();
+		_reqParams.sort = {
+			field: _isAsc ? _sortIndex : '-' + _sortIndex
+		};
+
+		if (!_hasAllData) {
+			this.fetchRows();
+		} else {
+			this.updateColumn(column);
+			this.sortRows();
+		}
 	}
 
 	getSortOrder() {
@@ -292,6 +390,7 @@ class Store extends EventEmitter {
 
 	clearSearchRows() {
 		_search_results = null;
+		_reqParams.query = null;
 		this.emitChange();
 	}
 
@@ -305,41 +404,61 @@ class Store extends EventEmitter {
 		this.sortRows();
 	}
 
+	setDateRange(dates) {
+		_reqParams.created = {
+			from: dates.from,
+			to: dates.to
+		};
+
+		this.fetchRows();
+	}
+
 	searchRows(q) {
-		let columns = _.filter(_columns, ((item) => {
-			return item.allow_search;
-		}));
 
-		let matches = [];
+		if (_hasAllData) {
 
-		_.forEach(_rows, ((item) => {
-
-			_.forEach(columns, ((col) => {
-				if (!item[col.id]) {
-					return;
-				}
-
-				let field = item[col.id].toLowerCase();
-
-				if (field.indexOf(q) !== -1) {
-					if (!_.findWhere(matches, { data: item })) {
-						matches.push({
-							is_group: false,
-							match: col.id,
-							position: {
-								start: field.indexOf(q),
-								end: q.length
-							},
-							term: q,
-							data: item
-						});
-					}
-				}
+			let columns = _.filter(_columns, ((item) => {
+				return item.allow_search;
 			}));
-		}));
 
-		if (matches.length) {
-			_search_results = matches;
+			let matches = [];
+
+			_.forEach(_rows, ((item) => {
+
+				_.forEach(columns, ((col) => {
+					if (!item[col.id]) {
+						return;
+					}
+
+					let field = item[col.id].toLowerCase();
+
+					if (field.indexOf(q) !== -1) {
+						if (!_.findWhere(matches, { data: item })) {
+							matches.push({
+								is_group: false,
+								match: col.id,
+								position: {
+									start: field.indexOf(q),
+									end: q.length
+								},
+								term: q,
+								data: item
+							});
+						}
+					}
+				}));
+			}));
+
+			if (matches.length) {
+				_search_results = matches;
+			}
+
+		} else {
+			_reqParams.query = {
+				q: q
+			};
+
+			this.fetchRows();
 		}
 
 		this.emitChange();
@@ -353,6 +472,16 @@ class Store extends EventEmitter {
 		let uri = _custom_data_uri ? _custom_data_uri : _opts.request.uri;
 
 		return uri;
+	}
+
+	setTotalCount(headers) {
+		if (headers['x-total-count']) {
+			_totalCount = Number(headers['x-total-count']);
+		}
+	}
+
+	getTotalCount() {
+		return _totalCount;
 	}
 
 	emitChange() {
@@ -375,6 +504,8 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 
 		case Constants.BOOTSTRAP:
 			_Store.bootstrap(payload.data);
+			_Store.setReady(true);
+			_Store.emitChange();
 			break;
 
 		case Constants.SET_DATA_URI:
@@ -382,14 +513,24 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 			break;
 
 		case Constants.FETCH_ROWS:
-			_rows = payload.data.map((item) => {
-				let rand = _.random(0, 20);
-				item.created_at = moment().subtract(rand, 'days').toISOString();
-				return item;
-			});
+			let pushData = (data) => {
+				data.forEach((item) => {
+					_rows.push(item);
+				});
+			};
+
+			// if (_rows.length) {
+				// pushData(payload.data.body);
+			// } else {
+				// _rows = payload.data.body;
+			// }
+
+			_rows = payload.data.body;
+
 			_raw_data = _rows;
+			_Store.setTotalCount(payload.data.headers);
 			_Store.sortRows();
-			_Store.setReady(true);
+			_Store.setLoading(false);
 			_Store.emitChange();
 			break;
 
@@ -419,6 +560,11 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 
 		case Constants.DATE_SELECTED:
 			_Store.setDate(payload.data);
+			_Store.emitChange();
+			break;
+
+		case Constants.DATE_RANGE_CHANGE:
+			_Store.setDateRange(payload.data);
 			_Store.emitChange();
 			break;
 

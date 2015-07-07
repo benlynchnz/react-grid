@@ -53,8 +53,14 @@ export default class SearchView extends React.Component {
     }
 
     render() {
+        let pos = this.props.target.getBoundingClientRect();
+
+        let inputStyle = {
+            left: (pos.right - 300) + 'px'
+        };
+
         return (
-            <div className={styles['input-container']}>
+            <div className={styles['input-container']} style={inputStyle}>
                 <input type="text" onBlur={this._onBlur} onFocus={this._onFocus} required />
                 <span className={styles['highlight']}></span>
                 <span className={styles['bar']}></span>

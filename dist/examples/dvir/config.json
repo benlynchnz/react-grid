@@ -1,0 +1,121 @@
+{
+	"rows_per_page": 5,
+    "paging_options": [5, 10, 20, 50, 100, 250],
+    "show_paging": true,
+    "request": {
+        "headers": [
+            {
+                "X-Mashape-Key": "DLhi4pkqMsmshJ9twnpplCqed27cp1QOesDjsnHv4oDHV4SKhF",
+                "Accept": "application/json"
+            }
+        ],
+        "required": ["created"]
+    },
+    "columns": [
+        {
+            "id": "created_at",
+            "index": 1,
+            "name": "Created At",
+            "weight": 0,
+            "sortable": false,
+			"ascending": true,
+			"type": {
+				"name": "datetime",
+                "format": "ddd DD MMM YYYY HH:mm",
+                "required": true,
+                "default": "Today"
+			}
+        },
+        {
+            "id": "status",
+            "index": 1,
+            "name": "Status",
+            "weight": 0,
+            "sortable": true,
+			"ascending": true,
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "inspection_type",
+            "index": 2,
+            "name": "Inspection Type",
+            "weight": 0,
+            "sortable": true,
+			"ascending": true,
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "inspected_by",
+            "index": 3,
+            "name": "Inspected By",
+            "weight": 1,
+            "sortable": true,
+			"ascending": true,
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "location",
+            "index": 4,
+            "name": "Location",
+            "weight": 0,
+            "sortable": false,
+			"ascending": true,
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "vehicle.number",
+            "index": 5,
+            "name": "Truck / Trailer #",
+            "weight": 0,
+            "sortable": true,
+			"ascending": true,
+			"type": {
+				"name": "string",
+                "src": "vehicle.number"
+			}
+        },
+        {
+            "id": "vehicle.plate",
+            "index": 6,
+            "name": "Plate",
+            "weight": 0,
+            "sortable": true,
+			"ascending": true,
+			"type": {
+				"name": "string",
+                "src": "vehicle.plate"
+			}
+        },
+        {
+            "id": "outcome",
+            "index": 7,
+            "name": "Outcome",
+            "weight": 0,
+            "sortable": true,
+			"ascending": false,
+            "default_sort": true,
+			"type": {
+				"name": "string"
+			}
+        },
+        {
+            "id": "open_actions",
+            "index": 0,
+            "name": "Open Actions",
+            "weight": 0,
+            "sortable": true,
+			"ascending": true,
+			"type": {
+				"name": "number"
+			}
+        }
+    ]
+}

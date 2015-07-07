@@ -8,6 +8,12 @@
 .body {
 }
 
+.loading-wrapper {
+	background-color: #fff;
+	min-height: 100px;
+    text-align: center;
+}
+
 .body .row:not(.group):first-child {
 	border-top: 1px solid #eee;
 }
@@ -19,6 +25,10 @@
   	width: 100%;
 	background-color: #fcfcfc;
 	border-bottom: 1px solid #eee;
+}
+
+.row.loading {
+	opacity: 0.3;
 }
 
 .head .row {
@@ -405,7 +415,6 @@
 .input-container {
 	display: inline-block;
 	position: absolute;
-	right: 160px;
 	margin-top: -8px;
 	float: left;
 }

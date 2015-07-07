@@ -9,6 +9,7 @@ import Columns from './components/views/Columns.jsx';
 import Rows from './components/views/Rows.jsx';
 import Footer from './components/views/Footer.jsx';
 import Options from './components/views/Options.jsx';
+import Loading from './components/views/Loading.jsx';
 
 export default class GridView extends React.Component {
 
@@ -20,7 +21,8 @@ export default class GridView extends React.Component {
 		this.state = {
 			columns: [],
 			rows: [],
-			isReady: false
+			isReady: false,
+			isLoading: true
 		};
 	}
 
@@ -43,7 +45,8 @@ export default class GridView extends React.Component {
 			this.setState({
 				columns: Store.getColumns(),
 				rows: rows,
-				isReady: Store.isReady()
+				isReady: Store.isReady(),
+				isLoading: Store.isLoading()
 			});
 		}
 	}
@@ -67,13 +70,15 @@ export default class GridView extends React.Component {
 					<div className={styles.table}>
 						<Options />
 						<Columns columns={this.state.columns} />
-						<Rows rows={this.state.rows} />
+						{this.state.isLoading ? <Loading /> : <Rows rows={this.state.rows} />}
 					</div>
 					{Store.getOptions().show_paging ? <Footer /> : null}
 				</div>
 			);
 		} else {
-			return <div>Loading ...</div>;
+			return (
+				<div className={styles.wrapper}></div>
+			);
 		}
 
 	}

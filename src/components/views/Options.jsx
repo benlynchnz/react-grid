@@ -33,6 +33,10 @@ export default class OptionsView extends React.Component {
             if (action === "DATE_SELECTED") {
                 Actions.setDate(JSON.parse(e.detail.payload).date);
             }
+
+            if (action === "DATE_RANGE_CHANGE") {
+                Actions.setDateRange(JSON.parse(e.detail.payload).dates);
+            }
         }
 
         el.addEventListener('event', handler);
@@ -42,7 +46,7 @@ export default class OptionsView extends React.Component {
         e.currentTarget.style.visibility = 'hidden';
         let el = this.refs['tools-search'].getDOMNode();
 
-        React.render(<Search el={el} li={e.currentTarget} />, el);
+        React.render(<Search el={el} li={e.currentTarget} target={e.target}/>, el);
 
         el.getElementsByTagName('input')[0].focus();
     }
@@ -55,19 +59,19 @@ export default class OptionsView extends React.Component {
 
     render() {
         return (
-            <div className={styles['options-wrapper']}>
-                <div id="group-by" className={styles['group-by']}></div>
+            <div className={styles["options-wrapper"]}>
+                <div id="group-by" className={styles["group-by"]}></div>
                 <div ref="tools-search"></div>
-                <div className={styles['options-dates']}>
+                <div className={styles["options-dates"]}>
                     <react-datepicker
                         id="myDatePicker"
-                        className="react-datepicker">
+                        data-range="true"
+                        data-default-range={Store.getOptions().defaultDate}>
                     </react-datepicker>
                 </div>
-                <ul className={styles['options-tools']}>
+                <ul className={styles["options-tools"]}>
                     <li onClick={this._onSearchClick}><img src="./icons/search.png" /></li>
-                    <li onClick={this._onFilterClick}><img src="./icons/filter-variant.png" /></li>
-                    <li><img src="./icons/settings.png" /></li>
+                    {Store.getGroups().length ? (<li onClick={this._onFilterClick}><img src="./icons/filter-variant.png" /></li>) : null}
                 </ul>
             </div>
         );

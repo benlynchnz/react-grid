@@ -36,8 +36,8 @@ export default {
 		});
 
 		req.end((err, result) => {
-			if (result.body) {
-				deferred.resolve(result.body);
+			if (result) {
+				deferred.resolve(result);
 			}
 		});
 

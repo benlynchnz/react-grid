@@ -130,7 +130,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _componentsUtils2 = _interopRequireDefault(_componentsUtils);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
@@ -150,6 +150,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _componentsViewsOptionsJsx2 = _interopRequireDefault(_componentsViewsOptionsJsx);
 
+	var _componentsViewsLoadingJsx = __webpack_require__(9);
+
+	var _componentsViewsLoadingJsx2 = _interopRequireDefault(_componentsViewsLoadingJsx);
+
 	var GridView = (function (_React$Component) {
 		function GridView(props) {
 			_classCallCheck(this, GridView);
@@ -159,7 +163,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.state = {
 				columns: [],
 				rows: [],
-				isReady: false
+				isReady: false,
+				isLoading: true
 			};
 		}
 
@@ -189,7 +194,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					this.setState({
 						columns: _componentsStore2['default'].getColumns(),
 						rows: rows,
-						isReady: _componentsStore2['default'].isReady()
+						isReady: _componentsStore2['default'].isReady(),
+						isLoading: _componentsStore2['default'].isLoading()
 					});
 				}
 			}
@@ -218,16 +224,12 @@ return /******/ (function(modules) { // webpackBootstrap
 							{ className: _GridStyleCss2['default'].table },
 							React.createElement(_componentsViewsOptionsJsx2['default'], null),
 							React.createElement(_componentsViewsColumnsJsx2['default'], { columns: this.state.columns }),
-							React.createElement(_componentsViewsRowsJsx2['default'], { rows: this.state.rows })
+							this.state.isLoading ? React.createElement(_componentsViewsLoadingJsx2['default'], null) : React.createElement(_componentsViewsRowsJsx2['default'], { rows: this.state.rows })
 						),
 						_componentsStore2['default'].getOptions().show_paging ? React.createElement(_componentsViewsFooterJsx2['default'], null) : null
 					);
 				} else {
-					return React.createElement(
-						'div',
-						null,
-						'Loading ...'
-					);
+					return React.createElement('div', { className: _GridStyleCss2['default'].wrapper });
 				}
 			}
 		}]);
@@ -257,13 +259,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var _events = __webpack_require__(19);
+	var _events = __webpack_require__(20);
 
-	var _dispatcher = __webpack_require__(10);
+	var _dispatcher = __webpack_require__(11);
 
 	var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
-	var _constants = __webpack_require__(11);
+	var _constants = __webpack_require__(12);
 
 	var _constants2 = _interopRequireDefault(_constants);
 
@@ -271,9 +273,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _actions2 = _interopRequireDefault(_actions);
 
+	var _GridStyleCss = __webpack_require__(10);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
 	var _columns = [],
 	    _rows = [],
 	    _raw_data = [],
+	    _totalCount = 0,
 	    _sorted_rows = [],
 	    _search_results = null,
 	    _sortIndex = null,
@@ -282,7 +289,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _custom_data_uri = null,
 	    _groups = [],
 	    _groupBy = null,
-	    _isReady = false;
+	    _isReady = false,
+	    _isLoading = true;
+
+	var _hasAllData = false,
+	    _reqParams = {};
 
 	var Store = (function (_EventEmitter) {
 		function Store() {
@@ -302,14 +313,79 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.setColumns(data.columns);
 				this.setDefaultColumnSort();
 				this.setGroups();
+				this.onBootstrapComplete();
+			}
+		}, {
+			key: 'onBootstrapComplete',
+			value: function onBootstrapComplete() {
+				this.fetchRows();
+			}
+		}, {
+			key: 'fetchRows',
+			value: function fetchRows() {
+				var opts = this.getOptions();
 
-				_actions2['default'].fetchRows(this.getDataURI());
+				if (opts.request && opts.request.required && opts.request.required.length) {
+					var _ret = (function () {
+						var params = _.keys(_reqParams);
+
+						var exists = _.every(opts.request.required, function (item) {
+							return params.indexOf(item) !== -1;
+						});
+
+						if (!exists) {
+							return {
+								v: undefined
+							};
+						}
+					})();
+
+					if (typeof _ret === 'object') return _ret.v;
+				};
+
+				var uri = this.getDataURI() + this.getQueryString();
+				_actions2['default'].fetchRows(uri);
+				this.setLoading(true);
 			}
 		}, {
 			key: 'getTotalRows',
 			value: function getTotalRows() {
-				var total = _search_results ? _search_results : _rows;
-				return total.length;
+				var total = undefined;
+
+				if (_search_results) {
+					total = _search_results.length;
+				}
+
+				if (_totalCount) {
+					total = _totalCount;
+				} else {
+					total = _rows.length;
+				}
+
+				return total;
+			}
+		}, {
+			key: 'getQueryString',
+			value: function getQueryString() {
+				var params = [];
+
+				params.push('page=' + _opts.current_page);
+				params.push('per_page=' + _opts.rows_per_page);
+
+				if (_reqParams.query) {
+					params.push('q=' + _reqParams.query.q);
+				}
+
+				if (_reqParams.sort) {
+					params.push('sort=' + _reqParams.sort.field);
+				}
+
+				if (_reqParams.created) {
+					params.push('created[gte]=' + _reqParams.created.from);
+					params.push('created[lte]=' + _reqParams.created.to);
+				}
+
+				return '?' + params.join('&');
 			}
 		}, {
 			key: 'setPage',
@@ -323,6 +399,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				_opts.current_page = page;
+
+				this.fetchRows();
 			}
 		}, {
 			key: 'isReady',
@@ -335,10 +413,22 @@ return /******/ (function(modules) { // webpackBootstrap
 				_isReady = Boolean(bool);
 			}
 		}, {
+			key: 'isLoading',
+			value: function isLoading() {
+				return _isLoading;
+			}
+		}, {
+			key: 'setLoading',
+			value: function setLoading(bool) {
+				_isLoading = Boolean(bool);
+			}
+		}, {
 			key: 'setRowsPerPage',
 			value: function setRowsPerPage(rows) {
 				_opts.rows_per_page = Number(rows);
 				_opts.current_page = 0;
+
+				this.fetchRows();
 			}
 		}, {
 			key: 'getOptions',
@@ -356,6 +446,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				_opts.show_paging = data.show_paging;
 				_opts.current_page = 0;
 				_opts.request = data.request;
+
+				var hasDate = _.filter(data.columns, function (item) {
+					return item.type.name === 'datetime' && item.type.required;
+				});
+
+				if (hasDate.length) {
+					_opts.defaultDate = hasDate[0].type['default'];
+				}
 			}
 		}, {
 			key: 'setColumns',
@@ -459,6 +557,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				_sortIndex = column.id;
 
+				_reqParams.sort = {
+					field: _isAsc ? _sortIndex : '-' + _sortIndex
+				};
+
 				this.updateColumn(column);
 			}
 		}, {
@@ -475,7 +577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					(function () {
 						var grouped = _.groupBy(result, function (item) {
 							if (_groupBy.id.split('.') !== -1) {
-								var _ret2 = (function () {
+								var _ret3 = (function () {
 									var keys = _groupBy.id.split('.'),
 									    value = item;
 
@@ -488,7 +590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 									};
 								})();
 
-								if (typeof _ret2 === 'object') return _ret2.v;
+								if (typeof _ret3 === 'object') return _ret3.v;
 							}
 
 							return item[_groupBy.id];
@@ -514,11 +616,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getRows',
 			value: function getRows() {
-				var __data = _search_results ? _search_results : _sorted_rows,
+				var __data = _search_results ? _search_results : _rows,
 				    start = _opts.current_page * _opts.rows_per_page,
 				    end = start === 0 ? _opts.rows_per_page : start + _opts.rows_per_page,
 				    rows = _.slice(__data, start, end),
 				    current_group = rows[0];
+
+				if (_rows.length < this.getTotalCount()) {
+					rows = __data;
+				}
 
 				// Get all the raw data rows
 				var data = rows.map(function (item) {
@@ -586,8 +692,16 @@ return /******/ (function(modules) { // webpackBootstrap
 				column.active_sort = true;
 				_sortIndex = column.id;
 
-				this.updateColumn(column);
-				this.sortRows();
+				_reqParams.sort = {
+					field: _isAsc ? _sortIndex : '-' + _sortIndex
+				};
+
+				if (!_hasAllData) {
+					this.fetchRows();
+				} else {
+					this.updateColumn(column);
+					this.sortRows();
+				}
 			}
 		}, {
 			key: 'getSortOrder',
@@ -598,6 +712,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'clearSearchRows',
 			value: function clearSearchRows() {
 				_search_results = null;
+				_reqParams.query = null;
 				this.emitChange();
 			}
 		}, {
@@ -612,42 +727,64 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.sortRows();
 			}
 		}, {
+			key: 'setDateRange',
+			value: function setDateRange(dates) {
+				_reqParams.created = {
+					from: dates.from,
+					to: dates.to
+				};
+
+				this.fetchRows();
+			}
+		}, {
 			key: 'searchRows',
 			value: function searchRows(q) {
-				var columns = _.filter(_columns, function (item) {
-					return item.allow_search;
-				});
 
-				var matches = [];
+				if (_hasAllData) {
+					(function () {
 
-				_.forEach(_rows, function (item) {
+						var columns = _.filter(_columns, function (item) {
+							return item.allow_search;
+						});
 
-					_.forEach(columns, function (col) {
-						if (!item[col.id]) {
-							return;
+						var matches = [];
+
+						_.forEach(_rows, function (item) {
+
+							_.forEach(columns, function (col) {
+								if (!item[col.id]) {
+									return;
+								}
+
+								var field = item[col.id].toLowerCase();
+
+								if (field.indexOf(q) !== -1) {
+									if (!_.findWhere(matches, { data: item })) {
+										matches.push({
+											is_group: false,
+											match: col.id,
+											position: {
+												start: field.indexOf(q),
+												end: q.length
+											},
+											term: q,
+											data: item
+										});
+									}
+								}
+							});
+						});
+
+						if (matches.length) {
+							_search_results = matches;
 						}
+					})();
+				} else {
+					_reqParams.query = {
+						q: q
+					};
 
-						var field = item[col.id].toLowerCase();
-
-						if (field.indexOf(q) !== -1) {
-							if (!_.findWhere(matches, { data: item })) {
-								matches.push({
-									is_group: false,
-									match: col.id,
-									position: {
-										start: field.indexOf(q),
-										end: q.length
-									},
-									term: q,
-									data: item
-								});
-							}
-						}
-					});
-				});
-
-				if (matches.length) {
-					_search_results = matches;
+					this.fetchRows();
 				}
 
 				this.emitChange();
@@ -663,6 +800,18 @@ return /******/ (function(modules) { // webpackBootstrap
 				var uri = _custom_data_uri ? _custom_data_uri : _opts.request.uri;
 
 				return uri;
+			}
+		}, {
+			key: 'setTotalCount',
+			value: function setTotalCount(headers) {
+				if (headers['x-total-count']) {
+					_totalCount = Number(headers['x-total-count']);
+				}
+			}
+		}, {
+			key: 'getTotalCount',
+			value: function getTotalCount() {
+				return _totalCount;
 			}
 		}, {
 			key: 'emitChange',
@@ -691,6 +840,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			case _constants2['default'].BOOTSTRAP:
 				_Store.bootstrap(payload.data);
+				_Store.setReady(true);
+				_Store.emitChange();
 				break;
 
 			case _constants2['default'].SET_DATA_URI:
@@ -698,14 +849,24 @@ return /******/ (function(modules) { // webpackBootstrap
 				break;
 
 			case _constants2['default'].FETCH_ROWS:
-				_rows = payload.data.map(function (item) {
-					var rand = _.random(0, 20);
-					item.created_at = moment().subtract(rand, 'days').toISOString();
-					return item;
-				});
+				var pushData = function pushData(data) {
+					data.forEach(function (item) {
+						_rows.push(item);
+					});
+				};
+
+				// if (_rows.length) {
+				// pushData(payload.data.body);
+				// } else {
+				// _rows = payload.data.body;
+				// }
+
+				_rows = payload.data.body;
+
 				_raw_data = _rows;
+				_Store.setTotalCount(payload.data.headers);
 				_Store.sortRows();
-				_Store.setReady(true);
+				_Store.setLoading(false);
 				_Store.emitChange();
 				break;
 
@@ -738,6 +899,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				_Store.emitChange();
 				break;
 
+			case _constants2['default'].DATE_RANGE_CHANGE:
+				_Store.setDateRange(payload.data);
+				_Store.emitChange();
+				break;
+
 			default:
 				break;
 
@@ -759,15 +925,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _dispatcher = __webpack_require__(10);
+	var _dispatcher = __webpack_require__(11);
 
 	var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
-	var _constants = __webpack_require__(11);
+	var _constants = __webpack_require__(12);
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _api = __webpack_require__(12);
+	var _api = __webpack_require__(13);
 
 	var _api2 = _interopRequireDefault(_api);
 
@@ -829,6 +995,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			_dispatcher2['default'].dispatch({
 				type: _constants2['default'].DATE_SELECTED,
 				data: date
+			});
+		},
+
+		setDateRange: function setDateRange(dates) {
+			_dispatcher2['default'].dispatch({
+				type: _constants2['default'].DATE_RANGE_CHANGE,
+				data: dates
 			});
 		},
 
@@ -923,11 +1096,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils2 = _interopRequireDefault(_utils);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _GroupsJsx = __webpack_require__(13);
+	var _GroupsJsx = __webpack_require__(14);
 
 	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
 
@@ -1086,19 +1259,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils2 = _interopRequireDefault(_utils);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _cellTypesIndex = __webpack_require__(14);
+	var _cellTypesIndex = __webpack_require__(15);
 
 	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
 
-	var _RowJsx = __webpack_require__(15);
+	var _RowJsx = __webpack_require__(16);
 
 	var _RowJsx2 = _interopRequireDefault(_RowJsx);
 
-	var _RowGroupedJsx = __webpack_require__(16);
+	var _RowGroupedJsx = __webpack_require__(17);
 
 	var _RowGroupedJsx2 = _interopRequireDefault(_RowGroupedJsx);
 
@@ -1169,11 +1342,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils2 = _interopRequireDefault(_utils);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _RowsPerPageJsx = __webpack_require__(17);
+	var _RowsPerPageJsx = __webpack_require__(18);
 
 	var _RowsPerPageJsx2 = _interopRequireDefault(_RowsPerPageJsx);
 
@@ -1320,15 +1493,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils2 = _interopRequireDefault(_utils);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _GroupsJsx = __webpack_require__(13);
+	var _GroupsJsx = __webpack_require__(14);
 
 	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
 
-	var _SearchJsx = __webpack_require__(18);
+	var _SearchJsx = __webpack_require__(19);
 
 	var _SearchJsx2 = _interopRequireDefault(_SearchJsx);
 
@@ -1358,6 +1531,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (action === 'DATE_SELECTED') {
 	                    _actions2['default'].setDate(JSON.parse(e.detail.payload).date);
 	                }
+
+	                if (action === 'DATE_RANGE_CHANGE') {
+	                    _actions2['default'].setDateRange(JSON.parse(e.detail.payload).dates);
+	                }
 	            };
 
 	            el.addEventListener('event', handler);
@@ -1368,7 +1545,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            e.currentTarget.style.visibility = 'hidden';
 	            var el = this.refs['tools-search'].getDOMNode();
 
-	            React.render(React.createElement(_SearchJsx2['default'], { el: el, li: e.currentTarget }), el);
+	            React.render(React.createElement(_SearchJsx2['default'], { el: el, li: e.currentTarget, target: e.target }), el);
 
 	            el.getElementsByTagName('input')[0].focus();
 	        }
@@ -1392,7 +1569,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    { className: _GridStyleCss2['default']['options-dates'] },
 	                    React.createElement('react-datepicker', {
 	                        id: 'myDatePicker',
-	                        className: 'react-datepicker' })
+	                        'data-range': 'true',
+	                        'data-default-range': _store2['default'].getOptions().defaultDate })
 	                ),
 	                React.createElement(
 	                    'ul',
@@ -1402,16 +1580,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        { onClick: this._onSearchClick },
 	                        React.createElement('img', { src: './icons/search.png' })
 	                    ),
-	                    React.createElement(
+	                    _store2['default'].getGroups().length ? React.createElement(
 	                        'li',
 	                        { onClick: this._onFilterClick },
 	                        React.createElement('img', { src: './icons/filter-variant.png' })
-	                    ),
-	                    React.createElement(
-	                        'li',
-	                        null,
-	                        React.createElement('img', { src: './icons/settings.png' })
-	                    )
+	                    ) : null
 	                )
 	            );
 	        }
@@ -1428,11 +1601,81 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// removed by extract-text-webpack-plugin
-	module.exports = {"wrapper":"GridStyle__wrapper___2GPIa","table":"GridStyle__table___1hfrk","body":"GridStyle__body___3fMzu","row":"GridStyle__row___25tH_","group":"GridStyle__group___3GIS0","head":"GridStyle__head___2E1A4","cell":"GridStyle__cell___nHb5Q","header":"GridStyle__header___5Kszw","title":"GridStyle__title___1qH-h","group-by-header":"GridStyle__group-by-header___1w9CU","options":"GridStyle__options___3Xxx3","cell-valign-middle":"GridStyle__cell-valign-middle___VjDQk","cell-valign-bottom":"GridStyle__cell-valign-bottom___1bXVW","cell-min":"GridStyle__cell-min___2PDoq","cell-max":"GridStyle__cell-max___wXFkb","column-sort":"GridStyle__column-sort___1kRVc","cell-nowrap":"GridStyle__cell-nowrap___1AC-S","cell-align-center":"GridStyle__cell-align-center___2MEAH","cell-align-right":"GridStyle__cell-align-right___1VhSM","cell-highlight":"GridStyle__cell-highlight___3mcBR","search-highlight":"GridStyle__search-highlight___3xr9Z","cell-100px":"GridStyle__cell-100px___3LsNv","asc":"GridStyle__asc___20KVi","desc":"GridStyle__desc___19MPa","footer":"GridStyle__footer___3SKuL","ul":"GridStyle__ul___7Ryif","li":"GridStyle__li___Y2ezh","dots-vertical":"GridStyle__dots-vertical___3-Jus","caret":"GridStyle__caret___2WrVL","menu-wrapper":"GridStyle__menu-wrapper___2dzHZ","rows-per-page":"GridStyle__rows-per-page___1y7Um","group-by":"GridStyle__group-by___O3qZl","menu-hdr":"GridStyle__menu-hdr___1J_7i","selected":"GridStyle__selected___3eyuf","options-wrapper":"GridStyle__options-wrapper___InRhA","options-dates":"GridStyle__options-dates___VcUuW","options-tools":"GridStyle__options-tools___2D5V3","input-container":"GridStyle__input-container___vpTCt","bar":"GridStyle__bar___1eATB","highlight":"GridStyle__highlight___yiNAP","inputHighlighter":"GridStyle__inputHighlighter___1xnoT","tools-search":"GridStyle__tools-search___1xKWy","w-0":"GridStyle__w-0___3iPqO","w-1":"GridStyle__w-1___1EdTA","w-2":"GridStyle__w-2___g3RIZ","w-3":"GridStyle__w-3___25drh","w-4":"GridStyle__w-4___3rlJH"};
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _GridStyleCss = __webpack_require__(10);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var LoadingView = (function (_React$Component) {
+	    function LoadingView(props) {
+	        _classCallCheck(this, LoadingView);
+
+	        _get(Object.getPrototypeOf(LoadingView.prototype), "constructor", this).call(this, props);
+	    }
+
+	    _inherits(LoadingView, _React$Component);
+
+	    _createClass(LoadingView, [{
+	        key: "render",
+	        value: function render() {
+	            var rows = _store2["default"].getOptions().rows_per_page,
+	                height = rows * 48 + (rows + 1);
+
+	            var divStyle = {
+	                height: height + "px"
+	            };
+
+	            var loadingStyle = {
+	                paddingTop: height / 2 - 20 + "px"
+	            };
+
+	            return React.createElement(
+	                "div",
+	                { className: _GridStyleCss2["default"]["loading-wrapper"], style: divStyle },
+	                React.createElement(
+	                    "div",
+	                    { style: loadingStyle },
+	                    React.createElement("img", { src: "./svg/oval.svg" })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return LoadingView;
+	})(React.Component);
+
+	exports["default"] = LoadingView;
+	;
+	module.exports = exports["default"];
 
 /***/ },
 /* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"wrapper":"GridStyle__wrapper___2GPIa","table":"GridStyle__table___1hfrk","body":"GridStyle__body___3fMzu","loading-wrapper":"GridStyle__loading-wrapper___1QZpb","row":"GridStyle__row___25tH_","group":"GridStyle__group___3GIS0","loading":"GridStyle__loading___2PMTK","head":"GridStyle__head___2E1A4","cell":"GridStyle__cell___nHb5Q","header":"GridStyle__header___5Kszw","title":"GridStyle__title___1qH-h","group-by-header":"GridStyle__group-by-header___1w9CU","options":"GridStyle__options___3Xxx3","cell-valign-middle":"GridStyle__cell-valign-middle___VjDQk","cell-valign-bottom":"GridStyle__cell-valign-bottom___1bXVW","cell-min":"GridStyle__cell-min___2PDoq","cell-max":"GridStyle__cell-max___wXFkb","column-sort":"GridStyle__column-sort___1kRVc","cell-nowrap":"GridStyle__cell-nowrap___1AC-S","cell-align-center":"GridStyle__cell-align-center___2MEAH","cell-align-right":"GridStyle__cell-align-right___1VhSM","cell-highlight":"GridStyle__cell-highlight___3mcBR","search-highlight":"GridStyle__search-highlight___3xr9Z","cell-100px":"GridStyle__cell-100px___3LsNv","asc":"GridStyle__asc___20KVi","desc":"GridStyle__desc___19MPa","footer":"GridStyle__footer___3SKuL","ul":"GridStyle__ul___7Ryif","li":"GridStyle__li___Y2ezh","dots-vertical":"GridStyle__dots-vertical___3-Jus","caret":"GridStyle__caret___2WrVL","menu-wrapper":"GridStyle__menu-wrapper___2dzHZ","rows-per-page":"GridStyle__rows-per-page___1y7Um","group-by":"GridStyle__group-by___O3qZl","menu-hdr":"GridStyle__menu-hdr___1J_7i","selected":"GridStyle__selected___3eyuf","options-wrapper":"GridStyle__options-wrapper___InRhA","options-dates":"GridStyle__options-dates___VcUuW","options-tools":"GridStyle__options-tools___2D5V3","input-container":"GridStyle__input-container___vpTCt","bar":"GridStyle__bar___1eATB","highlight":"GridStyle__highlight___yiNAP","inputHighlighter":"GridStyle__inputHighlighter___1xnoT","tools-search":"GridStyle__tools-search___1xKWy","w-0":"GridStyle__w-0___3iPqO","w-1":"GridStyle__w-1___1EdTA","w-2":"GridStyle__w-2___g3RIZ","w-3":"GridStyle__w-3___25drh","w-4":"GridStyle__w-4___3rlJH"};
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1441,13 +1684,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _flux = __webpack_require__(25);
+	var _flux = __webpack_require__(26);
 
 	exports['default'] = new _flux.Dispatcher();
 	module.exports = exports['default'];
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1466,6 +1709,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		SET_GROUP: "SET_GROUP",
 		SEARCHING: "SEARCHING",
 		DATE_SELECTED: "DATE_SELECTED",
+		DATE_RANGE_CHANGE: "DATE_RANGE_CHANGE",
 		SET_DATA_URI: "SET_DATA_URI"
 	};
 
@@ -1473,7 +1717,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1488,11 +1732,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _superagent = __webpack_require__(27);
+	var _superagent = __webpack_require__(28);
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _q = __webpack_require__(26);
+	var _q = __webpack_require__(27);
 
 	var _q2 = _interopRequireDefault(_q);
 
@@ -1526,8 +1770,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			});
 
 			req.end(function (err, result) {
-				if (result.body) {
-					deferred.resolve(result.body);
+				if (result) {
+					deferred.resolve(result);
 				}
 			});
 
@@ -1537,7 +1781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1564,7 +1808,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
@@ -1661,7 +1905,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1672,27 +1916,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _link = __webpack_require__(20);
+	var _link = __webpack_require__(21);
 
 	var _link2 = _interopRequireDefault(_link);
 
-	var _img = __webpack_require__(21);
+	var _img = __webpack_require__(22);
 
 	var _img2 = _interopRequireDefault(_img);
 
-	var _datetime = __webpack_require__(22);
+	var _datetime = __webpack_require__(23);
 
 	var _datetime2 = _interopRequireDefault(_datetime);
 
-	var _number = __webpack_require__(23);
+	var _number = __webpack_require__(24);
 
 	var _number2 = _interopRequireDefault(_number);
 
-	var _string = __webpack_require__(24);
+	var _string = __webpack_require__(25);
 
 	var _string2 = _interopRequireDefault(_string);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
@@ -1747,7 +1991,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1770,11 +2014,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _cellTypesIndex = __webpack_require__(14);
+	var _cellTypesIndex = __webpack_require__(15);
 
 	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
 
@@ -1848,7 +2092,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// classes.push(styles['cell-highlight']);
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1871,11 +2115,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _cellTypesIndex = __webpack_require__(14);
+	var _cellTypesIndex = __webpack_require__(15);
 
 	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
 
@@ -1933,7 +2177,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1956,7 +2200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
@@ -2041,7 +2285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2068,7 +2312,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
@@ -2127,9 +2371,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var pos = this.props.target.getBoundingClientRect();
+
+	            var inputStyle = {
+	                left: pos.right - 300 + 'px'
+	            };
+
 	            return React.createElement(
 	                'div',
-	                { className: _GridStyleCss2['default']['input-container'] },
+	                { className: _GridStyleCss2['default']['input-container'], style: inputStyle },
 	                React.createElement('input', { type: 'text', onBlur: this._onBlur, onFocus: this._onFocus, required: true }),
 	                React.createElement('span', { className: _GridStyleCss2['default']['highlight'] }),
 	                React.createElement('span', { className: _GridStyleCss2['default']['bar'] }),
@@ -2146,7 +2396,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -2453,7 +2703,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2464,7 +2714,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _GridStyleCss = __webpack_require__(9);
+	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
@@ -2529,7 +2779,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2565,7 +2815,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2594,7 +2844,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2609,7 +2859,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _numeral = __webpack_require__(29);
+	var _numeral = __webpack_require__(30);
 
 	var _numeral2 = _interopRequireDefault(_numeral);
 
@@ -2623,7 +2873,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2654,7 +2904,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2666,11 +2916,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(28)
+	module.exports.Dispatcher = __webpack_require__(29)
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process, setImmediate) {// vim:ts=4:sts=4:sw=4:
@@ -4722,18 +4972,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	});
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30), __webpack_require__(31).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31), __webpack_require__(32).setImmediate))
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Emitter = __webpack_require__(33);
-	var reduce = __webpack_require__(34);
+	var Emitter = __webpack_require__(34);
+	var reduce = __webpack_require__(35);
 
 	/**
 	 * Root reference for iframes.
@@ -5854,7 +6104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -5871,7 +6121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	var invariant = __webpack_require__(32);
+	var invariant = __webpack_require__(33);
 
 	var _lastID = 1;
 	var _prefix = 'ID_';
@@ -6110,7 +6360,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -6795,7 +7045,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// shim for using process in browser
@@ -6859,10 +7109,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(35).nextTick;
+	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(36).nextTick;
 	var apply = Function.prototype.apply;
 	var slice = Array.prototype.slice;
 	var immediateIds = {};
@@ -6938,10 +7188,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31).setImmediate, __webpack_require__(31).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32).setImmediate, __webpack_require__(32).clearImmediate))
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7000,7 +7250,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -7170,7 +7420,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -7199,7 +7449,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// shim for using process in browser
