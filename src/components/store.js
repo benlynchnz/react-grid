@@ -143,6 +143,7 @@ class Store extends EventEmitter {
 		_opts.default_number_format = data.default_number_format || "0,0";
 		_opts.show_paging = data.show_paging;
 		_opts.current_page = 0;
+		_opts.show_datepicker = (data.show_datepicker === false) ? false : true;
 		_opts.request = data.request;
 
 		let hasDate = _.filter(data.columns, (item) => {

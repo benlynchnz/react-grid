@@ -23,23 +23,25 @@ export default class OptionsView extends React.Component {
     componentDidMount() {
         utils.dispatch("render");
 
-        let el = document.getElementById('myDatePicker');
+        if (Store.getOptions().show_datepicker) {
+            let el = document.getElementById('myDatePicker');
 
-        let handler = (e) => {
-            let action = e.detail.action;
-            console.log('ACTION:: ' + e.detail.action);
-            console.log('PAYLOAD:: ' + e.detail.payload);
+            let handler = (e) => {
+                let action = e.detail.action;
+                console.log('ACTION:: ' + e.detail.action);
+                console.log('PAYLOAD:: ' + e.detail.payload);
 
-            if (action === "DATE_SELECTED") {
-                Actions.setDate(JSON.parse(e.detail.payload).date);
+                if (action === "DATE_SELECTED") {
+                    Actions.setDate(JSON.parse(e.detail.payload).date);
+                }
+
+                if (action === "DATE_RANGE_CHANGE") {
+                    Actions.setDateRange(JSON.parse(e.detail.payload).dates);
+                }
             }
 
-            if (action === "DATE_RANGE_CHANGE") {
-                Actions.setDateRange(JSON.parse(e.detail.payload).dates);
-            }
+            el.addEventListener('event', handler);
         }
-
-        el.addEventListener('event', handler);
     }
 
     _onSearchClick(e) {
@@ -58,18 +60,22 @@ export default class OptionsView extends React.Component {
 	}
 
     render() {
+        let opts = Store.getOptions();
+
         return (
             <div className={styles["options-wrapper"]}>
                 <div id="group-by" className={styles["group-by"]}></div>
                 <div ref="tools-search"></div>
-                <div className={styles["options-dates"]}>
-                    <react-datepicker
-                        id="myDatePicker"
-                        data-range="true"
-                        data-hide-inputs="true"
-                        data-default-range={Store.getOptions().defaultDate}>
-                    </react-datepicker>
-                </div>
+                {opts.show_datepicker ? (
+                    <div className={styles["options-dates"]}>
+                        <react-datepicker
+                            id="myDatePicker"
+                            data-range="true"
+                            data-hide-inputs="true"
+                            data-default-range={Store.getOptions().defaultDate}>
+                        </react-datepicker>
+                    </div>
+                ) : null}
                 <ul className={styles["options-tools"]}>
                     <li onClick={this._onSearchClick}><img src="./icons/search.png" /></li>
                     {Store.getGroups().length ? (<li onClick={this._onFilterClick}><img src="./icons/filter-variant.png" /></li>) : null}

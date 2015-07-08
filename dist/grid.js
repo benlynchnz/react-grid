@@ -445,6 +445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				_opts.default_number_format = data.default_number_format || '0,0';
 				_opts.show_paging = data.show_paging;
 				_opts.current_page = 0;
+				_opts.show_datepicker = data.show_datepicker === false ? false : true;
 				_opts.request = data.request;
 
 				var hasDate = _.filter(data.columns, function (item) {
@@ -1263,15 +1264,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _cellTypesIndex = __webpack_require__(15);
+	var _cellTypesIndex = __webpack_require__(17);
 
 	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
 
-	var _RowJsx = __webpack_require__(16);
+	var _RowJsx = __webpack_require__(18);
 
 	var _RowJsx2 = _interopRequireDefault(_RowJsx);
 
-	var _RowGroupedJsx = __webpack_require__(17);
+	var _RowGroupedJsx = __webpack_require__(19);
 
 	var _RowGroupedJsx2 = _interopRequireDefault(_RowGroupedJsx);
 
@@ -1346,7 +1347,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _RowsPerPageJsx = __webpack_require__(19);
+	var _RowsPerPageJsx = __webpack_require__(15);
 
 	var _RowsPerPageJsx2 = _interopRequireDefault(_RowsPerPageJsx);
 
@@ -1501,7 +1502,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
 
-	var _SearchJsx = __webpack_require__(18);
+	var _SearchJsx = __webpack_require__(16);
 
 	var _SearchJsx2 = _interopRequireDefault(_SearchJsx);
 
@@ -1521,23 +1522,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function componentDidMount() {
 	            _utils2['default'].dispatch('render');
 
-	            var el = document.getElementById('myDatePicker');
+	            if (_store2['default'].getOptions().show_datepicker) {
+	                var el = document.getElementById('myDatePicker');
 
-	            var handler = function handler(e) {
-	                var action = e.detail.action;
-	                console.log('ACTION:: ' + e.detail.action);
-	                console.log('PAYLOAD:: ' + e.detail.payload);
+	                var handler = function handler(e) {
+	                    var action = e.detail.action;
+	                    console.log('ACTION:: ' + e.detail.action);
+	                    console.log('PAYLOAD:: ' + e.detail.payload);
 
-	                if (action === 'DATE_SELECTED') {
-	                    _actions2['default'].setDate(JSON.parse(e.detail.payload).date);
-	                }
+	                    if (action === 'DATE_SELECTED') {
+	                        _actions2['default'].setDate(JSON.parse(e.detail.payload).date);
+	                    }
 
-	                if (action === 'DATE_RANGE_CHANGE') {
-	                    _actions2['default'].setDateRange(JSON.parse(e.detail.payload).dates);
-	                }
-	            };
+	                    if (action === 'DATE_RANGE_CHANGE') {
+	                        _actions2['default'].setDateRange(JSON.parse(e.detail.payload).dates);
+	                    }
+	                };
 
-	            el.addEventListener('event', handler);
+	                el.addEventListener('event', handler);
+	            }
 	        }
 	    }, {
 	        key: '_onSearchClick',
@@ -1559,12 +1562,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var opts = _store2['default'].getOptions();
+
 	            return React.createElement(
 	                'div',
 	                { className: _GridStyleCss2['default']['options-wrapper'] },
 	                React.createElement('div', { id: 'group-by', className: _GridStyleCss2['default']['group-by'] }),
 	                React.createElement('div', { ref: 'tools-search' }),
-	                React.createElement(
+	                opts.show_datepicker ? React.createElement(
 	                    'div',
 	                    { className: _GridStyleCss2['default']['options-dates'] },
 	                    React.createElement('react-datepicker', {
@@ -1572,7 +1577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        'data-range': 'true',
 	                        'data-hide-inputs': 'true',
 	                        'data-default-range': _store2['default'].getOptions().defaultDate })
-	                ),
+	                ) : null,
 	                React.createElement(
 	                    'ul',
 	                    { className: _GridStyleCss2['default']['options-tools'] },
@@ -1912,92 +1917,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _link = __webpack_require__(21);
-
-	var _link2 = _interopRequireDefault(_link);
-
-	var _img = __webpack_require__(22);
-
-	var _img2 = _interopRequireDefault(_img);
-
-	var _datetime = __webpack_require__(23);
-
-	var _datetime2 = _interopRequireDefault(_datetime);
-
-	var _number = __webpack_require__(24);
-
-	var _number2 = _interopRequireDefault(_number);
-
-	var _string = __webpack_require__(25);
-
-	var _string2 = _interopRequireDefault(_string);
-
-	var _GridStyleCss = __webpack_require__(10);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var highlight = function highlight(element, start, end) {
-	    var str = element;
-
-	    str = str.substr(0, start) + '<span class="' + _GridStyleCss2['default']['search-highlight'] + '">' + str.substr(start, end) + '</span>' + str.substr(start + end);
-
-	    return str;
-	};
-
-	var createMarkup = function createMarkup(el, position) {
-	    return {
-	        __html: highlight(el, position.start, position.end)
-	    };
-	};
-
-	exports['default'] = function (col, row) {
-
-	    switch (col.type.name) {
-	        case 'link':
-	            return (0, _link2['default'])(col, row);
-	            break;
-	        case 'image':
-	            return (0, _img2['default'])(col, row);
-	            break;
-	        case 'datetime':
-	            return (0, _datetime2['default'])(col, row);
-	            break;
-	        case 'array':
-	            return ARRAY(col, row);
-	            break;
-	        case 'number':
-	            return (0, _number2['default'])(col, row);
-	            break;
-	        case 'string':
-	            if (col.type.src) {
-	                return (0, _string2['default'])(col, row);
-	            } else {
-	                if (row.match && col.id === row.match) {
-	                    var el = row.data[col.id];
-	                    return React.createElement('div', { dangerouslySetInnerHTML: createMarkup(el, row.position) });
-	                }
-	                return row.data[col.id] || '-';
-	            }
-	            break;
-	        default:
-	            return row.data[col.id] || '-';
-	    }
-	};
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
 		value: true
 	});
 
@@ -2011,174 +1930,96 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var _store = __webpack_require__(2);
+	var _actions = __webpack_require__(3);
 
-	var _store2 = _interopRequireDefault(_store);
+	var _actions2 = _interopRequireDefault(_actions);
 
 	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _cellTypesIndex = __webpack_require__(15);
+	var RowsPerPageView = (function (_React$Component) {
+		function RowsPerPageView(props) {
+			_classCallCheck(this, RowsPerPageView);
 
-	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
+			_get(Object.getPrototypeOf(RowsPerPageView.prototype), 'constructor', this).call(this, props);
 
-	var RowView = (function (_React$Component) {
-		function RowView(props) {
-			_classCallCheck(this, RowView);
-
-			_get(Object.getPrototypeOf(RowView.prototype), 'constructor', this).call(this, props);
+			this._onClick = this._onClick.bind(this);
+			this._onBlur = this._onBlur.bind(this);
 		}
 
-		_inherits(RowView, _React$Component);
+		_inherits(RowsPerPageView, _React$Component);
 
-		_createClass(RowView, [{
+		_createClass(RowsPerPageView, [{
+			key: '_onClick',
+			value: function _onClick(e) {
+				var option = e.target.getAttribute('data-value');
+				_actions2['default'].setRowsPerPage(option);
+				this._onBlur();
+			}
+		}, {
+			key: '_onBlur',
+			value: function _onBlur() {
+				this.props.el.removeAttribute('style');
+				React.unmountComponentAtNode(this.props.el);
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				var _this = this;
 
-				var genClass = function genClass(col, row) {
-					var classes = [_GridStyleCss2['default'].cell];
+				var position = this.props.target.getBoundingClientRect(),
+				    offsetTop = this.props.opts.paging_options.length * 48 - 48;
 
-					if (col.classes) {
-						col.classes.forEach(function (item) {
-							classes.push(_GridStyleCss2['default'][item]);
-						});
+				this.props.el.style.position = 'fixed';
+				this.props.el.style.left = position.left - 20 + 'px';
+				this.props.el.style.top = position.top - offsetTop + 'px';
+				this.props.el.style.display = 'block';
+
+				var genClass = function genClass(item) {
+					var classes = [_GridStyleCss2['default'].li];
+
+					if (item === _this.props.opts.rows_per_page) {
+						classes.push(_GridStyleCss2['default'].selected);
 					}
-
-					if (col.weight || col.weight === 0) {
-						classes.push(_GridStyleCss2['default']['w-' + col.weight]);
-					}
-
-					if (col.type.name === 'number') {
-						classes.push(_GridStyleCss2['default']['cell-align-right']);
-					}
-
-					if (row.match && col.id === row.match) {}
 
 					return classes.join(' ');
 				};
 
-				var genStyle = function genStyle(col) {
-					if (col.row_style) {
-						return col.row_style;
-					}
+				var clickHandler = function clickHandler(e) {
+					document.removeEventListener('click', clickHandler);
+					_this._onBlur();
 				};
+
+				document.addEventListener('click', clickHandler);
 
 				return React.createElement(
 					'div',
-					{ key: this.props.i, className: _GridStyleCss2['default'].row },
-					_store2['default'].getColumns().map(function (col, j) {
-						return React.createElement(
-							'div',
-							{
-								key: j,
-								'data-label': col.name,
-								className: genClass(col, _this.props.row),
-								style: genStyle(col) },
-							(0, _cellTypesIndex2['default'])(col, _this.props.row)
-						);
-					})
-				);
-			}
-		}]);
-
-		return RowView;
-	})(React.Component);
-
-	exports['default'] = RowView;
-	;
-	module.exports = exports['default'];
-
-	// classes.push(styles['cell-highlight']);
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _GridStyleCss = __webpack_require__(10);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _cellTypesIndex = __webpack_require__(15);
-
-	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
-
-	var RowGroupedView = (function (_React$Component) {
-		function RowGroupedView(props) {
-			_classCallCheck(this, RowGroupedView);
-
-			_get(Object.getPrototypeOf(RowGroupedView.prototype), 'constructor', this).call(this, props);
-		}
-
-		_inherits(RowGroupedView, _React$Component);
-
-		_createClass(RowGroupedView, [{
-			key: 'render',
-			value: function render() {
-
-				if (!this.props.group) {
-					return React.createElement('div', null);
-				}
-
-				var genRowClass = function genRowClass(col) {
-					var classes = [_GridStyleCss2['default'].row];
-					classes.push(_GridStyleCss2['default'].group);
-
-					return classes.join(' ');
-				};
-
-				var genClass = function genClass(col) {
-					var classes = [_GridStyleCss2['default'].cell];
-					classes.push(_GridStyleCss2['default'].group);
-
-					return classes.join(' ');
-				};
-
-				var col = _store2['default'].getColumn(this.props.group.id),
-				    row = this.props.row;
-
-				return React.createElement(
-					'div',
-					{ key: col.id, className: genRowClass() },
+					{ className: _GridStyleCss2['default']['menu-wrapper'] },
 					React.createElement(
-						'div',
-						{ className: _GridStyleCss2['default'].cell },
-						(0, _cellTypesIndex2['default'])(col, row)
+						'ul',
+						{ className: _GridStyleCss2['default'].ul },
+						this.props.opts.paging_options.map(function (item, i) {
+							return React.createElement(
+								'li',
+								{ key: i, className: genClass(item), 'data-value': item, onClick: _this._onClick },
+								item
+							);
+						})
 					)
 				);
 			}
 		}]);
 
-		return RowGroupedView;
+		return RowsPerPageView;
 	})(React.Component);
 
-	exports['default'] = RowGroupedView;
+	exports['default'] = RowsPerPageView;
 	;
 	module.exports = exports['default'];
 
 /***/ },
-/* 18 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2289,6 +2130,193 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _link = __webpack_require__(21);
+
+	var _link2 = _interopRequireDefault(_link);
+
+	var _img = __webpack_require__(22);
+
+	var _img2 = _interopRequireDefault(_img);
+
+	var _datetime = __webpack_require__(23);
+
+	var _datetime2 = _interopRequireDefault(_datetime);
+
+	var _number = __webpack_require__(24);
+
+	var _number2 = _interopRequireDefault(_number);
+
+	var _string = __webpack_require__(25);
+
+	var _string2 = _interopRequireDefault(_string);
+
+	var _GridStyleCss = __webpack_require__(10);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var highlight = function highlight(element, start, end) {
+	    var str = element;
+
+	    str = str.substr(0, start) + '<span class="' + _GridStyleCss2['default']['search-highlight'] + '">' + str.substr(start, end) + '</span>' + str.substr(start + end);
+
+	    return str;
+	};
+
+	var createMarkup = function createMarkup(el, position) {
+	    return {
+	        __html: highlight(el, position.start, position.end)
+	    };
+	};
+
+	exports['default'] = function (col, row) {
+
+	    switch (col.type.name) {
+	        case 'link':
+	            return (0, _link2['default'])(col, row);
+	            break;
+	        case 'image':
+	            return (0, _img2['default'])(col, row);
+	            break;
+	        case 'datetime':
+	            return (0, _datetime2['default'])(col, row);
+	            break;
+	        case 'array':
+	            return ARRAY(col, row);
+	            break;
+	        case 'number':
+	            return (0, _number2['default'])(col, row);
+	            break;
+	        case 'string':
+	            if (col.type.src) {
+	                return (0, _string2['default'])(col, row);
+	            } else {
+	                if (row.match && col.id === row.match) {
+	                    var el = row.data[col.id];
+	                    return React.createElement('div', { dangerouslySetInnerHTML: createMarkup(el, row.position) });
+	                }
+	                return row.data[col.id] || '-';
+	            }
+	            break;
+	        default:
+	            return row.data[col.id] || '-';
+	    }
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _GridStyleCss = __webpack_require__(10);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _cellTypesIndex = __webpack_require__(17);
+
+	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
+
+	var RowView = (function (_React$Component) {
+		function RowView(props) {
+			_classCallCheck(this, RowView);
+
+			_get(Object.getPrototypeOf(RowView.prototype), 'constructor', this).call(this, props);
+		}
+
+		_inherits(RowView, _React$Component);
+
+		_createClass(RowView, [{
+			key: 'render',
+			value: function render() {
+				var _this = this;
+
+				var genClass = function genClass(col, row) {
+					var classes = [_GridStyleCss2['default'].cell];
+
+					if (col.classes) {
+						col.classes.forEach(function (item) {
+							classes.push(_GridStyleCss2['default'][item]);
+						});
+					}
+
+					if (col.weight || col.weight === 0) {
+						classes.push(_GridStyleCss2['default']['w-' + col.weight]);
+					}
+
+					if (col.type.name === 'number') {
+						classes.push(_GridStyleCss2['default']['cell-align-right']);
+					}
+
+					if (row.match && col.id === row.match) {}
+
+					return classes.join(' ');
+				};
+
+				var genStyle = function genStyle(col) {
+					if (col.row_style) {
+						return col.row_style;
+					}
+				};
+
+				return React.createElement(
+					'div',
+					{ key: this.props.i, className: _GridStyleCss2['default'].row },
+					_store2['default'].getColumns().map(function (col, j) {
+						return React.createElement(
+							'div',
+							{
+								key: j,
+								'data-label': col.name,
+								className: genClass(col, _this.props.row),
+								style: genStyle(col) },
+							(0, _cellTypesIndex2['default'])(col, _this.props.row)
+						);
+					})
+				);
+			}
+		}]);
+
+		return RowView;
+	})(React.Component);
+
+	exports['default'] = RowView;
+	;
+	module.exports = exports['default'];
+
+	// classes.push(styles['cell-highlight']);
+
+/***/ },
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2308,91 +2336,68 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var _actions = __webpack_require__(3);
+	var _store = __webpack_require__(2);
 
-	var _actions2 = _interopRequireDefault(_actions);
+	var _store2 = _interopRequireDefault(_store);
 
 	var _GridStyleCss = __webpack_require__(10);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var RowsPerPageView = (function (_React$Component) {
-		function RowsPerPageView(props) {
-			_classCallCheck(this, RowsPerPageView);
+	var _cellTypesIndex = __webpack_require__(17);
 
-			_get(Object.getPrototypeOf(RowsPerPageView.prototype), 'constructor', this).call(this, props);
+	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
 
-			this._onClick = this._onClick.bind(this);
-			this._onBlur = this._onBlur.bind(this);
+	var RowGroupedView = (function (_React$Component) {
+		function RowGroupedView(props) {
+			_classCallCheck(this, RowGroupedView);
+
+			_get(Object.getPrototypeOf(RowGroupedView.prototype), 'constructor', this).call(this, props);
 		}
 
-		_inherits(RowsPerPageView, _React$Component);
+		_inherits(RowGroupedView, _React$Component);
 
-		_createClass(RowsPerPageView, [{
-			key: '_onClick',
-			value: function _onClick(e) {
-				var option = e.target.getAttribute('data-value');
-				_actions2['default'].setRowsPerPage(option);
-				this._onBlur();
-			}
-		}, {
-			key: '_onBlur',
-			value: function _onBlur() {
-				this.props.el.removeAttribute('style');
-				React.unmountComponentAtNode(this.props.el);
-			}
-		}, {
+		_createClass(RowGroupedView, [{
 			key: 'render',
 			value: function render() {
-				var _this = this;
 
-				var position = this.props.target.getBoundingClientRect(),
-				    offsetTop = this.props.opts.paging_options.length * 48 - 48;
+				if (!this.props.group) {
+					return React.createElement('div', null);
+				}
 
-				this.props.el.style.position = 'fixed';
-				this.props.el.style.left = position.left - 20 + 'px';
-				this.props.el.style.top = position.top - offsetTop + 'px';
-				this.props.el.style.display = 'block';
-
-				var genClass = function genClass(item) {
-					var classes = [_GridStyleCss2['default'].li];
-
-					if (item === _this.props.opts.rows_per_page) {
-						classes.push(_GridStyleCss2['default'].selected);
-					}
+				var genRowClass = function genRowClass(col) {
+					var classes = [_GridStyleCss2['default'].row];
+					classes.push(_GridStyleCss2['default'].group);
 
 					return classes.join(' ');
 				};
 
-				var clickHandler = function clickHandler(e) {
-					document.removeEventListener('click', clickHandler);
-					_this._onBlur();
+				var genClass = function genClass(col) {
+					var classes = [_GridStyleCss2['default'].cell];
+					classes.push(_GridStyleCss2['default'].group);
+
+					return classes.join(' ');
 				};
 
-				document.addEventListener('click', clickHandler);
+				var col = _store2['default'].getColumn(this.props.group.id),
+				    row = this.props.row;
 
 				return React.createElement(
 					'div',
-					{ className: _GridStyleCss2['default']['menu-wrapper'] },
+					{ key: col.id, className: genRowClass() },
 					React.createElement(
-						'ul',
-						{ className: _GridStyleCss2['default'].ul },
-						this.props.opts.paging_options.map(function (item, i) {
-							return React.createElement(
-								'li',
-								{ key: i, className: genClass(item), 'data-value': item, onClick: _this._onClick },
-								item
-							);
-						})
+						'div',
+						{ className: _GridStyleCss2['default'].cell },
+						(0, _cellTypesIndex2['default'])(col, row)
 					)
 				);
 			}
 		}]);
 
-		return RowsPerPageView;
+		return RowGroupedView;
 	})(React.Component);
 
-	exports['default'] = RowsPerPageView;
+	exports['default'] = RowGroupedView;
 	;
 	module.exports = exports['default'];
 
@@ -4983,8 +4988,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Module dependencies.
 	 */
 
-	var Emitter = __webpack_require__(34);
-	var reduce = __webpack_require__(35);
+	var Emitter = __webpack_require__(35);
+	var reduce = __webpack_require__(34);
 
 	/**
 	 * Root reference for iframes.
@@ -7256,6 +7261,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	
 	/**
+	 * Reduce `arr` with `fn`.
+	 *
+	 * @param {Array} arr
+	 * @param {Function} fn
+	 * @param {Mixed} initial
+	 *
+	 * TODO: combatible error handling?
+	 */
+
+	module.exports = function(arr, fn, initial){  
+	  var idx = 0;
+	  var len = arr.length;
+	  var curr = arguments.length == 3
+	    ? initial
+	    : arr[idx++];
+
+	  while (idx < len) {
+	    curr = fn.call(null, curr, arr[idx], ++idx, arr);
+	  }
+	  
+	  return curr;
+	};
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
 	 * Expose `Emitter`.
 	 */
 
@@ -7419,35 +7453,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return !! this.listeners(event).length;
 	};
 
-
-/***/ },
-/* 35 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * Reduce `arr` with `fn`.
-	 *
-	 * @param {Array} arr
-	 * @param {Function} fn
-	 * @param {Mixed} initial
-	 *
-	 * TODO: combatible error handling?
-	 */
-
-	module.exports = function(arr, fn, initial){  
-	  var idx = 0;
-	  var len = arr.length;
-	  var curr = arguments.length == 3
-	    ? initial
-	    : arr[idx++];
-
-	  while (idx < len) {
-	    curr = fn.call(null, curr, arr[idx], ++idx, arr);
-	  }
-	  
-	  return curr;
-	};
 
 /***/ },
 /* 36 */
