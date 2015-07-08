@@ -21,7 +21,7 @@ export default class OptionsView extends React.Component {
     }
 
     componentDidMount() {
-        utils.dispatch('render');
+        utils.dispatch("render");
 
         let el = document.getElementById('myDatePicker');
 
@@ -66,6 +66,7 @@ export default class OptionsView extends React.Component {
                     <react-datepicker
                         id="myDatePicker"
                         data-range="true"
+                        data-hide-inputs="true"
                         data-default-range={Store.getOptions().defaultDate}>
                     </react-datepicker>
                 </div>

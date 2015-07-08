@@ -1346,7 +1346,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _RowsPerPageJsx = __webpack_require__(18);
+	var _RowsPerPageJsx = __webpack_require__(19);
 
 	var _RowsPerPageJsx2 = _interopRequireDefault(_RowsPerPageJsx);
 
@@ -1501,7 +1501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
 
-	var _SearchJsx = __webpack_require__(19);
+	var _SearchJsx = __webpack_require__(18);
 
 	var _SearchJsx2 = _interopRequireDefault(_SearchJsx);
 
@@ -1570,6 +1570,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    React.createElement('react-datepicker', {
 	                        id: 'myDatePicker',
 	                        'data-range': 'true',
+	                        'data-hide-inputs': 'true',
 	                        'data-default-range': _store2['default'].getOptions().defaultDate })
 	                ),
 	                React.createElement(
@@ -2183,114 +2184,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _actions = __webpack_require__(3);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _GridStyleCss = __webpack_require__(10);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var RowsPerPageView = (function (_React$Component) {
-		function RowsPerPageView(props) {
-			_classCallCheck(this, RowsPerPageView);
-
-			_get(Object.getPrototypeOf(RowsPerPageView.prototype), 'constructor', this).call(this, props);
-
-			this._onClick = this._onClick.bind(this);
-			this._onBlur = this._onBlur.bind(this);
-		}
-
-		_inherits(RowsPerPageView, _React$Component);
-
-		_createClass(RowsPerPageView, [{
-			key: '_onClick',
-			value: function _onClick(e) {
-				var option = e.target.getAttribute('data-value');
-				_actions2['default'].setRowsPerPage(option);
-				this._onBlur();
-			}
-		}, {
-			key: '_onBlur',
-			value: function _onBlur() {
-				this.props.el.removeAttribute('style');
-				React.unmountComponentAtNode(this.props.el);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this = this;
-
-				var position = this.props.target.getBoundingClientRect(),
-				    offsetTop = this.props.opts.paging_options.length * 48 - 48;
-
-				this.props.el.style.position = 'fixed';
-				this.props.el.style.left = position.left - 20 + 'px';
-				this.props.el.style.top = position.top - offsetTop + 'px';
-				this.props.el.style.display = 'block';
-
-				var genClass = function genClass(item) {
-					var classes = [_GridStyleCss2['default'].li];
-
-					if (item === _this.props.opts.rows_per_page) {
-						classes.push(_GridStyleCss2['default'].selected);
-					}
-
-					return classes.join(' ');
-				};
-
-				var clickHandler = function clickHandler(e) {
-					document.removeEventListener('click', clickHandler);
-					_this._onBlur();
-				};
-
-				document.addEventListener('click', clickHandler);
-
-				return React.createElement(
-					'div',
-					{ className: _GridStyleCss2['default']['menu-wrapper'] },
-					React.createElement(
-						'ul',
-						{ className: _GridStyleCss2['default'].ul },
-						this.props.opts.paging_options.map(function (item, i) {
-							return React.createElement(
-								'li',
-								{ key: i, className: genClass(item), 'data-value': item, onClick: _this._onClick },
-								item
-							);
-						})
-					)
-				);
-			}
-		}]);
-
-		return RowsPerPageView;
-	})(React.Component);
-
-	exports['default'] = RowsPerPageView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
 
@@ -2392,6 +2285,114 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(React.Component);
 
 	exports['default'] = SearchView;
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _actions = __webpack_require__(3);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _GridStyleCss = __webpack_require__(10);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var RowsPerPageView = (function (_React$Component) {
+		function RowsPerPageView(props) {
+			_classCallCheck(this, RowsPerPageView);
+
+			_get(Object.getPrototypeOf(RowsPerPageView.prototype), 'constructor', this).call(this, props);
+
+			this._onClick = this._onClick.bind(this);
+			this._onBlur = this._onBlur.bind(this);
+		}
+
+		_inherits(RowsPerPageView, _React$Component);
+
+		_createClass(RowsPerPageView, [{
+			key: '_onClick',
+			value: function _onClick(e) {
+				var option = e.target.getAttribute('data-value');
+				_actions2['default'].setRowsPerPage(option);
+				this._onBlur();
+			}
+		}, {
+			key: '_onBlur',
+			value: function _onBlur() {
+				this.props.el.removeAttribute('style');
+				React.unmountComponentAtNode(this.props.el);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this = this;
+
+				var position = this.props.target.getBoundingClientRect(),
+				    offsetTop = this.props.opts.paging_options.length * 48 - 48;
+
+				this.props.el.style.position = 'fixed';
+				this.props.el.style.left = position.left - 20 + 'px';
+				this.props.el.style.top = position.top - offsetTop + 'px';
+				this.props.el.style.display = 'block';
+
+				var genClass = function genClass(item) {
+					var classes = [_GridStyleCss2['default'].li];
+
+					if (item === _this.props.opts.rows_per_page) {
+						classes.push(_GridStyleCss2['default'].selected);
+					}
+
+					return classes.join(' ');
+				};
+
+				var clickHandler = function clickHandler(e) {
+					document.removeEventListener('click', clickHandler);
+					_this._onBlur();
+				};
+
+				document.addEventListener('click', clickHandler);
+
+				return React.createElement(
+					'div',
+					{ className: _GridStyleCss2['default']['menu-wrapper'] },
+					React.createElement(
+						'ul',
+						{ className: _GridStyleCss2['default'].ul },
+						this.props.opts.paging_options.map(function (item, i) {
+							return React.createElement(
+								'li',
+								{ key: i, className: genClass(item), 'data-value': item, onClick: _this._onClick },
+								item
+							);
+						})
+					)
+				);
+			}
+		}]);
+
+		return RowsPerPageView;
+	})(React.Component);
+
+	exports['default'] = RowsPerPageView;
 	;
 	module.exports = exports['default'];
 

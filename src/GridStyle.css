@@ -374,17 +374,12 @@
 	position: absolute;
 }
 
-.options-dates li {
-	float: left;
-	padding-right: 24px;
-	opacity: 0.56;
-	cursor: pointer;
+.options-dates input {
+	float: right;
 }
 
 .options-tools input {
-	/*position: absolute;*/
 	cursor: pointer;
-	/*right: 300px;*/
 }
 
 .options-tools {

@@ -374,17 +374,12 @@
 	position: absolute;
 }
 
-.GridStyle__options-dates___VcUuW li {
-	float: left;
-	padding-right: 24px;
-	opacity: 0.56;
-	cursor: pointer;
+.GridStyle__options-dates___VcUuW input {
+	float: right;
 }
 
 .GridStyle__options-tools___2D5V3 input {
-	/*position: absolute;*/
 	cursor: pointer;
-	/*right: 300px;*/
 }
 
 .GridStyle__options-tools___2D5V3 {
