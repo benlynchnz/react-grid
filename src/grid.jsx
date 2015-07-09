@@ -58,8 +58,8 @@ export default class GridView extends React.Component {
 			throw new Error("no config.json defined");
 		}
 
-		if (props["request-data"]) {
-			Actions.setDataURI(props["request-data"]);
+		if (props["request-uri"]) {
+			Actions.setDataURI(props["request-uri"]);
 		}
 	}
 

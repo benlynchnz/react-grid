@@ -49,11 +49,16 @@ class Store extends EventEmitter {
 			if (!exists) {
 				return;
 			}
-		};
+		}
 
-		let uri = this.getDataURI() + this.getQueryString();
-		Actions.fetchRows(uri);
-		this.setLoading(true);
+		console.log('total count', this.getTotalCount());
+		console.log('in memort', this.getTotalRows());
+
+		if (this.getTotalRows() === 0 || !this.hasAllData()) {
+			let uri = this.getDataURI() + this.getQueryString();
+			Actions.fetchRows(uri);
+			this.setLoading(true);
+		}
 	}
 
 	getTotalRows() {
@@ -63,11 +68,13 @@ class Store extends EventEmitter {
 			total = _search_results.length;
 		}
 
-		if (_totalCount) {
-			total = _totalCount;
-		} else {
+		// if (_totalCount) {
+			// total = _totalCount;
+		// } else {
 			total = _rows.length;
-		}
+		// }
+
+		console.log('getTotalRows()', total);
 
 		return total;
 	}
@@ -255,6 +262,11 @@ class Store extends EventEmitter {
 	}
 
 	sortRows() {
+		if (!this.hasAllData()) {
+			_sorted_rows = _rows;
+			return;
+		}
+
 		let rows = _search_results ? _search_results : _rows;
 		let result = _.chain(rows)
 			.sortBy(_sortIndex)
@@ -301,14 +313,17 @@ class Store extends EventEmitter {
 	}
 
 	getRows() {
-		let __data = _search_results ? _search_results : _rows,
+		let __data = _search_results ? _search_results : _sorted_rows,
 			start = (_opts.current_page * _opts.rows_per_page),
 			end = start === 0 ? _opts.rows_per_page : (start + _opts.rows_per_page),
 			rows = _.slice(__data, start, end),
 			current_group = rows[0];
 
-		if (_rows.length < this.getTotalCount()) {
-			rows = __data;
+		if (!this.hasAllData()) {
+		// if (_rows.length < this.getTotalCount()) {
+			// rows = __data;
+			// debugger;
+			console.log(_sorted_rows);
 		}
 
 		// Get all the raw data rows
@@ -341,8 +356,8 @@ class Store extends EventEmitter {
 			});
 		}
 
-		if (end > this.getTotalRows()) {
-			end = this.getTotalRows();
+		if (end > this.getTotalCount()) {
+			end = this.getTotalCount();
 		}
 
 		this.setPaging(start, end);
@@ -377,12 +392,17 @@ class Store extends EventEmitter {
 			field: _isAsc ? _sortIndex : '-' + _sortIndex
 		};
 
-		if (!_hasAllData) {
+		if (!this.hasAllData()) {
 			this.fetchRows();
 		} else {
 			this.updateColumn(column);
 			this.sortRows();
 		}
+	}
+
+	hasAllData() {
+		console.log(this.getTotalCount() === this.getTotalRows());
+		return this.getTotalRows() === this.getTotalCount();
 	}
 
 	getSortOrder() {
@@ -416,7 +436,7 @@ class Store extends EventEmitter {
 
 	searchRows(q) {
 
-		if (_hasAllData) {
+		if (this.hasAllData()) {
 
 			let columns = _.filter(_columns, ((item) => {
 				return item.allow_search;
@@ -478,6 +498,8 @@ class Store extends EventEmitter {
 	setTotalCount(headers) {
 		if (headers['x-total-count']) {
 			_totalCount = Number(headers['x-total-count']);
+		} else {
+			_totalCount = _rows.length;
 		}
 	}
 
@@ -515,18 +537,21 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 
 		case Constants.FETCH_ROWS:
 			let pushData = (data) => {
-				data.forEach((item) => {
+				data.forEach((item, i) => {
+					item.$i = _opts.current_page + '.' + i;
 					_rows.push(item);
 				});
 			};
 
-			// if (_rows.length) {
-				// pushData(payload.data.body);
-			// } else {
-				// _rows = payload.data.body;
-			// }
+			if (_rows.length) {
+				pushData(payload.data.body);
+			} else {
+				_rows = payload.data.body;
+			}
 
-			_rows = payload.data.body;
+			console.log(_rows.length);
+
+			// _rows = payload.data.body;
 
 			_raw_data = _rows;
 			_Store.setTotalCount(payload.data.headers);
