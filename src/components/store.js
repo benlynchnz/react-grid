@@ -1,8 +1,7 @@
-import {EventEmitter} from 'events';
-import AppDispatcher from './dispatcher';
-import Constants from './constants';
-import Actions from './actions';
-import styles from '../GridStyle.css';
+import {EventEmitter} from "events";
+import AppDispatcher from "./dispatcher";
+import Constants from "./constants";
+import Actions from "./actions";
 
 let _columns = [],
 	_rows = [],
@@ -17,10 +16,10 @@ let _columns = [],
 	_groups = [],
 	_groupBy = null,
 	_isReady = false,
-	_isLoading = true;
+	_isLoading = true,
+	_element = null;
 
-let _hasAllData = false,
-	_reqParams = {};
+let _reqParams = {};
 
 class Store extends EventEmitter {
 
@@ -51,9 +50,6 @@ class Store extends EventEmitter {
 			}
 		}
 
-		console.log('total count', this.getTotalCount());
-		console.log('in memort', this.getTotalRows());
-
 		if (this.getTotalRows() === 0 || !this.hasAllData()) {
 			let uri = this.getDataURI() + this.getQueryString();
 			Actions.fetchRows(uri);
@@ -62,19 +58,11 @@ class Store extends EventEmitter {
 	}
 
 	getTotalRows() {
-		let total;
+		let total = _rows.length;
 
 		if (_search_results) {
 			total = _search_results.length;
 		}
-
-		// if (_totalCount) {
-			// total = _totalCount;
-		// } else {
-			total = _rows.length;
-		// }
-
-		console.log('getTotalRows()', total);
 
 		return total;
 	}
@@ -82,29 +70,29 @@ class Store extends EventEmitter {
 	getQueryString() {
 		let params = [];
 
-		params.push('page=' + _opts.current_page);
-		params.push('per_page=' + _opts.rows_per_page);
+		params.push("page=" + _opts.current_page);
+		params.push("per_page=" + _opts.rows_per_page);
 
 		if (_reqParams.query) {
-			params.push('q=' + _reqParams.query.q);
+			params.push("q=" + _reqParams.query.q);
 		}
 
 		if (_reqParams.sort) {
-			params.push('sort=' + _reqParams.sort.field);
+			params.push("sort=" + _reqParams.sort.field);
 		}
 
 		if (_reqParams.created) {
-			params.push('created[gte]=' + _reqParams.created.from);
-			params.push('created[lte]=' + _reqParams.created.to);
+			params.push("created[gte]=" + _reqParams.created.from);
+			params.push("created[lte]=" + _reqParams.created.to);
 		}
 
-		return '?' + params.join('&');
+		return "?" + params.join("&");
 	}
 
 	setPage(direction) {
 		let page = _opts.current_page;
 
-		if (direction === 'forward') {
+		if (direction === "forward") {
 			page = page + 1;
 		} else {
 			page = page - 1;
@@ -154,7 +142,7 @@ class Store extends EventEmitter {
 		_opts.request = data.request;
 
 		let hasDate = _.filter(data.columns, (item) => {
-			return item.type.name === 'datetime' && item.type.required;
+			return item.type.name === "datetime" && item.type.required;
 		});
 
 		if (hasDate.length) {
@@ -164,13 +152,13 @@ class Store extends EventEmitter {
 
 	setColumns(data) {
 		let non_numeric_columns = _.chain(data)
-			.filter((column) => { return column.type.name !== 'number' })
-			.sortBy('index')
+			.filter((column) => { return column.type.name !== "number"; })
+			.sortBy("index")
 			.value();
 
 		let numeric_columns = _.chain(data)
-			.filter((column) => { return column.type.name === 'number' })
-			.sortBy('index')
+			.filter((column) => { return column.type.name === "number"; })
+			.sortBy("index")
 			.value();
 
 		_columns = non_numeric_columns.concat(numeric_columns).map((item, i) => {
@@ -181,8 +169,8 @@ class Store extends EventEmitter {
 	}
 
 	setGroups() {
-		let data = [],
-		groups = _.forEach(_columns, (item) => {
+		let data = [];
+		_.forEach(_columns, (item) => {
 			if (item.can_group) {
 				data.push(item);
 			}
@@ -210,7 +198,7 @@ class Store extends EventEmitter {
 	}
 
 	getColumns() {
-		let sorted = _.sortBy(_columns, 'internal_idx');
+		let sorted = _.sortBy(_columns, "internal_idx");
 
 		if (_groupBy) {
 			sorted = _.remove(sorted, (item) => {
@@ -255,7 +243,7 @@ class Store extends EventEmitter {
 		_sortIndex = column.id;
 
 		_reqParams.sort = {
-			field: _isAsc ? _sortIndex : '-' + _sortIndex
+			field: _isAsc ? _sortIndex : "-" + _sortIndex
 		};
 
 		this.updateColumn(column);
@@ -274,7 +262,7 @@ class Store extends EventEmitter {
 
 		if (!_isAsc) {
 			result.reverse();
-		};
+		}
 
 		if (_groupBy) {
 			let grouped = _.groupBy(result, (item) => {
@@ -282,8 +270,8 @@ class Store extends EventEmitter {
 					let keys = _groupBy.id.split('.'),
 			            value = item;
 
-			        keys.forEach((item) => {
-			            value = value[item];
+			        keys.forEach((key) => {
+			        	value = value[key];
 			        });
 
 			        return value;
@@ -292,15 +280,15 @@ class Store extends EventEmitter {
 				return item[_groupBy.id];
 			});
 
-			let map = [],
-				res = _.chain(grouped)
-				.pairs()
-				.each((item) => {
-					_.each(item[1], (row) => {
-						map.push(row);
-					});
-				})
-				.value()
+			let map = [];
+			_.chain(grouped)
+			.pairs()
+			.each((item) => {
+				_.each(item[1], (row) => {
+					map.push(row);
+				});
+			})
+			.value();
 
 			result = map;
 		}
@@ -319,20 +307,13 @@ class Store extends EventEmitter {
 			rows = _.slice(__data, start, end),
 			current_group = rows[0];
 
-		if (!this.hasAllData()) {
-		// if (_rows.length < this.getTotalCount()) {
-			// rows = __data;
-			// debugger;
-			console.log(_sorted_rows);
-		}
-
 		// Get all the raw data rows
 		let data = rows.map((item) => {
 			if (!item.match) { // fix this
 				return {
 					is_group: false,
 					data: item
-				}
+				};
 			} else {
 				return item;
 			}
@@ -389,7 +370,7 @@ class Store extends EventEmitter {
 		_sortIndex = column.id;
 
 		_reqParams.sort = {
-			field: _isAsc ? _sortIndex : '-' + _sortIndex
+			field: _isAsc ? _sortIndex : "-" + _sortIndex
 		};
 
 		if (!this.hasAllData()) {
@@ -401,7 +382,6 @@ class Store extends EventEmitter {
 	}
 
 	hasAllData() {
-		console.log(this.getTotalCount() === this.getTotalRows());
 		return this.getTotalRows() === this.getTotalCount();
 	}
 
@@ -496,8 +476,8 @@ class Store extends EventEmitter {
 	}
 
 	setTotalCount(headers) {
-		if (headers['x-total-count']) {
-			_totalCount = Number(headers['x-total-count']);
+		if (headers["x-total-count"]) {
+			_totalCount = Number(headers["x-total-count"]);
 		} else {
 			_totalCount = _rows.length;
 		}
@@ -505,6 +485,14 @@ class Store extends EventEmitter {
 
 	getTotalCount() {
 		return _totalCount;
+	}
+
+	setElement(data) {
+		_element = data;
+	}
+
+	getElement() {
+		return _element;
 	}
 
 	emitChange() {
@@ -538,7 +526,7 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 		case Constants.FETCH_ROWS:
 			let pushData = (data) => {
 				data.forEach((item, i) => {
-					item.$i = _opts.current_page + '.' + i;
+					item.$i = _opts.current_page + "." + i;
 					_rows.push(item);
 				});
 			};
@@ -548,8 +536,6 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 			} else {
 				_rows = payload.data.body;
 			}
-
-			console.log(_rows.length);
 
 			// _rows = payload.data.body;
 
@@ -592,6 +578,10 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 		case Constants.DATE_RANGE_CHANGE:
 			_Store.setDateRange(payload.data);
 			_Store.emitChange();
+			break;
+
+		case Constants.SET_ELEMENT:
+			_Store.setElement(payload.data);
 			break;
 
 		default:

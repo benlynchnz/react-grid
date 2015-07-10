@@ -27,12 +27,14 @@ let componentDidMount = (ctx) => {
 
 utils.componentDidMount = componentDidMount;
 
-let dispatch = (action, payload) => {
-    let event = new CustomEvent('render', {
+let dispatch = (element, action, payload, evt) => {
+    let type = evt ? evt : 'event';
+
+    let event = new CustomEvent(type, {
         'detail': {action, payload}
     });
 
-    document.dispatchEvent(event);
+    element.dispatchEvent(event);
 }
 
 utils.dispatch = dispatch;

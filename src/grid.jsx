@@ -1,5 +1,3 @@
-"use strict";
-
 import Store from './components/store';
 import Actions from './components/actions';
 import utils from './components/utils';
@@ -61,6 +59,8 @@ export default class GridView extends React.Component {
 		if (props["request-uri"]) {
 			Actions.setDataURI(props["request-uri"]);
 		}
+
+		Actions.setElement(this.props.element);
 	}
 
 	render() {

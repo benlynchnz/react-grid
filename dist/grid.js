@@ -211,6 +211,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (props['request-uri']) {
 					_componentsActions2['default'].setDataURI(props['request-uri']);
 				}
+
+				_componentsActions2['default'].setElement(this.props.element);
 			}
 		}, {
 			key: 'render',
@@ -245,19 +247,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 	var _events = __webpack_require__(20);
 
@@ -273,10 +275,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _GridStyleCss = __webpack_require__(10);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
 	var _columns = [],
 	    _rows = [],
 	    _raw_data = [],
@@ -290,10 +288,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _groups = [],
 	    _groupBy = null,
 	    _isReady = false,
-	    _isLoading = true;
+	    _isLoading = true,
+	    _element = null;
 
-	var _hasAllData = false,
-	    _reqParams = {};
+	var _reqParams = {};
 
 	var Store = (function (_EventEmitter) {
 		function Store() {
@@ -307,7 +305,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		_inherits(Store, _EventEmitter);
 
 		_createClass(Store, [{
-			key: 'bootstrap',
+			key: "bootstrap",
 			value: function bootstrap(data) {
 				this.setOptions(data);
 				this.setColumns(data.columns);
@@ -316,12 +314,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.onBootstrapComplete();
 			}
 		}, {
-			key: 'onBootstrapComplete',
+			key: "onBootstrapComplete",
 			value: function onBootstrapComplete() {
 				this.fetchRows();
 			}
 		}, {
-			key: 'fetchRows',
+			key: "fetchRows",
 			value: function fetchRows() {
 				var opts = this.getOptions();
 
@@ -340,66 +338,55 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 					})();
 
-					if (typeof _ret === 'object') return _ret.v;
+					if (typeof _ret === "object") return _ret.v;
 				}
-
-				console.log('total count', this.getTotalCount());
-				console.log('in memort', this.getTotalRows());
 
 				if (this.getTotalRows() === 0 || !this.hasAllData()) {
 					var uri = this.getDataURI() + this.getQueryString();
-					_actions2['default'].fetchRows(uri);
+					_actions2["default"].fetchRows(uri);
 					this.setLoading(true);
 				}
 			}
 		}, {
-			key: 'getTotalRows',
+			key: "getTotalRows",
 			value: function getTotalRows() {
-				var total = undefined;
+				var total = _rows.length;
 
 				if (_search_results) {
 					total = _search_results.length;
 				}
 
-				// if (_totalCount) {
-				// total = _totalCount;
-				// } else {
-				total = _rows.length;
-				// }
-
-				console.log('getTotalRows()', total);
-
 				return total;
 			}
 		}, {
-			key: 'getQueryString',
+			key: "getQueryString",
 			value: function getQueryString() {
 				var params = [];
 
-				params.push('page=' + _opts.current_page);
-				params.push('per_page=' + _opts.rows_per_page);
+				params.push("page=" + _opts.current_page);
+				params.push("per_page=" + _opts.rows_per_page);
 
 				if (_reqParams.query) {
-					params.push('q=' + _reqParams.query.q);
+					params.push("q=" + _reqParams.query.q);
 				}
 
 				if (_reqParams.sort) {
-					params.push('sort=' + _reqParams.sort.field);
+					params.push("sort=" + _reqParams.sort.field);
 				}
 
 				if (_reqParams.created) {
-					params.push('created[gte]=' + _reqParams.created.from);
-					params.push('created[lte]=' + _reqParams.created.to);
+					params.push("created[gte]=" + _reqParams.created.from);
+					params.push("created[lte]=" + _reqParams.created.to);
 				}
 
-				return '?' + params.join('&');
+				return "?" + params.join("&");
 			}
 		}, {
-			key: 'setPage',
+			key: "setPage",
 			value: function setPage(direction) {
 				var page = _opts.current_page;
 
-				if (direction === 'forward') {
+				if (direction === "forward") {
 					page = page + 1;
 				} else {
 					page = page - 1;
@@ -410,27 +397,27 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.fetchRows();
 			}
 		}, {
-			key: 'isReady',
+			key: "isReady",
 			value: function isReady() {
 				return _isReady;
 			}
 		}, {
-			key: 'setReady',
+			key: "setReady",
 			value: function setReady(bool) {
 				_isReady = Boolean(bool);
 			}
 		}, {
-			key: 'isLoading',
+			key: "isLoading",
 			value: function isLoading() {
 				return _isLoading;
 			}
 		}, {
-			key: 'setLoading',
+			key: "setLoading",
 			value: function setLoading(bool) {
 				_isLoading = Boolean(bool);
 			}
 		}, {
-			key: 'setRowsPerPage',
+			key: "setRowsPerPage",
 			value: function setRowsPerPage(rows) {
 				_opts.rows_per_page = Number(rows);
 				_opts.current_page = 0;
@@ -438,41 +425,41 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.fetchRows();
 			}
 		}, {
-			key: 'getOptions',
+			key: "getOptions",
 			value: function getOptions() {
 				return _opts;
 			}
 		}, {
-			key: 'setOptions',
+			key: "setOptions",
 			value: function setOptions(data) {
 				_opts.title = data.title;
 				_opts.rows_per_page = data.rows_per_page;
 				_opts.paging_options = data.paging_options || [5, 10, 20, 50, 100];
-				_opts.default_date_format = data.default_date_format || 'ddd DD MMM YYYY';
-				_opts.default_number_format = data.default_number_format || '0,0';
+				_opts.default_date_format = data.default_date_format || "ddd DD MMM YYYY";
+				_opts.default_number_format = data.default_number_format || "0,0";
 				_opts.show_paging = data.show_paging;
 				_opts.current_page = 0;
 				_opts.show_datepicker = data.show_datepicker === false ? false : true;
 				_opts.request = data.request;
 
 				var hasDate = _.filter(data.columns, function (item) {
-					return item.type.name === 'datetime' && item.type.required;
+					return item.type.name === "datetime" && item.type.required;
 				});
 
 				if (hasDate.length) {
-					_opts.defaultDate = hasDate[0].type['default'];
+					_opts.defaultDate = hasDate[0].type["default"];
 				}
 			}
 		}, {
-			key: 'setColumns',
+			key: "setColumns",
 			value: function setColumns(data) {
 				var non_numeric_columns = _.chain(data).filter(function (column) {
-					return column.type.name !== 'number';
-				}).sortBy('index').value();
+					return column.type.name !== "number";
+				}).sortBy("index").value();
 
 				var numeric_columns = _.chain(data).filter(function (column) {
-					return column.type.name === 'number';
-				}).sortBy('index').value();
+					return column.type.name === "number";
+				}).sortBy("index").value();
 
 				_columns = non_numeric_columns.concat(numeric_columns).map(function (item, i) {
 					item.internal_idx = i;
@@ -481,10 +468,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 			}
 		}, {
-			key: 'setGroups',
+			key: "setGroups",
 			value: function setGroups() {
-				var data = [],
-				    groups = _.forEach(_columns, function (item) {
+				var data = [];
+				_.forEach(_columns, function (item) {
 					if (item.can_group) {
 						data.push(item);
 					}
@@ -493,12 +480,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				_groups = data;
 			}
 		}, {
-			key: 'getGroups',
+			key: "getGroups",
 			value: function getGroups() {
 				return _groups;
 			}
 		}, {
-			key: 'setGroup',
+			key: "setGroup",
 			value: function setGroup(id) {
 				if (id) {
 					_groupBy = this.getColumn(id);
@@ -509,14 +496,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.sortRows();
 			}
 		}, {
-			key: 'getCurrentGroup',
+			key: "getCurrentGroup",
 			value: function getCurrentGroup() {
 				return _groupBy;
 			}
 		}, {
-			key: 'getColumns',
+			key: "getColumns",
 			value: function getColumns() {
-				var sorted = _.sortBy(_columns, 'internal_idx');
+				var sorted = _.sortBy(_columns, "internal_idx");
 
 				if (_groupBy) {
 					sorted = _.remove(sorted, function (item) {
@@ -527,29 +514,29 @@ return /******/ (function(modules) { // webpackBootstrap
 				return sorted;
 			}
 		}, {
-			key: 'getColumnCount',
+			key: "getColumnCount",
 			value: function getColumnCount() {
 				return _columns.length;
 			}
 		}, {
-			key: 'getColumn',
+			key: "getColumn",
 			value: function getColumn(id) {
 				return _.findWhere(_columns, { id: id });
 			}
 		}, {
-			key: 'getColumnAtIndex',
+			key: "getColumnAtIndex",
 			value: function getColumnAtIndex(i) {
 				return this.getColumns()[i];
 			}
 		}, {
-			key: 'updateColumn',
+			key: "updateColumn",
 			value: function updateColumn(column) {
 				var idx = _.findWhere(_columns, { id: column.id });
 				_.pull(_columns, idx);
 				_columns.push(column);
 			}
 		}, {
-			key: 'setDefaultColumnSort',
+			key: "setDefaultColumnSort",
 			value: function setDefaultColumnSort() {
 				var column = _.findWhere(_columns, { default_sort: true });
 
@@ -566,13 +553,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				_sortIndex = column.id;
 
 				_reqParams.sort = {
-					field: _isAsc ? _sortIndex : '-' + _sortIndex
+					field: _isAsc ? _sortIndex : "-" + _sortIndex
 				};
 
 				this.updateColumn(column);
 			}
 		}, {
-			key: 'sortRows',
+			key: "sortRows",
 			value: function sortRows() {
 				if (!this.hasAllData()) {
 					_sorted_rows = _rows;
@@ -584,18 +571,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				if (!_isAsc) {
 					result.reverse();
-				};
+				}
 
 				if (_groupBy) {
 					(function () {
 						var grouped = _.groupBy(result, function (item) {
-							if (_groupBy.id.split('.') !== -1) {
+							if (_groupBy.id.split(".") !== -1) {
 								var _ret3 = (function () {
-									var keys = _groupBy.id.split('.'),
+									var keys = _groupBy.id.split("."),
 									    value = item;
 
-									keys.forEach(function (item) {
-										value = value[item];
+									keys.forEach(function (key) {
+										value = value[key];
 									});
 
 									return {
@@ -603,14 +590,14 @@ return /******/ (function(modules) { // webpackBootstrap
 									};
 								})();
 
-								if (typeof _ret3 === 'object') return _ret3.v;
+								if (typeof _ret3 === "object") return _ret3.v;
 							}
 
 							return item[_groupBy.id];
 						});
 
-						var map = [],
-						    res = _.chain(grouped).pairs().each(function (item) {
+						var map = [];
+						_.chain(grouped).pairs().each(function (item) {
 							_.each(item[1], function (row) {
 								map.push(row);
 							});
@@ -627,20 +614,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: 'getRows',
+			key: "getRows",
 			value: function getRows() {
 				var __data = _search_results ? _search_results : _sorted_rows,
 				    start = _opts.current_page * _opts.rows_per_page,
 				    end = start === 0 ? _opts.rows_per_page : start + _opts.rows_per_page,
 				    rows = _.slice(__data, start, end),
 				    current_group = rows[0];
-
-				if (!this.hasAllData()) {
-					// if (_rows.length < this.getTotalCount()) {
-					// rows = __data;
-					// debugger;
-					console.log(_sorted_rows);
-				}
 
 				// Get all the raw data rows
 				var data = rows.map(function (item) {
@@ -682,18 +662,18 @@ return /******/ (function(modules) { // webpackBootstrap
 				return data;
 			}
 		}, {
-			key: 'setPaging',
+			key: "setPaging",
 			value: function setPaging(start, end) {
 				_opts.paging_from = start + 1;
 				_opts.paging_to = end;
 			}
 		}, {
-			key: 'getRowAtIndex',
+			key: "getRowAtIndex",
 			value: function getRowAtIndex(i) {
 				return this.getRows()[i];
 			}
 		}, {
-			key: 'sortColumns',
+			key: "sortColumns",
 			value: function sortColumns(column) {
 				if (_sortIndex !== column.id) {
 					_isAsc = false;
@@ -709,7 +689,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				_sortIndex = column.id;
 
 				_reqParams.sort = {
-					field: _isAsc ? _sortIndex : '-' + _sortIndex
+					field: _isAsc ? _sortIndex : "-" + _sortIndex
 				};
 
 				if (!this.hasAllData()) {
@@ -720,36 +700,35 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		}, {
-			key: 'hasAllData',
+			key: "hasAllData",
 			value: function hasAllData() {
-				console.log(this.getTotalCount() === this.getTotalRows());
 				return this.getTotalRows() === this.getTotalCount();
 			}
 		}, {
-			key: 'getSortOrder',
+			key: "getSortOrder",
 			value: function getSortOrder() {
 				return _isAsc;
 			}
 		}, {
-			key: 'clearSearchRows',
+			key: "clearSearchRows",
 			value: function clearSearchRows() {
 				_search_results = null;
 				_reqParams.query = null;
 				this.emitChange();
 			}
 		}, {
-			key: 'setDate',
+			key: "setDate",
 			value: function setDate(date) {
 				var rows = _raw_data;
 
 				_search_results = _.filter(rows, function (item) {
-					return moment(item.created_at).endOf('day').toISOString() === date;
+					return moment(item.created_at).endOf("day").toISOString() === date;
 				});
 
 				this.sortRows();
 			}
 		}, {
-			key: 'setDateRange',
+			key: "setDateRange",
 			value: function setDateRange(dates) {
 				_reqParams.created = {
 					from: dates.from,
@@ -759,7 +738,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.fetchRows();
 			}
 		}, {
-			key: 'searchRows',
+			key: "searchRows",
 			value: function searchRows(q) {
 
 				if (this.hasAllData()) {
@@ -812,45 +791,55 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.emitChange();
 			}
 		}, {
-			key: 'setDataURI',
+			key: "setDataURI",
 			value: function setDataURI(uri) {
 				_custom_data_uri = uri;
 			}
 		}, {
-			key: 'getDataURI',
+			key: "getDataURI",
 			value: function getDataURI() {
 				var uri = _custom_data_uri ? _custom_data_uri : _opts.request.uri;
 
 				return uri;
 			}
 		}, {
-			key: 'setTotalCount',
+			key: "setTotalCount",
 			value: function setTotalCount(headers) {
-				if (headers['x-total-count']) {
-					_totalCount = Number(headers['x-total-count']);
+				if (headers["x-total-count"]) {
+					_totalCount = Number(headers["x-total-count"]);
 				} else {
 					_totalCount = _rows.length;
 				}
 			}
 		}, {
-			key: 'getTotalCount',
+			key: "getTotalCount",
 			value: function getTotalCount() {
 				return _totalCount;
 			}
 		}, {
-			key: 'emitChange',
+			key: "setElement",
+			value: function setElement(data) {
+				_element = data;
+			}
+		}, {
+			key: "getElement",
+			value: function getElement() {
+				return _element;
+			}
+		}, {
+			key: "emitChange",
 			value: function emitChange() {
-				this.emit(_constants2['default'].CHANGE);
+				this.emit(_constants2["default"].CHANGE);
 			}
 		}, {
-			key: 'addChangeListener',
+			key: "addChangeListener",
 			value: function addChangeListener(cb) {
-				this.on(_constants2['default'].CHANGE, cb);
+				this.on(_constants2["default"].CHANGE, cb);
 			}
 		}, {
-			key: 'removeChangeListener',
+			key: "removeChangeListener",
 			value: function removeChangeListener(cb) {
-				this.removeListener(_constants2['default'].CHANGE, cb);
+				this.removeListener(_constants2["default"].CHANGE, cb);
 			}
 		}]);
 
@@ -859,23 +848,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Store = new Store();
 
-	_Store.dispatchToken = _dispatcher2['default'].register(function (payload) {
+	_Store.dispatchToken = _dispatcher2["default"].register(function (payload) {
 		switch (payload.type) {
 
-			case _constants2['default'].BOOTSTRAP:
+			case _constants2["default"].BOOTSTRAP:
 				_Store.bootstrap(payload.data);
 				_Store.setReady(true);
 				_Store.emitChange();
 				break;
 
-			case _constants2['default'].SET_DATA_URI:
+			case _constants2["default"].SET_DATA_URI:
 				_Store.setDataURI(payload.data);
 				break;
 
-			case _constants2['default'].FETCH_ROWS:
+			case _constants2["default"].FETCH_ROWS:
 				var pushData = function pushData(data) {
 					data.forEach(function (item, i) {
-						item.$i = _opts.current_page + '.' + i;
+						item.$i = _opts.current_page + "." + i;
 						_rows.push(item);
 					});
 				};
@@ -886,8 +875,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					_rows = payload.data.body;
 				}
 
-				console.log(_rows.length);
-
 				// _rows = payload.data.body;
 
 				_raw_data = _rows;
@@ -897,38 +884,42 @@ return /******/ (function(modules) { // webpackBootstrap
 				_Store.emitChange();
 				break;
 
-			case _constants2['default'].COL_SORT:
+			case _constants2["default"].COL_SORT:
 				_Store.sortColumns(payload.data);
 				_Store.emitChange();
 				break;
 
-			case _constants2['default'].MOVE_PAGE:
+			case _constants2["default"].MOVE_PAGE:
 				_Store.setPage(payload.data);
 				_Store.emitChange();
 				break;
 
-			case _constants2['default'].ROWS_PER_PAGE:
+			case _constants2["default"].ROWS_PER_PAGE:
 				_Store.setRowsPerPage(payload.data);
 				_Store.emitChange();
 				break;
 
-			case _constants2['default'].SET_GROUP:
+			case _constants2["default"].SET_GROUP:
 				_Store.setGroup(payload.data);
 				_Store.emitChange();
 				break;
 
-			case _constants2['default'].SEARCHING:
+			case _constants2["default"].SEARCHING:
 				_Store.searchRows(payload.data);
 				break;
 
-			case _constants2['default'].DATE_SELECTED:
+			case _constants2["default"].DATE_SELECTED:
 				_Store.setDate(payload.data);
 				_Store.emitChange();
 				break;
 
-			case _constants2['default'].DATE_RANGE_CHANGE:
+			case _constants2["default"].DATE_RANGE_CHANGE:
 				_Store.setDateRange(payload.data);
 				_Store.emitChange();
+				break;
+
+			case _constants2["default"].SET_ELEMENT:
+				_Store.setElement(payload.data);
 				break;
 
 			default:
@@ -937,8 +928,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 	});
 
-	exports['default'] = _Store;
-	module.exports = exports['default'];
+	exports["default"] = _Store;
+	module.exports = exports["default"];
 
 /***/ },
 /* 3 */
@@ -1037,6 +1028,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				type: _constants2['default'].SET_DATA_URI,
 				data: uri
 			});
+		},
+
+		setElement: function setElement(el) {
+			_dispatcher2['default'].dispatch({
+				type: _constants2['default'].SET_ELEMENT,
+				data: el
+			});
 		}
 
 	};
@@ -1078,12 +1076,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	utils.componentDidMount = componentDidMount;
 
-	var dispatch = function dispatch(action, payload) {
-		var event = new CustomEvent('render', {
+	var dispatch = function dispatch(element, action, payload, evt) {
+		var type = evt ? evt : 'event';
+
+		var event = new CustomEvent(type, {
 			'detail': { action: action, payload: payload }
 		});
 
-		document.dispatchEvent(event);
+		element.dispatchEvent(event);
 	};
 
 	utils.dispatch = dispatch;
@@ -1373,7 +1373,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _RowsPerPageJsx = __webpack_require__(19);
+	var _RowsPerPageJsx = __webpack_require__(18);
 
 	var _RowsPerPageJsx2 = _interopRequireDefault(_RowsPerPageJsx);
 
@@ -1528,7 +1528,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
 
-	var _SearchJsx = __webpack_require__(18);
+	var _SearchJsx = __webpack_require__(19);
 
 	var _SearchJsx2 = _interopRequireDefault(_SearchJsx);
 
@@ -1546,7 +1546,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(OptionsView, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            _utils2['default'].dispatch('render');
+	            _utils2['default'].dispatch(document, null, null, 'render');
 
 	            if (_store2['default'].getOptions().show_datepicker) {
 	                var el = document.getElementById('myDatePicker');
@@ -1742,7 +1742,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		SEARCHING: "SEARCHING",
 		DATE_SELECTED: "DATE_SELECTED",
 		DATE_RANGE_CHANGE: "DATE_RANGE_CHANGE",
-		SET_DATA_URI: "SET_DATA_URI"
+		SET_DATA_URI: "SET_DATA_URI",
+		ROW_CLICKED: "ROW_CLICKED",
+		SET_ELEMENT: "SET_ELEMENT",
+		CELL_CLICKED: "CELL_CLICKED"
 	};
 
 	exports["default"] = constants;
@@ -1940,13 +1943,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 	var _link = __webpack_require__(21);
 
@@ -1975,7 +1978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var highlight = function highlight(element, start, end) {
 	    var str = element;
 
-	    str = str.substr(0, start) + '<span class="' + _GridStyleCss2['default']['search-highlight'] + '">' + str.substr(start, end) + '</span>' + str.substr(start + end);
+	    str = str.substr(0, start) + "<span class=\"" + _GridStyleCss2["default"]["search-highlight"] + "\">" + str.substr(start, end) + "</span>" + str.substr(start + end);
 
 	    return str;
 	};
@@ -1986,65 +1989,62 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	};
 
-	exports['default'] = function (col, row) {
+	exports["default"] = function (col, row) {
 
 	    switch (col.type.name) {
-	        case 'link':
-	            return (0, _link2['default'])(col, row);
-	            break;
-	        case 'image':
-	            return (0, _img2['default'])(col, row);
-	            break;
-	        case 'datetime':
-	            return (0, _datetime2['default'])(col, row);
-	            break;
-	        case 'array':
-	            return ARRAY(col, row);
-	            break;
-	        case 'number':
-	            return (0, _number2['default'])(col, row);
-	            break;
-	        case 'string':
+	        case "link":
+	            return (0, _link2["default"])(col, row);
+	        case "image":
+	            return (0, _img2["default"])(col, row);
+	        case "datetime":
+	            return (0, _datetime2["default"])(col, row);
+	        case "number":
+	            return (0, _number2["default"])(col, row);
+	        case "string":
 	            if (col.type.src) {
-	                return (0, _string2['default'])(col, row);
+	                return (0, _string2["default"])(col, row);
 	            } else {
 	                if (row.match && col.id === row.match) {
 	                    var el = row.data[col.id];
-	                    return React.createElement('div', { dangerouslySetInnerHTML: createMarkup(el, row.position) });
+	                    return React.createElement("div", { dangerouslySetInnerHTML: createMarkup(el, row.position) });
 	                }
-	                return row.data[col.id] || '-';
+	                return row.data[col.id] || "-";
 	            }
 	            break;
 	        default:
-	            return row.data[col.id] || '-';
+	            return row.data[col.id] || "-";
 	    }
 	};
 
-	module.exports = exports['default'];
+	module.exports = exports["default"];
 
 /***/ },
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 	var _store = __webpack_require__(2);
 
 	var _store2 = _interopRequireDefault(_store);
+
+	var _constants = __webpack_require__(12);
+
+	var _constants2 = _interopRequireDefault(_constants);
 
 	var _GridStyleCss = __webpack_require__(10);
 
@@ -2054,40 +2054,49 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
 
+	var _utils = __webpack_require__(4);
+
+	var _utils2 = _interopRequireDefault(_utils);
+
 	var RowView = (function (_React$Component) {
 		function RowView(props) {
 			_classCallCheck(this, RowView);
 
-			_get(Object.getPrototypeOf(RowView.prototype), 'constructor', this).call(this, props);
+			_get(Object.getPrototypeOf(RowView.prototype), "constructor", this).call(this, props);
+
+			this._onClick = this._onClick.bind(this);
 		}
 
 		_inherits(RowView, _React$Component);
 
 		_createClass(RowView, [{
-			key: 'render',
+			key: "_onClick",
+			value: function _onClick(data) {
+				_utils2["default"].dispatch(_store2["default"].getElement(), _constants2["default"].ROW_CLICKED, JSON.stringify(data));
+			}
+		}, {
+			key: "render",
 			value: function render() {
 				var _this = this;
 
-				var genClass = function genClass(col, row) {
-					var classes = [_GridStyleCss2['default'].cell];
+				var genClass = function genClass(col) {
+					var classes = [_GridStyleCss2["default"].cell];
 
 					if (col.classes) {
 						col.classes.forEach(function (item) {
-							classes.push(_GridStyleCss2['default'][item]);
+							classes.push(_GridStyleCss2["default"][item]);
 						});
 					}
 
 					if (col.weight || col.weight === 0) {
-						classes.push(_GridStyleCss2['default']['w-' + col.weight]);
+						classes.push(_GridStyleCss2["default"]["w-" + col.weight]);
 					}
 
-					if (col.type.name === 'number') {
-						classes.push(_GridStyleCss2['default']['cell-align-right']);
+					if (col.type.name === "number") {
+						classes.push(_GridStyleCss2["default"]["cell-align-right"]);
 					}
 
-					if (row.match && col.id === row.match) {}
-
-					return classes.join(' ');
+					return classes.join(" ");
 				};
 
 				var genStyle = function genStyle(col) {
@@ -2097,17 +2106,18 @@ return /******/ (function(modules) { // webpackBootstrap
 				};
 
 				return React.createElement(
-					'div',
-					{ key: this.props.i, className: _GridStyleCss2['default'].row },
-					_store2['default'].getColumns().map(function (col, j) {
+					"div",
+					{ key: this.props.i, className: _GridStyleCss2["default"].row },
+					_store2["default"].getColumns().map(function (col, i) {
 						return React.createElement(
-							'div',
+							"div",
 							{
-								key: j,
-								'data-label': col.name,
-								className: genClass(col, _this.props.row),
+								key: i,
+								"data-label": col.name,
+								className: genClass(col),
+								onClick: _this._onClick.bind(_this, _this.props.row.data),
 								style: genStyle(col) },
-							(0, _cellTypesIndex2['default'])(col, _this.props.row)
+							(0, _cellTypesIndex2["default"])(col, _this.props.row)
 						);
 					})
 				);
@@ -2117,11 +2127,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		return RowView;
 	})(React.Component);
 
-	exports['default'] = RowView;
-	;
-	module.exports = exports['default'];
-
-	// classes.push(styles['cell-highlight']);
+	exports["default"] = RowView;
+	module.exports = exports["default"];
 
 /***/ },
 /* 17 */
@@ -2210,6 +2217,114 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _actions = __webpack_require__(3);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _GridStyleCss = __webpack_require__(10);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var RowsPerPageView = (function (_React$Component) {
+		function RowsPerPageView(props) {
+			_classCallCheck(this, RowsPerPageView);
+
+			_get(Object.getPrototypeOf(RowsPerPageView.prototype), 'constructor', this).call(this, props);
+
+			this._onClick = this._onClick.bind(this);
+			this._onBlur = this._onBlur.bind(this);
+		}
+
+		_inherits(RowsPerPageView, _React$Component);
+
+		_createClass(RowsPerPageView, [{
+			key: '_onClick',
+			value: function _onClick(e) {
+				var option = e.target.getAttribute('data-value');
+				_actions2['default'].setRowsPerPage(option);
+				this._onBlur();
+			}
+		}, {
+			key: '_onBlur',
+			value: function _onBlur() {
+				this.props.el.removeAttribute('style');
+				React.unmountComponentAtNode(this.props.el);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this = this;
+
+				var position = this.props.target.getBoundingClientRect(),
+				    offsetTop = this.props.opts.paging_options.length * 48 - 48;
+
+				this.props.el.style.position = 'fixed';
+				this.props.el.style.left = position.left - 20 + 'px';
+				this.props.el.style.top = position.top - offsetTop + 'px';
+				this.props.el.style.display = 'block';
+
+				var genClass = function genClass(item) {
+					var classes = [_GridStyleCss2['default'].li];
+
+					if (item === _this.props.opts.rows_per_page) {
+						classes.push(_GridStyleCss2['default'].selected);
+					}
+
+					return classes.join(' ');
+				};
+
+				var clickHandler = function clickHandler(e) {
+					document.removeEventListener('click', clickHandler);
+					_this._onBlur();
+				};
+
+				document.addEventListener('click', clickHandler);
+
+				return React.createElement(
+					'div',
+					{ className: _GridStyleCss2['default']['menu-wrapper'] },
+					React.createElement(
+						'ul',
+						{ className: _GridStyleCss2['default'].ul },
+						this.props.opts.paging_options.map(function (item, i) {
+							return React.createElement(
+								'li',
+								{ key: i, className: genClass(item), 'data-value': item, onClick: _this._onClick },
+								item
+							);
+						})
+					)
+				);
+			}
+		}]);
+
+		return RowsPerPageView;
+	})(React.Component);
+
+	exports['default'] = RowsPerPageView;
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2316,114 +2431,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(React.Component);
 
 	exports['default'] = SearchView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _actions = __webpack_require__(3);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _GridStyleCss = __webpack_require__(10);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var RowsPerPageView = (function (_React$Component) {
-		function RowsPerPageView(props) {
-			_classCallCheck(this, RowsPerPageView);
-
-			_get(Object.getPrototypeOf(RowsPerPageView.prototype), 'constructor', this).call(this, props);
-
-			this._onClick = this._onClick.bind(this);
-			this._onBlur = this._onBlur.bind(this);
-		}
-
-		_inherits(RowsPerPageView, _React$Component);
-
-		_createClass(RowsPerPageView, [{
-			key: '_onClick',
-			value: function _onClick(e) {
-				var option = e.target.getAttribute('data-value');
-				_actions2['default'].setRowsPerPage(option);
-				this._onBlur();
-			}
-		}, {
-			key: '_onBlur',
-			value: function _onBlur() {
-				this.props.el.removeAttribute('style');
-				React.unmountComponentAtNode(this.props.el);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this = this;
-
-				var position = this.props.target.getBoundingClientRect(),
-				    offsetTop = this.props.opts.paging_options.length * 48 - 48;
-
-				this.props.el.style.position = 'fixed';
-				this.props.el.style.left = position.left - 20 + 'px';
-				this.props.el.style.top = position.top - offsetTop + 'px';
-				this.props.el.style.display = 'block';
-
-				var genClass = function genClass(item) {
-					var classes = [_GridStyleCss2['default'].li];
-
-					if (item === _this.props.opts.rows_per_page) {
-						classes.push(_GridStyleCss2['default'].selected);
-					}
-
-					return classes.join(' ');
-				};
-
-				var clickHandler = function clickHandler(e) {
-					document.removeEventListener('click', clickHandler);
-					_this._onBlur();
-				};
-
-				document.addEventListener('click', clickHandler);
-
-				return React.createElement(
-					'div',
-					{ className: _GridStyleCss2['default']['menu-wrapper'] },
-					React.createElement(
-						'ul',
-						{ className: _GridStyleCss2['default'].ul },
-						this.props.opts.paging_options.map(function (item, i) {
-							return React.createElement(
-								'li',
-								{ key: i, className: genClass(item), 'data-value': item, onClick: _this._onClick },
-								item
-							);
-						})
-					)
-				);
-			}
-		}]);
-
-		return RowsPerPageView;
-	})(React.Component);
-
-	exports['default'] = RowsPerPageView;
 	;
 	module.exports = exports['default'];
 
@@ -2879,13 +2886,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 	var _store = __webpack_require__(2);
 
@@ -2895,14 +2902,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _numeral2 = _interopRequireDefault(_numeral);
 
-	exports['default'] = function (col, row) {
-	    var props = col.type.props,
-	        value = row.data[col.id];
+	exports["default"] = function (col, row) {
+	    var value = row.data[col.id];
 
-	    return (0, _numeral2['default'])(value).format(col.type.format || _store2['default'].getOptions().number_format);
+	    return (0, _numeral2["default"])(value).format(col.type.format || _store2["default"].getOptions().number_format);
 	};
 
-	module.exports = exports['default'];
+	module.exports = exports["default"];
 
 /***/ },
 /* 25 */
@@ -5004,7 +5010,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	});
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32), __webpack_require__(31).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31), __webpack_require__(32).setImmediate))
 
 /***/ },
 /* 28 */
@@ -7080,6 +7086,70 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
+	// shim for using process in browser
+
+	var process = module.exports = {};
+	var queue = [];
+	var draining = false;
+
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    draining = true;
+	    var currentQueue;
+	    var len = queue.length;
+	    while(len) {
+	        currentQueue = queue;
+	        queue = [];
+	        var i = -1;
+	        while (++i < len) {
+	            currentQueue[i]();
+	        }
+	        len = queue.length;
+	    }
+	    draining = false;
+	}
+	process.nextTick = function (fun) {
+	    queue.push(fun);
+	    if (!draining) {
+	        setTimeout(drainQueue, 0);
+	    }
+	};
+
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	// TODO(shtylman)
+	process.cwd = function () { return '/' };
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function() { return 0; };
+
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(36).nextTick;
 	var apply = Function.prototype.apply;
 	var slice = Array.prototype.slice;
@@ -7156,71 +7226,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31).setImmediate, __webpack_require__(31).clearImmediate))
-
-/***/ },
-/* 32 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// shim for using process in browser
-
-	var process = module.exports = {};
-	var queue = [];
-	var draining = false;
-
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    draining = true;
-	    var currentQueue;
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        var i = -1;
-	        while (++i < len) {
-	            currentQueue[i]();
-	        }
-	        len = queue.length;
-	    }
-	    draining = false;
-	}
-	process.nextTick = function (fun) {
-	    queue.push(fun);
-	    if (!draining) {
-	        setTimeout(drainQueue, 0);
-	    }
-	};
-
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-
-	function noop() {}
-
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-
-	// TODO(shtylman)
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
-
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32).setImmediate, __webpack_require__(32).clearImmediate))
 
 /***/ },
 /* 33 */

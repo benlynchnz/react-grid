@@ -75,6 +75,13 @@ export default {
 			type: Constants.SET_DATA_URI,
 			data: uri
 		});
+	},
+
+	setElement: (el) => {
+		AppDispatcher.dispatch({
+			type: Constants.SET_ELEMENT,
+			data: el
+		});
 	}
 
 };

@@ -21,7 +21,7 @@ export default class OptionsView extends React.Component {
     }
 
     componentDidMount() {
-        utils.dispatch("render");
+        utils.dispatch(document, null, null, "render");
 
         if (Store.getOptions().show_datepicker) {
             let el = document.getElementById('myDatePicker');
