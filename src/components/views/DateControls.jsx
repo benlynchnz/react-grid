@@ -1,10 +1,10 @@
-import Store from '../store';
-import Actions from '../actions';
-import utils from '../utils';
-import styles from '../../GridStyle.css';
+import Store from "../store";
+import Actions from "../actions";
+import utils from "../utils";
+import styles from "../../GridStyle.css";
 
-import Groups from './Groups.jsx';
-import Search from './Search.jsx';
+import Groups from "./Groups.jsx";
+import Search from "./Search.jsx";
 
 export default class DateControlsView extends React.Component {
 
@@ -32,7 +32,7 @@ export default class DateControlsView extends React.Component {
                 if (action === "DATE_RANGE_CHANGE") {
                     Actions.setDateRange(JSON.parse(e.detail.payload).dates);
                 }
-            }
+            };
 
             el.addEventListener('event', handler);
         }
@@ -56,5 +56,4 @@ export default class DateControlsView extends React.Component {
             </div>
         );
     }
-
-};
+}
