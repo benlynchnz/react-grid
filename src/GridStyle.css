@@ -72,7 +72,6 @@
 .header {
 	background-color: #fff;
 	line-height: 56px;
-	padding-top: 24px;
 }
 
 .header .cell {
@@ -87,17 +86,11 @@
     -ms-user-select: none;
     user-select: none;
 	border-bottom: 0;
+	cursor: default;
 }
 
-.head .title {
-	font-size: 18px;
-	padding-left: 32px;
-}
-
-.title .group-by-header {
-	font-size: 80%;
-	margin-left: 6px;
-	color: hsla(0, 0%, 0%, 0.56);
+.head {
+	background-color: #fff;
 }
 
 .options {
@@ -273,16 +266,6 @@
 	line-height: 56px;
 }
 
-.options .dots-vertical {
-	float: right;
-	opacity: 0.56;
-	cursor: pointer;
-}
-
-.options .dots-vertical:hover {
-	opacity: 1;
-}
-
 .footer .li {
 	float: left;
 	margin-right: 30px;
@@ -361,21 +344,35 @@
 	background-color: #eee;
 }
 
+.date-controls-wrapper {
+	display: flex;
+	background-color: #f8f8f8;
+	padding: 10px;
+	margin-bottom: 15px;
+}
+
 .options-wrapper {
 	background-color: #fff;
 	padding: 24px 32px;
 	border-top: 1px solid #ddd;
+	min-height: 50px;
 }
 
-.options-dates {
+.options-wrapper .title {
 	float: left;
-	margin: 0;
-	padding: 0;
-	position: absolute;
 }
 
-.options-dates input {
-	float: right;
+.options-wrapper .title h1 {
+	margin: 0;
+	font-weight: 500;
+	font-size: 28px;
+	color: hsla(0, 0%, 0%, 0.87);
+}
+
+.options-wrapper .title h2 {
+	color: hsla(0, 0%, 0%, 0.56);
+	font-weight: 500;
+	font-size: 18px;
 }
 
 .options-tools input {
@@ -415,21 +412,16 @@
 }
 
 
-.input-container img {
+.input-container i {
 	position: absolute;
 	bottom: 8px;
 	right: 0px;
 	width: 24px;
 	height: 24px;
-	opacity: 0.56;
 	cursor: pointer;
 }
 
-.input-container img:hover {
-	opacity: 1;
-}
-
-input {
+.input {
 	font-size: 18px;
 	padding: 10px 10px 10px 5px;
 	display: block;
@@ -439,7 +431,7 @@ input {
 	color: hsla(0, 0%, 0%, 1);
 }
 
-input:focus {
+.input:focus {
 	outline: none;
 }
 

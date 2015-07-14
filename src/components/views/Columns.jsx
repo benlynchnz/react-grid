@@ -1,20 +1,17 @@
-'use strict';
-
-import Store from '../store';
-import Actions from '../actions';
-import utils from '../utils';
-import styles from '../../GridStyle.css';
-import Groups from './Groups.jsx';
+import Store from "../store";
+import Actions from "../actions";
+import styles from "../../GridStyle.css";
+import Groups from "./Groups.jsx";
 
 export default class ColumnsView extends React.Component {
 
-	displayName: 'grid-columns-view'
+	displayName: "grid-columns-view"
 
 	constructor(props) {
 		super(props);
 		this.state = {
 			options: Store.getOptions()
-		}
+		};
 	}
 
 	_onClick(e) {
@@ -29,7 +26,7 @@ export default class ColumnsView extends React.Component {
 	}
 
 	_onGroupByClick(e) {
-		let menuWrapper = document.getElementById('group-by');
+		let menuWrapper = document.getElementById("group-by");
 
 		React.render(<Groups target={e.target} el={menuWrapper}/>, menuWrapper);
 	}
@@ -39,53 +36,47 @@ export default class ColumnsView extends React.Component {
 			let classes = [styles.cell];
 
 			if (item.active_sort) {
-				classes.push(styles['column-sort']);
+				classes.push(styles["column-sort"]);
 			}
 
 			if (Store.getSortOrder()) {
-				classes.push(styles['asc']);
+				classes.push(styles.asc);
 			} else {
-				classes.push(styles['desc']);
+				classes.push(styles.desc);
 			}
 
-			if (item.type.name === 'number') {
-				classes.push(styles['cell-align-right']);
+			if (item.type.name === "number") {
+				classes.push(styles["cell-align-right"]);
 			}
 
 			if (item.classes) {
-				item.classes.forEach((item) => {
-					classes.push(styles[item]);
+				item.classes.forEach((cls) => {
+					classes.push(styles[cls]);
 				});
 			}
 
 			if (item.weight || item.weight === 0) {
-				classes.push(styles['w-' + item.weight]);
+				classes.push(styles["w-" + item.weight]);
 			}
 
-			return classes.join(' ');
-		}
+			return classes.join(" ");
+		};
 
 		let genStyles = (item) => {
 			if (item.style) {
 				return item.style;
 			}
-		}
+		};
 
 		let trClass = () => {
 			let classes = [styles.row];
-			classes.push(styles['header']);
+			classes.push(styles.header);
 
-			return classes.join(' ');
-		}
+			return classes.join(" ");
+		};
 
 		return (
 			<div className={styles.head}>
-				{this.state.options.title ?
-				(<div className={trClass()}>
-					<div className={styles.title}>
-						{this.state.options.title}<span className={styles['group-by-header']}>{Store.getCurrentGroup() ? 'by ' + Store.getCurrentGroup().name : null}</span>
-					</div>
-				</div>) : null}
 				<div className={trClass()}>
 					{this.props.columns.map((item) => {
 						return (
@@ -103,4 +94,4 @@ export default class ColumnsView extends React.Component {
 			</div>
 		);
 	}
-};
+}

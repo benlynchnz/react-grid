@@ -72,7 +72,6 @@
 .GridStyle__header___5Kszw {
 	background-color: #fff;
 	line-height: 56px;
-	padding-top: 24px;
 }
 
 .GridStyle__header___5Kszw .GridStyle__cell___nHb5Q {
@@ -87,17 +86,11 @@
     -ms-user-select: none;
     user-select: none;
 	border-bottom: 0;
+	cursor: default;
 }
 
-.GridStyle__head___2E1A4 .GridStyle__title___1qH-h {
-	font-size: 18px;
-	padding-left: 32px;
-}
-
-.GridStyle__title___1qH-h .GridStyle__group-by-header___1w9CU {
-	font-size: 80%;
-	margin-left: 6px;
-	color: hsla(0, 0%, 0%, 0.56);
+.GridStyle__head___2E1A4 {
+	background-color: #fff;
 }
 
 .GridStyle__options___3Xxx3 {
@@ -273,16 +266,6 @@
 	line-height: 56px;
 }
 
-.GridStyle__options___3Xxx3 .GridStyle__dots-vertical___3-Jus {
-	float: right;
-	opacity: 0.56;
-	cursor: pointer;
-}
-
-.GridStyle__options___3Xxx3 .GridStyle__dots-vertical___3-Jus:hover {
-	opacity: 1;
-}
-
 .GridStyle__footer___3SKuL .GridStyle__li___Y2ezh {
 	float: left;
 	margin-right: 30px;
@@ -361,21 +344,38 @@
 	background-color: #eee;
 }
 
+.GridStyle__date-controls-wrapper___2rUHy {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	background-color: #f8f8f8;
+	padding: 10px;
+	margin-bottom: 15px;
+}
+
 .GridStyle__options-wrapper___InRhA {
 	background-color: #fff;
 	padding: 24px 32px;
 	border-top: 1px solid #ddd;
+	min-height: 50px;
 }
 
-.GridStyle__options-dates___VcUuW {
+.GridStyle__options-wrapper___InRhA .GridStyle__title___1qH-h {
 	float: left;
-	margin: 0;
-	padding: 0;
-	position: absolute;
 }
 
-.GridStyle__options-dates___VcUuW input {
-	float: right;
+.GridStyle__options-wrapper___InRhA .GridStyle__title___1qH-h h1 {
+	margin: 0;
+	font-weight: 500;
+	font-size: 28px;
+	color: hsla(0, 0%, 0%, 0.87);
+}
+
+.GridStyle__options-wrapper___InRhA .GridStyle__title___1qH-h h2 {
+	color: hsla(0, 0%, 0%, 0.56);
+	font-weight: 500;
+	font-size: 18px;
 }
 
 .GridStyle__options-tools___2D5V3 input {
@@ -415,21 +415,16 @@
 }
 
 
-.GridStyle__input-container___vpTCt img {
+.GridStyle__input-container___vpTCt i {
 	position: absolute;
 	bottom: 8px;
 	right: 0px;
 	width: 24px;
 	height: 24px;
-	opacity: 0.56;
 	cursor: pointer;
 }
 
-.GridStyle__input-container___vpTCt img:hover {
-	opacity: 1;
-}
-
-input {
+.GridStyle__input___3PI7W {
 	font-size: 18px;
 	padding: 10px 10px 10px 5px;
 	display: block;
@@ -439,7 +434,7 @@ input {
 	color: hsla(0, 0%, 0%, 1);
 }
 
-input:focus {
+.GridStyle__input___3PI7W:focus {
 	outline: none;
 }
 

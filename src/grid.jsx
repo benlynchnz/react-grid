@@ -7,6 +7,7 @@ import Columns from './components/views/Columns.jsx';
 import Rows from './components/views/Rows.jsx';
 import Footer from './components/views/Footer.jsx';
 import Options from './components/views/Options.jsx';
+import DateControls from './components/views/DateControls.jsx';
 import Loading from './components/views/Loading.jsx';
 
 export default class GridView extends React.Component {
@@ -66,6 +67,8 @@ export default class GridView extends React.Component {
 	render() {
 		if (this.state.isReady) {
 			return (
+				<div>
+				<DateControls />
 				<div className={styles.wrapper}>
 					<div className={styles.table}>
 						<Options />
@@ -74,6 +77,7 @@ export default class GridView extends React.Component {
 					</div>
 					{Store.getOptions().show_paging ? <Footer /> : null}
 				</div>
+			</div>
 			);
 		} else {
 			return (

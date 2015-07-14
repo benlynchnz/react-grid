@@ -1,12 +1,10 @@
-'use strict';
-
-import Actions from '../actions';
-import Store from '../store';
-import styles from '../../GridStyle.css';
+import Actions from "../actions";
+import Store from "../store";
+import styles from "../../GridStyle.css";
 
 export default class SearchView extends React.Component {
 
-    displayName: 'search-view'
+    displayName: "search-view"
 
     constructor(props) {
         super(props);
@@ -18,23 +16,21 @@ export default class SearchView extends React.Component {
 
     _onBlur(e) {
         if (!e || !e.target.value) {
-            this.props.li.style.visibility = 'visible';
-		    React.unmountComponentAtNode(this.props.el);
-        } else {
-
+            this.props.li.style.visibility = "visible";
+            React.unmountComponentAtNode(this.props.el);
         }
     }
 
     _onFocus(e) {
-        let keyHandler = (e) => {
-            let value = e.target.value;
+        let keyHandler = (el) => {
+            let value = el.target.value;
 
-            if (e.which === 13) {
+            if (el.which === 13) {
                 Actions.search(value);
                 this._onBlur(e);
             }
 
-            if (e.which === 27) {
+            if (el.which === 27) {
                 Store.clearSearchRows();
                 this._onBlur(e);
             }
@@ -42,9 +38,9 @@ export default class SearchView extends React.Component {
             if (!value) {
                 Store.clearSearchRows();
             }
-        }
+        };
 
-        e.target.addEventListener('keyup', keyHandler);
+        e.target.addEventListener("keyup", keyHandler);
     }
 
     _onSearchClear() {
@@ -56,17 +52,16 @@ export default class SearchView extends React.Component {
         let pos = this.props.target.getBoundingClientRect();
 
         let inputStyle = {
-            left: (pos.right - 300) + 'px'
+            left: (pos.right - 300) + "px"
         };
 
         return (
             <div className={styles['input-container']} style={inputStyle}>
-                <input type="text" onBlur={this._onBlur} onFocus={this._onFocus} required />
-                <span className={styles['highlight']}></span>
-                <span className={styles['bar']}></span>
-                <img src="./icons/close.png" onClick={this._onSearchClear}/>
+                <input type="text" className={styles.input} onBlur={this._onBlur} onFocus={this._onFocus} required />
+                <span className={styles.highlight}></span>
+                <span className={styles.bar}></span>
+                <i onClick={this._onSearchClear} className="material-icons">close</i>
             </div>
         );
     }
-
-};
+}

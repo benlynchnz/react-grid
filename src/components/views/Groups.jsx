@@ -1,5 +1,3 @@
-'use strict';
-
 import Store from '../store';
 import Actions from '../actions';
 import styles from '../../GridStyle.css';

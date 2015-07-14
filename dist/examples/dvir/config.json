@@ -1,4 +1,5 @@
 {
+	"title": "Inspections",
 	"rows_per_page": 5,
     "paging_options": [5, 10, 20, 50, 100, 250],
     "show_paging": true,
@@ -12,17 +13,6 @@
         "required": ["created"]
     },
     "columns": [
-		{
-            "id": "id",
-            "index": 0,
-            "name": "id",
-            "weight": 0,
-            "sortable": false,
-			"ascending": true,
-			"type": {
-				"name": "string"
-			}
-        },
         {
             "id": "created_at",
             "index": 1,
