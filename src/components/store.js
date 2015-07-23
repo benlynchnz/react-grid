@@ -46,7 +46,7 @@ class Store extends EventEmitter {
 			});
 
 			if (!exists) {
-				return;
+				// return;
 			}
 		}
 

@@ -192,6 +192,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_onChange',
 			value: function _onChange() {
+
 				if (_componentsStore2['default'].isReady()) {
 					var rows = _componentsStore2['default'].getRows();
 
@@ -333,21 +334,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				var opts = this.getOptions();
 
 				if (opts.request && opts.request.required && opts.request.required.length) {
-					var _ret = (function () {
+					(function () {
 						var params = _.keys(_reqParams);
 
 						var exists = _.every(opts.request.required, function (item) {
 							return params.indexOf(item) !== -1;
 						});
 
-						if (!exists) {
-							return {
-								v: undefined
-							};
-						}
+						if (!exists) {}
 					})();
-
-					if (typeof _ret === "object") return _ret.v;
 				}
 
 				if (this.getTotalRows() === 0 || !this.hasAllData()) {
@@ -940,6 +935,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports["default"] = _Store;
 	module.exports = exports["default"];
 
+	// return;
+
 /***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
@@ -1141,9 +1138,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			_classCallCheck(this, ColumnsView);
 
 			_get(Object.getPrototypeOf(ColumnsView.prototype), "constructor", this).call(this, props);
-			this.state = {
-				options: _store2["default"].getOptions()
-			};
+			this.state = {};
+			options: _store2["default"].getOptions();
 		}
 
 		_inherits(ColumnsView, _React$Component);
@@ -1443,7 +1439,11 @@ return /******/ (function(modules) { // webpackBootstrap
 								null,
 								this.state.rows_per_page
 							),
-							React.createElement('img', { className: _GridStyleCss2['default'].caret, src: './icons/menu-down.png' })
+							React.createElement(
+								'i',
+								{ className: 'material-icons' },
+								'arrow_drop_down'
+							)
 						),
 						React.createElement(
 							'li',
@@ -1457,12 +1457,20 @@ return /******/ (function(modules) { // webpackBootstrap
 						React.createElement(
 							'li',
 							{ className: _GridStyleCss2['default'].li, 'data-direction': 'back', onClick: this._onClick },
-							React.createElement('img', { src: './icons/chevron-left.png' })
+							React.createElement(
+								'i',
+								{ className: 'material-icons' },
+								'chevron_left'
+							)
 						),
 						React.createElement(
 							'li',
 							{ className: _GridStyleCss2['default'].li, 'data-direction': 'forward', onClick: this._onClick },
-							React.createElement('img', { src: './icons/chevron-right.png' })
+							React.createElement(
+								'i',
+								{ className: 'material-icons' },
+								'chevron_right'
+							)
 						)
 					)
 				);
@@ -1816,7 +1824,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                React.createElement(
 	                    "div",
 	                    { style: loadingStyle },
-	                    React.createElement("img", { src: "./svg/oval.svg" })
+	                    "Loading"
 	                )
 	            );
 	        }

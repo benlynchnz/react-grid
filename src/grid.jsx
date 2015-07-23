@@ -38,6 +38,7 @@ export default class GridView extends React.Component {
 	}
 
 	_onChange() {
+
 		if (Store.isReady()) {
 			let rows = Store.getRows();
 

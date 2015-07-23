@@ -10,8 +10,8 @@ export default class ColumnsView extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			options: Store.getOptions()
 		};
+			options: Store.getOptions()
 	}
 
 	_onClick(e) {

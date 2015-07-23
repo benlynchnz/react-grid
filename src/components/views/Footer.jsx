@@ -60,10 +60,10 @@ export default class FooterView extends React.Component {
 				<div id="rows-per-page" className={styles['rows-per-page']}></div>
 				<ul className={styles.ul}>
 					<li className={styles.li}>Rows per page:</li>
-					<li className={styles.li} onClick={this._onRowsPerPageClick} ><b>{this.state.rows_per_page}</b><img className={styles.caret} src="./icons/menu-down.png" /></li>
+					<li className={styles.li} onClick={this._onRowsPerPageClick} ><b>{this.state.rows_per_page}</b><i className="material-icons">arrow_drop_down</i></li>
 					<li className={styles.li}>{this.state.paging_from} - {this.state.paging_to} of {Store.getTotalCount()}</li>
-					<li className={styles.li} data-direction="back" onClick={this._onClick}><img src="./icons/chevron-left.png" /></li>
-					<li className={styles.li} data-direction="forward" onClick={this._onClick}><img src="./icons/chevron-right.png" /></li>
+					<li className={styles.li} data-direction="back" onClick={this._onClick}><i className="material-icons">chevron_left</i></li>
+					<li className={styles.li} data-direction="forward" onClick={this._onClick}><i className="material-icons">chevron_right</i></li>
 				</ul>
 			</div>
 		);

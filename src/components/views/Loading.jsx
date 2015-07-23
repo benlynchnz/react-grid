@@ -25,7 +25,7 @@ export default class LoadingView extends React.Component {
 
         return (
             <div className={styles["loading-wrapper"]} style={divStyle}>
-                <div style={loadingStyle}><img src="./svg/oval.svg" /></div>
+                <div style={loadingStyle}>Loading</div>
             </div>
         );
     }
