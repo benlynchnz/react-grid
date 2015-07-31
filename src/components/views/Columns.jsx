@@ -10,8 +10,38 @@ export default class ColumnsView extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			options: Store.getOptions(),
+			columnsPos: null
 		};
-			options: Store.getOptions()
+
+		this._handleScroll = this._handleScroll.bind(this);
+	}
+
+	componentDidMount() {
+		window.addEventListener("scroll", _.debounce(this._handleScroll, 100));
+		let columns = this.refs.columns.getDOMNode();
+
+		this.setState({
+			columnsPos: columns.getBoundingClientRect()
+		});
+	}
+
+	_handleScroll() {
+		let columns = this.refs.columns.getDOMNode(),
+		bounds = columns.getBoundingClientRect();
+
+		if (this.state.columnsPos) {
+			if (this.state.columnsPos.top >= window.pageYOffset) {
+				columns.classList.remove(styles.fixed);
+				return;
+			}
+		}
+
+		if (bounds.top < 0) {
+			columns.style.left = bounds.left + "px";
+			columns.style.width = bounds.width + "px";
+			columns.classList.add(styles.fixed);
+		}
 	}
 
 	_onClick(e) {
@@ -76,7 +106,7 @@ export default class ColumnsView extends React.Component {
 		};
 
 		return (
-			<div className={styles.head}>
+			<div className={styles.head} ref="columns">
 				<div className={trClass()}>
 					{this.props.columns.map((item) => {
 						return (

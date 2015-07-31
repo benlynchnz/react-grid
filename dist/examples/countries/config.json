@@ -95,18 +95,6 @@
 			}
         },
         {
-            "id": "created_at",
-            "index": 5,
-            "name": "Created",
-            "weight": 1,
-            "sortable": true,
-			"ascending": true,
-            "can_group": true,
-			"type": {
-				"name": "datetime"
-			}
-        },
-        {
             "id": "population",
             "index": 0,
             "name": "Population",

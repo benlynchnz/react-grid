@@ -1129,7 +1129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _GroupsJsx = __webpack_require__(15);
+	var _GroupsJsx = __webpack_require__(18);
 
 	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
 
@@ -1138,13 +1138,46 @@ return /******/ (function(modules) { // webpackBootstrap
 			_classCallCheck(this, ColumnsView);
 
 			_get(Object.getPrototypeOf(ColumnsView.prototype), "constructor", this).call(this, props);
-			this.state = {};
-			options: _store2["default"].getOptions();
+			this.state = {
+				options: _store2["default"].getOptions(),
+				columnsPos: null
+			};
+
+			this._handleScroll = this._handleScroll.bind(this);
 		}
 
 		_inherits(ColumnsView, _React$Component);
 
 		_createClass(ColumnsView, [{
+			key: "componentDidMount",
+			value: function componentDidMount() {
+				window.addEventListener("scroll", _.debounce(this._handleScroll, 100));
+				var columns = this.refs.columns.getDOMNode();
+
+				this.setState({
+					columnsPos: columns.getBoundingClientRect()
+				});
+			}
+		}, {
+			key: "_handleScroll",
+			value: function _handleScroll() {
+				var columns = this.refs.columns.getDOMNode(),
+				    bounds = columns.getBoundingClientRect();
+
+				if (this.state.columnsPos) {
+					if (this.state.columnsPos.top >= window.pageYOffset) {
+						columns.classList.remove(_GridStyleCss2["default"].fixed);
+						return;
+					}
+				}
+
+				if (bounds.top < 0) {
+					columns.style.left = bounds.left + "px";
+					columns.style.width = bounds.width + "px";
+					columns.classList.add(_GridStyleCss2["default"].fixed);
+				}
+			}
+		}, {
 			key: "_onClick",
 			value: function _onClick(e) {
 				var id = e.target.getAttribute("data-column-id"),
@@ -1213,7 +1246,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return React.createElement(
 					"div",
-					{ className: _GridStyleCss2["default"].head },
+					{ className: _GridStyleCss2["default"].head, ref: "columns" },
 					React.createElement(
 						"div",
 						{ className: trClass() },
@@ -1276,15 +1309,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _cellTypesIndex = __webpack_require__(16);
+	var _cellTypesIndex = __webpack_require__(15);
 
 	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
 
-	var _RowJsx = __webpack_require__(17);
+	var _RowJsx = __webpack_require__(16);
 
 	var _RowJsx2 = _interopRequireDefault(_RowJsx);
 
-	var _RowGroupedJsx = __webpack_require__(18);
+	var _RowGroupedJsx = __webpack_require__(17);
 
 	var _RowGroupedJsx2 = _interopRequireDefault(_RowGroupedJsx);
 
@@ -1327,21 +1360,21 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 	var _store = __webpack_require__(2);
 
@@ -1351,15 +1384,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _utils = __webpack_require__(4);
-
-	var _utils2 = _interopRequireDefault(_utils);
-
 	var _GridStyleCss = __webpack_require__(11);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _RowsPerPageJsx = __webpack_require__(19);
+	var _RowsPerPageJsx = __webpack_require__(20);
 
 	var _RowsPerPageJsx2 = _interopRequireDefault(_RowsPerPageJsx);
 
@@ -1367,109 +1396,154 @@ return /******/ (function(modules) { // webpackBootstrap
 		function FooterView(props) {
 			_classCallCheck(this, FooterView);
 
-			_get(Object.getPrototypeOf(FooterView.prototype), 'constructor', this).call(this, props);
-			this.state = _store2['default'].getOptions();
+			_get(Object.getPrototypeOf(FooterView.prototype), "constructor", this).call(this, props);
+			this.state = _store2["default"].getOptions();
 
 			this._onClick = this._onClick.bind(this);
 			this._onRowsPerPageClick = this._onRowsPerPageClick.bind(this);
+			this._handleScroll = this._handleScroll.bind(this);
 		}
 
 		_inherits(FooterView, _React$Component);
 
 		_createClass(FooterView, [{
-			key: 'componentWillMount',
+			key: "componentWillMount",
 			value: function componentWillMount() {
-				_store2['default'].addChangeListener(this._onChange.bind(this));
+				_store2["default"].addChangeListener(this._onChange.bind(this));
 			}
 		}, {
-			key: 'componentWillUnmount',
-			value: function componentWillUnmount() {
-				_store2['default'].addRemoveListener(this._onChange.bind(this));
-			}
-		}, {
-			key: '_onChange',
-			value: function _onChange() {
-				this.setState(_store2['default'].getOptions());
-			}
-		}, {
-			key: '_onClick',
-			value: function _onClick(e) {
-				var target = e.currentTarget.getAttribute('data-direction'),
-				    direction = target === 'forward' ? 'forward' : 'back';
+			key: "componentDidMount",
+			value: function componentDidMount() {
+				var windowHeight = window.innerHeight;
 
-				if (direction === 'back' && this.state.paging_from === 1) {
+				window.addEventListener("scroll", _.debounce(this._handleScroll, 100));
+
+				var footer = this.refs.footer.getDOMNode();
+
+				console.log(windowHeight);
+				console.log(footer.offsetTop);
+				this.refs["footer-btn"].getDOMNode().style.display = "block";
+			}
+		}, {
+			key: "componentWillUnmount",
+			value: function componentWillUnmount() {
+				_store2["default"].addRemoveListener(this._onChange.bind(this));
+			}
+		}, {
+			key: "_handleScroll",
+			value: function _handleScroll() {
+				var footer = this.refs.footer.getDOMNode();
+
+				console.log(footer.getBoundingClientRect().top);
+
+				if (footer.getBoundingClientRect().top + footer.offsetHeight >= window.innerHeight) {
+					this.refs["footer-btn"].getDOMNode().style.display = "block";
+				} else {
+					this.refs["footer-btn"].getDOMNode().style.display = "none";
+				}
+			}
+		}, {
+			key: "_onChange",
+			value: function _onChange() {
+				this.setState(_store2["default"].getOptions());
+			}
+		}, {
+			key: "_onClick",
+			value: function _onClick(e) {
+				var target = e.currentTarget.getAttribute("data-direction"),
+				    direction = target === "forward" ? "forward" : "back";
+
+				if (direction === "back" && this.state.paging_from === 1) {
 					return;
 				}
 
 				var next_rows = (this.state.current_page + 1) * this.state.rows_per_page + this.state.rows_per_page;
 
-				if (direction === 'forward' && next_rows - this.state.rows_per_page >= _store2['default'].getTotalCount()) {
+				if (direction === "forward" && next_rows - this.state.rows_per_page >= _store2["default"].getTotalCount()) {
 					return;
 				}
 
-				_actions2['default'].movePage(direction);
+				_actions2["default"].movePage(direction);
 			}
 		}, {
-			key: '_onRowsPerPageClick',
+			key: "_onRowsPerPageClick",
 			value: function _onRowsPerPageClick(e) {
-				var menuWrapper = document.getElementById('rows-per-page');
+				var menuWrapper = document.getElementById("rows-per-page");
 
-				React.render(React.createElement(_RowsPerPageJsx2['default'], { opts: this.state, target: e.target, el: menuWrapper }), menuWrapper);
+				React.render(React.createElement(_RowsPerPageJsx2["default"], { opts: this.state, target: e.target, el: menuWrapper }), menuWrapper);
 			}
 		}, {
-			key: 'render',
+			key: "render",
 			value: function render() {
+				var rowsStyle = {
+					marginRight: 0,
+					cursor: "pointer"
+				};
+
 				return React.createElement(
-					'div',
-					{ className: _GridStyleCss2['default'].footer },
-					React.createElement('div', { id: 'rows-per-page', className: _GridStyleCss2['default']['rows-per-page'] }),
+					"div",
+					{ className: _GridStyleCss2["default"].footer, ref: "footer" },
 					React.createElement(
-						'ul',
-						{ className: _GridStyleCss2['default'].ul },
+						"div",
+						{ className: _GridStyleCss2["default"]["footer-btn"], ref: "footer-btn" },
 						React.createElement(
-							'li',
-							{ className: _GridStyleCss2['default'].li },
-							'Rows per page:'
+							"i",
+							{ className: "material-icons" },
+							"more_vert"
+						)
+					),
+					React.createElement("div", { id: "rows-per-page", className: _GridStyleCss2["default"]["rows-per-page"] }),
+					React.createElement(
+						"ul",
+						{ className: _GridStyleCss2["default"].ul },
+						React.createElement(
+							"li",
+							{ className: _GridStyleCss2["default"].li },
+							"Rows per page:"
 						),
 						React.createElement(
-							'li',
-							{ className: _GridStyleCss2['default'].li, onClick: this._onRowsPerPageClick },
+							"li",
+							{ className: _GridStyleCss2["default"].li, style: rowsStyle, onClick: this._onRowsPerPageClick },
 							React.createElement(
-								'b',
+								"b",
 								null,
 								this.state.rows_per_page
-							),
-							React.createElement(
-								'i',
-								{ className: 'material-icons' },
-								'arrow_drop_down'
 							)
 						),
 						React.createElement(
-							'li',
-							{ className: _GridStyleCss2['default'].li },
+							"li",
+							{ className: _GridStyleCss2["default"].li, onClick: this._onRowsPerPageClick },
+							React.createElement(
+								"i",
+								{ className: "material-icons" },
+								"arrow_drop_down"
+							)
+						),
+						React.createElement(
+							"li",
+							{ className: _GridStyleCss2["default"].li },
 							this.state.paging_from,
-							' - ',
+							" - ",
 							this.state.paging_to,
-							' of ',
-							_store2['default'].getTotalCount()
+							" of ",
+							_store2["default"].getTotalCount()
 						),
 						React.createElement(
-							'li',
-							{ className: _GridStyleCss2['default'].li, 'data-direction': 'back', onClick: this._onClick },
+							"li",
+							{ className: _GridStyleCss2["default"].li, "data-direction": "back", onClick: this._onClick },
 							React.createElement(
-								'i',
-								{ className: 'material-icons' },
-								'chevron_left'
+								"i",
+								{ className: "material-icons" },
+								"chevron_left"
 							)
 						),
 						React.createElement(
-							'li',
-							{ className: _GridStyleCss2['default'].li, 'data-direction': 'forward', onClick: this._onClick },
+							"li",
+							{ className: _GridStyleCss2["default"].li, "data-direction": "forward", onClick: this._onClick },
 							React.createElement(
-								'i',
-								{ className: 'material-icons' },
-								'chevron_right'
+								"i",
+								{ className: "material-icons" },
+								"chevron_right"
 							)
 						)
 					)
@@ -1480,9 +1554,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		return FooterView;
 	})(React.Component);
 
-	exports['default'] = FooterView;
-	;
-	module.exports = exports['default'];
+	exports["default"] = FooterView;
+	module.exports = exports["default"];
 
 /***/ },
 /* 8 */
@@ -1520,11 +1593,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _GroupsJsx = __webpack_require__(15);
+	var _GroupsJsx = __webpack_require__(18);
 
 	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
 
-	var _SearchJsx = __webpack_require__(20);
+	var _SearchJsx = __webpack_require__(19);
 
 	var _SearchJsx2 = _interopRequireDefault(_SearchJsx);
 
@@ -1698,11 +1771,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _GroupsJsx = __webpack_require__(15);
+	var _GroupsJsx = __webpack_require__(18);
 
 	var _GroupsJsx2 = _interopRequireDefault(_GroupsJsx);
 
-	var _SearchJsx = __webpack_require__(20);
+	var _SearchJsx = __webpack_require__(19);
 
 	var _SearchJsx2 = _interopRequireDefault(_SearchJsx);
 
@@ -1842,7 +1915,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"wrapper":"GridStyle__wrapper___2GPIa","table":"GridStyle__table___1hfrk","body":"GridStyle__body___3fMzu","loading-wrapper":"GridStyle__loading-wrapper___1QZpb","row":"GridStyle__row___25tH_","group":"GridStyle__group___3GIS0","loading":"GridStyle__loading___2PMTK","head":"GridStyle__head___2E1A4","cell":"GridStyle__cell___nHb5Q","header":"GridStyle__header___5Kszw","options":"GridStyle__options___3Xxx3","cell-valign-middle":"GridStyle__cell-valign-middle___VjDQk","cell-valign-bottom":"GridStyle__cell-valign-bottom___1bXVW","cell-min":"GridStyle__cell-min___2PDoq","cell-max":"GridStyle__cell-max___wXFkb","column-sort":"GridStyle__column-sort___1kRVc","cell-nowrap":"GridStyle__cell-nowrap___1AC-S","cell-align-center":"GridStyle__cell-align-center___2MEAH","cell-align-right":"GridStyle__cell-align-right___1VhSM","cell-highlight":"GridStyle__cell-highlight___3mcBR","search-highlight":"GridStyle__search-highlight___3xr9Z","cell-100px":"GridStyle__cell-100px___3LsNv","asc":"GridStyle__asc___20KVi","desc":"GridStyle__desc___19MPa","footer":"GridStyle__footer___3SKuL","ul":"GridStyle__ul___7Ryif","li":"GridStyle__li___Y2ezh","caret":"GridStyle__caret___2WrVL","menu-wrapper":"GridStyle__menu-wrapper___2dzHZ","rows-per-page":"GridStyle__rows-per-page___1y7Um","group-by":"GridStyle__group-by___O3qZl","menu-hdr":"GridStyle__menu-hdr___1J_7i","selected":"GridStyle__selected___3eyuf","date-controls-wrapper":"GridStyle__date-controls-wrapper___2rUHy","options-wrapper":"GridStyle__options-wrapper___InRhA","title":"GridStyle__title___1qH-h","options-tools":"GridStyle__options-tools___2D5V3","input-container":"GridStyle__input-container___vpTCt","input":"GridStyle__input___3PI7W","bar":"GridStyle__bar___1eATB","highlight":"GridStyle__highlight___yiNAP","inputHighlighter":"GridStyle__inputHighlighter___1xnoT","tools-search":"GridStyle__tools-search___1xKWy","w-0":"GridStyle__w-0___3iPqO","w-1":"GridStyle__w-1___1EdTA","w-2":"GridStyle__w-2___g3RIZ","w-3":"GridStyle__w-3___25drh","w-4":"GridStyle__w-4___3rlJH"};
+	module.exports = {"wrapper":"GridStyle__wrapper___2GPIa","table":"GridStyle__table___1hfrk","body":"GridStyle__body___3fMzu","loading-wrapper":"GridStyle__loading-wrapper___1QZpb","row":"GridStyle__row___25tH_","group":"GridStyle__group___3GIS0","loading":"GridStyle__loading___2PMTK","head":"GridStyle__head___2E1A4","cell":"GridStyle__cell___nHb5Q","header":"GridStyle__header___5Kszw","fixed":"GridStyle__fixed___212TL","options":"GridStyle__options___3Xxx3","cell-valign-middle":"GridStyle__cell-valign-middle___VjDQk","cell-valign-bottom":"GridStyle__cell-valign-bottom___1bXVW","cell-min":"GridStyle__cell-min___2PDoq","cell-max":"GridStyle__cell-max___wXFkb","column-sort":"GridStyle__column-sort___1kRVc","cell-nowrap":"GridStyle__cell-nowrap___1AC-S","cell-align-center":"GridStyle__cell-align-center___2MEAH","cell-align-right":"GridStyle__cell-align-right___1VhSM","cell-highlight":"GridStyle__cell-highlight___3mcBR","search-highlight":"GridStyle__search-highlight___3xr9Z","cell-100px":"GridStyle__cell-100px___3LsNv","asc":"GridStyle__asc___20KVi","desc":"GridStyle__desc___19MPa","footer":"GridStyle__footer___3SKuL","footer-btn":"GridStyle__footer-btn___7vPwC","ul":"GridStyle__ul___7Ryif","li":"GridStyle__li___Y2ezh","caret":"GridStyle__caret___2WrVL","menu-wrapper":"GridStyle__menu-wrapper___2dzHZ","rows-per-page":"GridStyle__rows-per-page___1y7Um","group-by":"GridStyle__group-by___O3qZl","menu-hdr":"GridStyle__menu-hdr___1J_7i","selected":"GridStyle__selected___3eyuf","date-controls-wrapper":"GridStyle__date-controls-wrapper___2rUHy","options-wrapper":"GridStyle__options-wrapper___InRhA","title":"GridStyle__title___1qH-h","options-tools":"GridStyle__options-tools___2D5V3","input-container":"GridStyle__input-container___vpTCt","input":"GridStyle__input___3PI7W","bar":"GridStyle__bar___1eATB","highlight":"GridStyle__highlight___yiNAP","inputHighlighter":"GridStyle__inputHighlighter___1xnoT","tools-search":"GridStyle__tools-search___1xKWy","w-0":"GridStyle__w-0___3iPqO","w-1":"GridStyle__w-1___1EdTA","w-2":"GridStyle__w-2___g3RIZ","w-3":"GridStyle__w-3___25drh","w-4":"GridStyle__w-4___3rlJH"};
 
 /***/ },
 /* 12 */
@@ -1905,7 +1978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _superagent = __webpack_require__(29);
+	var _superagent = __webpack_require__(30);
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
@@ -1955,6 +2028,282 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _link = __webpack_require__(22);
+
+	var _link2 = _interopRequireDefault(_link);
+
+	var _img = __webpack_require__(23);
+
+	var _img2 = _interopRequireDefault(_img);
+
+	var _datetime = __webpack_require__(24);
+
+	var _datetime2 = _interopRequireDefault(_datetime);
+
+	var _number = __webpack_require__(25);
+
+	var _number2 = _interopRequireDefault(_number);
+
+	var _string = __webpack_require__(26);
+
+	var _string2 = _interopRequireDefault(_string);
+
+	var _GridStyleCss = __webpack_require__(11);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var highlight = function highlight(element, start, end) {
+	    var str = element;
+
+	    str = str.substr(0, start) + "<span class=\"" + _GridStyleCss2["default"]["search-highlight"] + "\">" + str.substr(start, end) + "</span>" + str.substr(start + end);
+
+	    return str;
+	};
+
+	var createMarkup = function createMarkup(el, position) {
+	    return {
+	        __html: highlight(el, position.start, position.end)
+	    };
+	};
+
+	exports["default"] = function (col, row) {
+
+	    switch (col.type.name) {
+	        case "link":
+	            return (0, _link2["default"])(col, row);
+	        case "image":
+	            return (0, _img2["default"])(col, row);
+	        case "datetime":
+	            return (0, _datetime2["default"])(col, row);
+	        case "number":
+	            return (0, _number2["default"])(col, row);
+	        case "string":
+	            if (col.type.src) {
+	                return (0, _string2["default"])(col, row);
+	            } else {
+	                if (row.match && col.id === row.match) {
+	                    var el = row.data[col.id];
+	                    return React.createElement("div", { dangerouslySetInnerHTML: createMarkup(el, row.position) });
+	                }
+	                return row.data[col.id] || "-";
+	            }
+	            break;
+	        default:
+	            return row.data[col.id] || "-";
+	    }
+	};
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _constants = __webpack_require__(13);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
+	var _GridStyleCss = __webpack_require__(11);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _cellTypesIndex = __webpack_require__(15);
+
+	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
+
+	var _utils = __webpack_require__(4);
+
+	var _utils2 = _interopRequireDefault(_utils);
+
+	var RowView = (function (_React$Component) {
+		function RowView(props) {
+			_classCallCheck(this, RowView);
+
+			_get(Object.getPrototypeOf(RowView.prototype), "constructor", this).call(this, props);
+
+			this._onClick = this._onClick.bind(this);
+		}
+
+		_inherits(RowView, _React$Component);
+
+		_createClass(RowView, [{
+			key: "_onClick",
+			value: function _onClick(data) {
+				_utils2["default"].dispatch(_store2["default"].getElement(), _constants2["default"].ROW_CLICKED, JSON.stringify(data));
+			}
+		}, {
+			key: "render",
+			value: function render() {
+				var _this = this;
+
+				var genClass = function genClass(col) {
+					var classes = [_GridStyleCss2["default"].cell];
+
+					if (col.classes) {
+						col.classes.forEach(function (item) {
+							classes.push(_GridStyleCss2["default"][item]);
+						});
+					}
+
+					if (col.weight || col.weight === 0) {
+						classes.push(_GridStyleCss2["default"]["w-" + col.weight]);
+					}
+
+					if (col.type.name === "number") {
+						classes.push(_GridStyleCss2["default"]["cell-align-right"]);
+					}
+
+					return classes.join(" ");
+				};
+
+				var genStyle = function genStyle(col) {
+					if (col.row_style) {
+						return col.row_style;
+					}
+				};
+
+				return React.createElement(
+					"div",
+					{ key: this.props.i, className: _GridStyleCss2["default"].row },
+					_store2["default"].getColumns().map(function (col, i) {
+						return React.createElement(
+							"div",
+							{
+								key: i,
+								"data-label": col.name,
+								className: genClass(col),
+								onClick: _this._onClick.bind(_this, _this.props.row.data),
+								style: genStyle(col) },
+							(0, _cellTypesIndex2["default"])(col, _this.props.row)
+						);
+					})
+				);
+			}
+		}]);
+
+		return RowView;
+	})(React.Component);
+
+	exports["default"] = RowView;
+	module.exports = exports["default"];
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _GridStyleCss = __webpack_require__(11);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _cellTypesIndex = __webpack_require__(15);
+
+	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
+
+	var RowGroupedView = (function (_React$Component) {
+		function RowGroupedView(props) {
+			_classCallCheck(this, RowGroupedView);
+
+			_get(Object.getPrototypeOf(RowGroupedView.prototype), 'constructor', this).call(this, props);
+		}
+
+		_inherits(RowGroupedView, _React$Component);
+
+		_createClass(RowGroupedView, [{
+			key: 'render',
+			value: function render() {
+
+				if (!this.props.group) {
+					return React.createElement('div', null);
+				}
+
+				var genRowClass = function genRowClass(col) {
+					var classes = [_GridStyleCss2['default'].row];
+					classes.push(_GridStyleCss2['default'].group);
+
+					return classes.join(' ');
+				};
+
+				var genClass = function genClass(col) {
+					var classes = [_GridStyleCss2['default'].cell];
+					classes.push(_GridStyleCss2['default'].group);
+
+					return classes.join(' ');
+				};
+
+				var col = _store2['default'].getColumn(this.props.group.id),
+				    row = this.props.row;
+
+				return React.createElement(
+					'div',
+					{ key: col.id, className: genRowClass() },
+					React.createElement(
+						'div',
+						{ className: _GridStyleCss2['default'].cell },
+						(0, _cellTypesIndex2['default'])(col, row)
+					)
+				);
+			}
+		}]);
+
+		return RowGroupedView;
+	})(React.Component);
+
+	exports['default'] = RowGroupedView;
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2078,391 +2427,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-	var _link = __webpack_require__(22);
-
-	var _link2 = _interopRequireDefault(_link);
-
-	var _img = __webpack_require__(23);
-
-	var _img2 = _interopRequireDefault(_img);
-
-	var _datetime = __webpack_require__(24);
-
-	var _datetime2 = _interopRequireDefault(_datetime);
-
-	var _number = __webpack_require__(25);
-
-	var _number2 = _interopRequireDefault(_number);
-
-	var _string = __webpack_require__(26);
-
-	var _string2 = _interopRequireDefault(_string);
-
-	var _GridStyleCss = __webpack_require__(11);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var highlight = function highlight(element, start, end) {
-	    var str = element;
-
-	    str = str.substr(0, start) + "<span class=\"" + _GridStyleCss2["default"]["search-highlight"] + "\">" + str.substr(start, end) + "</span>" + str.substr(start + end);
-
-	    return str;
-	};
-
-	var createMarkup = function createMarkup(el, position) {
-	    return {
-	        __html: highlight(el, position.start, position.end)
-	    };
-	};
-
-	exports["default"] = function (col, row) {
-
-	    switch (col.type.name) {
-	        case "link":
-	            return (0, _link2["default"])(col, row);
-	        case "image":
-	            return (0, _img2["default"])(col, row);
-	        case "datetime":
-	            return (0, _datetime2["default"])(col, row);
-	        case "number":
-	            return (0, _number2["default"])(col, row);
-	        case "string":
-	            if (col.type.src) {
-	                return (0, _string2["default"])(col, row);
-	            } else {
-	                if (row.match && col.id === row.match) {
-	                    var el = row.data[col.id];
-	                    return React.createElement("div", { dangerouslySetInnerHTML: createMarkup(el, row.position) });
-	                }
-	                return row.data[col.id] || "-";
-	            }
-	            break;
-	        default:
-	            return row.data[col.id] || "-";
-	    }
-	};
-
-	module.exports = exports["default"];
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _constants = __webpack_require__(13);
-
-	var _constants2 = _interopRequireDefault(_constants);
-
-	var _GridStyleCss = __webpack_require__(11);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _cellTypesIndex = __webpack_require__(16);
-
-	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
-
-	var _utils = __webpack_require__(4);
-
-	var _utils2 = _interopRequireDefault(_utils);
-
-	var RowView = (function (_React$Component) {
-		function RowView(props) {
-			_classCallCheck(this, RowView);
-
-			_get(Object.getPrototypeOf(RowView.prototype), "constructor", this).call(this, props);
-
-			this._onClick = this._onClick.bind(this);
-		}
-
-		_inherits(RowView, _React$Component);
-
-		_createClass(RowView, [{
-			key: "_onClick",
-			value: function _onClick(data) {
-				_utils2["default"].dispatch(_store2["default"].getElement(), _constants2["default"].ROW_CLICKED, JSON.stringify(data));
-			}
-		}, {
-			key: "render",
-			value: function render() {
-				var _this = this;
-
-				var genClass = function genClass(col) {
-					var classes = [_GridStyleCss2["default"].cell];
-
-					if (col.classes) {
-						col.classes.forEach(function (item) {
-							classes.push(_GridStyleCss2["default"][item]);
-						});
-					}
-
-					if (col.weight || col.weight === 0) {
-						classes.push(_GridStyleCss2["default"]["w-" + col.weight]);
-					}
-
-					if (col.type.name === "number") {
-						classes.push(_GridStyleCss2["default"]["cell-align-right"]);
-					}
-
-					return classes.join(" ");
-				};
-
-				var genStyle = function genStyle(col) {
-					if (col.row_style) {
-						return col.row_style;
-					}
-				};
-
-				return React.createElement(
-					"div",
-					{ key: this.props.i, className: _GridStyleCss2["default"].row },
-					_store2["default"].getColumns().map(function (col, i) {
-						return React.createElement(
-							"div",
-							{
-								key: i,
-								"data-label": col.name,
-								className: genClass(col),
-								onClick: _this._onClick.bind(_this, _this.props.row.data),
-								style: genStyle(col) },
-							(0, _cellTypesIndex2["default"])(col, _this.props.row)
-						);
-					})
-				);
-			}
-		}]);
-
-		return RowView;
-	})(React.Component);
-
-	exports["default"] = RowView;
-	module.exports = exports["default"];
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _GridStyleCss = __webpack_require__(11);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _cellTypesIndex = __webpack_require__(16);
-
-	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
-
-	var RowGroupedView = (function (_React$Component) {
-		function RowGroupedView(props) {
-			_classCallCheck(this, RowGroupedView);
-
-			_get(Object.getPrototypeOf(RowGroupedView.prototype), 'constructor', this).call(this, props);
-		}
-
-		_inherits(RowGroupedView, _React$Component);
-
-		_createClass(RowGroupedView, [{
-			key: 'render',
-			value: function render() {
-
-				if (!this.props.group) {
-					return React.createElement('div', null);
-				}
-
-				var genRowClass = function genRowClass(col) {
-					var classes = [_GridStyleCss2['default'].row];
-					classes.push(_GridStyleCss2['default'].group);
-
-					return classes.join(' ');
-				};
-
-				var genClass = function genClass(col) {
-					var classes = [_GridStyleCss2['default'].cell];
-					classes.push(_GridStyleCss2['default'].group);
-
-					return classes.join(' ');
-				};
-
-				var col = _store2['default'].getColumn(this.props.group.id),
-				    row = this.props.row;
-
-				return React.createElement(
-					'div',
-					{ key: col.id, className: genRowClass() },
-					React.createElement(
-						'div',
-						{ className: _GridStyleCss2['default'].cell },
-						(0, _cellTypesIndex2['default'])(col, row)
-					)
-				);
-			}
-		}]);
-
-		return RowGroupedView;
-	})(React.Component);
-
-	exports['default'] = RowGroupedView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
 /* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _actions = __webpack_require__(3);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _GridStyleCss = __webpack_require__(11);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var RowsPerPageView = (function (_React$Component) {
-		function RowsPerPageView(props) {
-			_classCallCheck(this, RowsPerPageView);
-
-			_get(Object.getPrototypeOf(RowsPerPageView.prototype), 'constructor', this).call(this, props);
-
-			this._onClick = this._onClick.bind(this);
-			this._onBlur = this._onBlur.bind(this);
-		}
-
-		_inherits(RowsPerPageView, _React$Component);
-
-		_createClass(RowsPerPageView, [{
-			key: '_onClick',
-			value: function _onClick(e) {
-				var option = e.target.getAttribute('data-value');
-				_actions2['default'].setRowsPerPage(option);
-				this._onBlur();
-			}
-		}, {
-			key: '_onBlur',
-			value: function _onBlur() {
-				this.props.el.removeAttribute('style');
-				React.unmountComponentAtNode(this.props.el);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this = this;
-
-				var position = this.props.target.getBoundingClientRect(),
-				    offsetTop = this.props.opts.paging_options.length * 48 - 48;
-
-				this.props.el.style.position = 'fixed';
-				this.props.el.style.left = position.left - 20 + 'px';
-				this.props.el.style.top = position.top - offsetTop + 'px';
-				this.props.el.style.display = 'block';
-
-				var genClass = function genClass(item) {
-					var classes = [_GridStyleCss2['default'].li];
-
-					if (item === _this.props.opts.rows_per_page) {
-						classes.push(_GridStyleCss2['default'].selected);
-					}
-
-					return classes.join(' ');
-				};
-
-				var clickHandler = function clickHandler(e) {
-					document.removeEventListener('click', clickHandler);
-					_this._onBlur();
-				};
-
-				document.addEventListener('click', clickHandler);
-
-				return React.createElement(
-					'div',
-					{ className: _GridStyleCss2['default']['menu-wrapper'] },
-					React.createElement(
-						'ul',
-						{ className: _GridStyleCss2['default'].ul },
-						this.props.opts.paging_options.map(function (item, i) {
-							return React.createElement(
-								'li',
-								{ key: i, className: genClass(item), 'data-value': item, onClick: _this._onClick },
-								item
-							);
-						})
-					)
-				);
-			}
-		}]);
-
-		return RowsPerPageView;
-	})(React.Component);
-
-	exports['default'] = RowsPerPageView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2574,6 +2539,114 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports["default"] = SearchView;
 	module.exports = exports["default"];
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _actions = __webpack_require__(3);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _GridStyleCss = __webpack_require__(11);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var RowsPerPageView = (function (_React$Component) {
+		function RowsPerPageView(props) {
+			_classCallCheck(this, RowsPerPageView);
+
+			_get(Object.getPrototypeOf(RowsPerPageView.prototype), 'constructor', this).call(this, props);
+
+			this._onClick = this._onClick.bind(this);
+			this._onBlur = this._onBlur.bind(this);
+		}
+
+		_inherits(RowsPerPageView, _React$Component);
+
+		_createClass(RowsPerPageView, [{
+			key: '_onClick',
+			value: function _onClick(e) {
+				var option = e.target.getAttribute('data-value');
+				_actions2['default'].setRowsPerPage(option);
+				this._onBlur();
+			}
+		}, {
+			key: '_onBlur',
+			value: function _onBlur() {
+				this.props.el.removeAttribute('style');
+				React.unmountComponentAtNode(this.props.el);
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this = this;
+
+				var position = this.props.target.getBoundingClientRect(),
+				    offsetTop = this.props.opts.paging_options.length * 48 - 48;
+
+				this.props.el.style.position = 'fixed';
+				this.props.el.style.left = position.left - 20 + 'px';
+				this.props.el.style.top = position.top - offsetTop + 'px';
+				this.props.el.style.display = 'block';
+
+				var genClass = function genClass(item) {
+					var classes = [_GridStyleCss2['default'].li];
+
+					if (item === _this.props.opts.rows_per_page) {
+						classes.push(_GridStyleCss2['default'].selected);
+					}
+
+					return classes.join(' ');
+				};
+
+				var clickHandler = function clickHandler(e) {
+					document.removeEventListener('click', clickHandler);
+					_this._onBlur();
+				};
+
+				document.addEventListener('click', clickHandler);
+
+				return React.createElement(
+					'div',
+					{ className: _GridStyleCss2['default']['menu-wrapper'] },
+					React.createElement(
+						'ul',
+						{ className: _GridStyleCss2['default'].ul },
+						this.props.opts.paging_options.map(function (item, i) {
+							return React.createElement(
+								'li',
+								{ key: i, className: genClass(item), 'data-value': item, onClick: _this._onClick },
+								item
+							);
+						})
+					)
+				);
+			}
+		}]);
+
+		return RowsPerPageView;
+	})(React.Component);
+
+	exports['default'] = RowsPerPageView;
+	;
+	module.exports = exports['default'];
 
 /***/ },
 /* 21 */
@@ -3095,7 +3168,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(30)
+	module.exports.Dispatcher = __webpack_require__(29)
 
 
 /***/ },
@@ -5151,10 +5224,266 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	});
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32), __webpack_require__(33).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(34), __webpack_require__(33).setImmediate))
 
 /***/ },
 /* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+	 * Copyright (c) 2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule Dispatcher
+	 * @typechecks
+	 */
+
+	"use strict";
+
+	var invariant = __webpack_require__(32);
+
+	var _lastID = 1;
+	var _prefix = 'ID_';
+
+	/**
+	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
+	 * different from generic pub-sub systems in two ways:
+	 *
+	 *   1) Callbacks are not subscribed to particular events. Every payload is
+	 *      dispatched to every registered callback.
+	 *   2) Callbacks can be deferred in whole or part until other callbacks have
+	 *      been executed.
+	 *
+	 * For example, consider this hypothetical flight destination form, which
+	 * selects a default city when a country is selected:
+	 *
+	 *   var flightDispatcher = new Dispatcher();
+	 *
+	 *   // Keeps track of which country is selected
+	 *   var CountryStore = {country: null};
+	 *
+	 *   // Keeps track of which city is selected
+	 *   var CityStore = {city: null};
+	 *
+	 *   // Keeps track of the base flight price of the selected city
+	 *   var FlightPriceStore = {price: null}
+	 *
+	 * When a user changes the selected city, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'city-update',
+	 *     selectedCity: 'paris'
+	 *   });
+	 *
+	 * This payload is digested by `CityStore`:
+	 *
+	 *   flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'city-update') {
+	 *       CityStore.city = payload.selectedCity;
+	 *     }
+	 *   });
+	 *
+	 * When the user selects a country, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'country-update',
+	 *     selectedCountry: 'australia'
+	 *   });
+	 *
+	 * This payload is digested by both stores:
+	 *
+	 *    CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       CountryStore.country = payload.selectedCountry;
+	 *     }
+	 *   });
+	 *
+	 * When the callback to update `CountryStore` is registered, we save a reference
+	 * to the returned token. Using this token with `waitFor()`, we can guarantee
+	 * that `CountryStore` is updated before the callback that updates `CityStore`
+	 * needs to query its data.
+	 *
+	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       // `CountryStore.country` may not be updated.
+	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
+	 *       // `CountryStore.country` is now guaranteed to be updated.
+	 *
+	 *       // Select the default city for the new country
+	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
+	 *     }
+	 *   });
+	 *
+	 * The usage of `waitFor()` can be chained, for example:
+	 *
+	 *   FlightPriceStore.dispatchToken =
+	 *     flightDispatcher.register(function(payload) {
+	 *       switch (payload.actionType) {
+	 *         case 'country-update':
+	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
+	 *           FlightPriceStore.price =
+	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
+	 *           break;
+	 *
+	 *         case 'city-update':
+	 *           FlightPriceStore.price =
+	 *             FlightPriceStore(CountryStore.country, CityStore.city);
+	 *           break;
+	 *     }
+	 *   });
+	 *
+	 * The `country-update` payload will be guaranteed to invoke the stores'
+	 * registered callbacks in order: `CountryStore`, `CityStore`, then
+	 * `FlightPriceStore`.
+	 */
+
+	  function Dispatcher() {
+	    this.$Dispatcher_callbacks = {};
+	    this.$Dispatcher_isPending = {};
+	    this.$Dispatcher_isHandled = {};
+	    this.$Dispatcher_isDispatching = false;
+	    this.$Dispatcher_pendingPayload = null;
+	  }
+
+	  /**
+	   * Registers a callback to be invoked with every dispatched payload. Returns
+	   * a token that can be used with `waitFor()`.
+	   *
+	   * @param {function} callback
+	   * @return {string}
+	   */
+	  Dispatcher.prototype.register=function(callback) {
+	    var id = _prefix + _lastID++;
+	    this.$Dispatcher_callbacks[id] = callback;
+	    return id;
+	  };
+
+	  /**
+	   * Removes a callback based on its token.
+	   *
+	   * @param {string} id
+	   */
+	  Dispatcher.prototype.unregister=function(id) {
+	    invariant(
+	      this.$Dispatcher_callbacks[id],
+	      'Dispatcher.unregister(...): `%s` does not map to a registered callback.',
+	      id
+	    );
+	    delete this.$Dispatcher_callbacks[id];
+	  };
+
+	  /**
+	   * Waits for the callbacks specified to be invoked before continuing execution
+	   * of the current callback. This method should only be used by a callback in
+	   * response to a dispatched payload.
+	   *
+	   * @param {array<string>} ids
+	   */
+	  Dispatcher.prototype.waitFor=function(ids) {
+	    invariant(
+	      this.$Dispatcher_isDispatching,
+	      'Dispatcher.waitFor(...): Must be invoked while dispatching.'
+	    );
+	    for (var ii = 0; ii < ids.length; ii++) {
+	      var id = ids[ii];
+	      if (this.$Dispatcher_isPending[id]) {
+	        invariant(
+	          this.$Dispatcher_isHandled[id],
+	          'Dispatcher.waitFor(...): Circular dependency detected while ' +
+	          'waiting for `%s`.',
+	          id
+	        );
+	        continue;
+	      }
+	      invariant(
+	        this.$Dispatcher_callbacks[id],
+	        'Dispatcher.waitFor(...): `%s` does not map to a registered callback.',
+	        id
+	      );
+	      this.$Dispatcher_invokeCallback(id);
+	    }
+	  };
+
+	  /**
+	   * Dispatches a payload to all registered callbacks.
+	   *
+	   * @param {object} payload
+	   */
+	  Dispatcher.prototype.dispatch=function(payload) {
+	    invariant(
+	      !this.$Dispatcher_isDispatching,
+	      'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.'
+	    );
+	    this.$Dispatcher_startDispatching(payload);
+	    try {
+	      for (var id in this.$Dispatcher_callbacks) {
+	        if (this.$Dispatcher_isPending[id]) {
+	          continue;
+	        }
+	        this.$Dispatcher_invokeCallback(id);
+	      }
+	    } finally {
+	      this.$Dispatcher_stopDispatching();
+	    }
+	  };
+
+	  /**
+	   * Is this Dispatcher currently dispatching.
+	   *
+	   * @return {boolean}
+	   */
+	  Dispatcher.prototype.isDispatching=function() {
+	    return this.$Dispatcher_isDispatching;
+	  };
+
+	  /**
+	   * Call the callback stored with the given id. Also do some internal
+	   * bookkeeping.
+	   *
+	   * @param {string} id
+	   * @internal
+	   */
+	  Dispatcher.prototype.$Dispatcher_invokeCallback=function(id) {
+	    this.$Dispatcher_isPending[id] = true;
+	    this.$Dispatcher_callbacks[id](this.$Dispatcher_pendingPayload);
+	    this.$Dispatcher_isHandled[id] = true;
+	  };
+
+	  /**
+	   * Set up bookkeeping needed when dispatching.
+	   *
+	   * @param {object} payload
+	   * @internal
+	   */
+	  Dispatcher.prototype.$Dispatcher_startDispatching=function(payload) {
+	    for (var id in this.$Dispatcher_callbacks) {
+	      this.$Dispatcher_isPending[id] = false;
+	      this.$Dispatcher_isHandled[id] = false;
+	    }
+	    this.$Dispatcher_pendingPayload = payload;
+	    this.$Dispatcher_isDispatching = true;
+	  };
+
+	  /**
+	   * Clear bookkeeping used for dispatching.
+	   *
+	   * @internal
+	   */
+	  Dispatcher.prototype.$Dispatcher_stopDispatching=function() {
+	    this.$Dispatcher_pendingPayload = null;
+	    this.$Dispatcher_isDispatching = false;
+	  };
+
+
+	module.exports = Dispatcher;
+
+
+/***/ },
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -6283,262 +6612,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-	 * Copyright (c) 2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule Dispatcher
-	 * @typechecks
-	 */
-
-	"use strict";
-
-	var invariant = __webpack_require__(34);
-
-	var _lastID = 1;
-	var _prefix = 'ID_';
-
-	/**
-	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
-	 * different from generic pub-sub systems in two ways:
-	 *
-	 *   1) Callbacks are not subscribed to particular events. Every payload is
-	 *      dispatched to every registered callback.
-	 *   2) Callbacks can be deferred in whole or part until other callbacks have
-	 *      been executed.
-	 *
-	 * For example, consider this hypothetical flight destination form, which
-	 * selects a default city when a country is selected:
-	 *
-	 *   var flightDispatcher = new Dispatcher();
-	 *
-	 *   // Keeps track of which country is selected
-	 *   var CountryStore = {country: null};
-	 *
-	 *   // Keeps track of which city is selected
-	 *   var CityStore = {city: null};
-	 *
-	 *   // Keeps track of the base flight price of the selected city
-	 *   var FlightPriceStore = {price: null}
-	 *
-	 * When a user changes the selected city, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'city-update',
-	 *     selectedCity: 'paris'
-	 *   });
-	 *
-	 * This payload is digested by `CityStore`:
-	 *
-	 *   flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'city-update') {
-	 *       CityStore.city = payload.selectedCity;
-	 *     }
-	 *   });
-	 *
-	 * When the user selects a country, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'country-update',
-	 *     selectedCountry: 'australia'
-	 *   });
-	 *
-	 * This payload is digested by both stores:
-	 *
-	 *    CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       CountryStore.country = payload.selectedCountry;
-	 *     }
-	 *   });
-	 *
-	 * When the callback to update `CountryStore` is registered, we save a reference
-	 * to the returned token. Using this token with `waitFor()`, we can guarantee
-	 * that `CountryStore` is updated before the callback that updates `CityStore`
-	 * needs to query its data.
-	 *
-	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       // `CountryStore.country` may not be updated.
-	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
-	 *       // `CountryStore.country` is now guaranteed to be updated.
-	 *
-	 *       // Select the default city for the new country
-	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
-	 *     }
-	 *   });
-	 *
-	 * The usage of `waitFor()` can be chained, for example:
-	 *
-	 *   FlightPriceStore.dispatchToken =
-	 *     flightDispatcher.register(function(payload) {
-	 *       switch (payload.actionType) {
-	 *         case 'country-update':
-	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
-	 *           FlightPriceStore.price =
-	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
-	 *           break;
-	 *
-	 *         case 'city-update':
-	 *           FlightPriceStore.price =
-	 *             FlightPriceStore(CountryStore.country, CityStore.city);
-	 *           break;
-	 *     }
-	 *   });
-	 *
-	 * The `country-update` payload will be guaranteed to invoke the stores'
-	 * registered callbacks in order: `CountryStore`, `CityStore`, then
-	 * `FlightPriceStore`.
-	 */
-
-	  function Dispatcher() {
-	    this.$Dispatcher_callbacks = {};
-	    this.$Dispatcher_isPending = {};
-	    this.$Dispatcher_isHandled = {};
-	    this.$Dispatcher_isDispatching = false;
-	    this.$Dispatcher_pendingPayload = null;
-	  }
-
-	  /**
-	   * Registers a callback to be invoked with every dispatched payload. Returns
-	   * a token that can be used with `waitFor()`.
-	   *
-	   * @param {function} callback
-	   * @return {string}
-	   */
-	  Dispatcher.prototype.register=function(callback) {
-	    var id = _prefix + _lastID++;
-	    this.$Dispatcher_callbacks[id] = callback;
-	    return id;
-	  };
-
-	  /**
-	   * Removes a callback based on its token.
-	   *
-	   * @param {string} id
-	   */
-	  Dispatcher.prototype.unregister=function(id) {
-	    invariant(
-	      this.$Dispatcher_callbacks[id],
-	      'Dispatcher.unregister(...): `%s` does not map to a registered callback.',
-	      id
-	    );
-	    delete this.$Dispatcher_callbacks[id];
-	  };
-
-	  /**
-	   * Waits for the callbacks specified to be invoked before continuing execution
-	   * of the current callback. This method should only be used by a callback in
-	   * response to a dispatched payload.
-	   *
-	   * @param {array<string>} ids
-	   */
-	  Dispatcher.prototype.waitFor=function(ids) {
-	    invariant(
-	      this.$Dispatcher_isDispatching,
-	      'Dispatcher.waitFor(...): Must be invoked while dispatching.'
-	    );
-	    for (var ii = 0; ii < ids.length; ii++) {
-	      var id = ids[ii];
-	      if (this.$Dispatcher_isPending[id]) {
-	        invariant(
-	          this.$Dispatcher_isHandled[id],
-	          'Dispatcher.waitFor(...): Circular dependency detected while ' +
-	          'waiting for `%s`.',
-	          id
-	        );
-	        continue;
-	      }
-	      invariant(
-	        this.$Dispatcher_callbacks[id],
-	        'Dispatcher.waitFor(...): `%s` does not map to a registered callback.',
-	        id
-	      );
-	      this.$Dispatcher_invokeCallback(id);
-	    }
-	  };
-
-	  /**
-	   * Dispatches a payload to all registered callbacks.
-	   *
-	   * @param {object} payload
-	   */
-	  Dispatcher.prototype.dispatch=function(payload) {
-	    invariant(
-	      !this.$Dispatcher_isDispatching,
-	      'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.'
-	    );
-	    this.$Dispatcher_startDispatching(payload);
-	    try {
-	      for (var id in this.$Dispatcher_callbacks) {
-	        if (this.$Dispatcher_isPending[id]) {
-	          continue;
-	        }
-	        this.$Dispatcher_invokeCallback(id);
-	      }
-	    } finally {
-	      this.$Dispatcher_stopDispatching();
-	    }
-	  };
-
-	  /**
-	   * Is this Dispatcher currently dispatching.
-	   *
-	   * @return {boolean}
-	   */
-	  Dispatcher.prototype.isDispatching=function() {
-	    return this.$Dispatcher_isDispatching;
-	  };
-
-	  /**
-	   * Call the callback stored with the given id. Also do some internal
-	   * bookkeeping.
-	   *
-	   * @param {string} id
-	   * @internal
-	   */
-	  Dispatcher.prototype.$Dispatcher_invokeCallback=function(id) {
-	    this.$Dispatcher_isPending[id] = true;
-	    this.$Dispatcher_callbacks[id](this.$Dispatcher_pendingPayload);
-	    this.$Dispatcher_isHandled[id] = true;
-	  };
-
-	  /**
-	   * Set up bookkeeping needed when dispatching.
-	   *
-	   * @param {object} payload
-	   * @internal
-	   */
-	  Dispatcher.prototype.$Dispatcher_startDispatching=function(payload) {
-	    for (var id in this.$Dispatcher_callbacks) {
-	      this.$Dispatcher_isPending[id] = false;
-	      this.$Dispatcher_isHandled[id] = false;
-	    }
-	    this.$Dispatcher_pendingPayload = payload;
-	    this.$Dispatcher_isDispatching = true;
-	  };
-
-	  /**
-	   * Clear bookkeeping used for dispatching.
-	   *
-	   * @internal
-	   */
-	  Dispatcher.prototype.$Dispatcher_stopDispatching=function() {
-	    this.$Dispatcher_pendingPayload = null;
-	    this.$Dispatcher_isDispatching = false;
-	  };
-
-
-	module.exports = Dispatcher;
-
-
-/***/ },
 /* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -7227,64 +7300,59 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// shim for using process in browser
+	/**
+	 * Copyright (c) 2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule invariant
+	 */
 
-	var process = module.exports = {};
-	var queue = [];
-	var draining = false;
+	"use strict";
 
-	function drainQueue() {
-	    if (draining) {
-	        return;
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var invariant = function(condition, format, a, b, c, d, e, f) {
+	  if (false) {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
 	    }
-	    draining = true;
-	    var currentQueue;
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        var i = -1;
-	        while (++i < len) {
-	            currentQueue[i]();
-	        }
-	        len = queue.length;
+	  }
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error(
+	        'Minified exception occurred; use the non-minified dev environment ' +
+	        'for the full error message and additional helpful warnings.'
+	      );
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(
+	        'Invariant Violation: ' +
+	        format.replace(/%s/g, function() { return args[argIndex++]; })
+	      );
 	    }
-	    draining = false;
-	}
-	process.nextTick = function (fun) {
-	    queue.push(fun);
-	    if (!draining) {
-	        setTimeout(drainQueue, 0);
-	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
 	};
 
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-
-	function noop() {}
-
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-
-	// TODO(shtylman)
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
+	module.exports = invariant;
 
 
 /***/ },
@@ -7373,59 +7441,64 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright (c) 2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule invariant
-	 */
+	// shim for using process in browser
 
-	"use strict";
+	var process = module.exports = {};
+	var queue = [];
+	var draining = false;
 
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-
-	var invariant = function(condition, format, a, b, c, d, e, f) {
-	  if (false) {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
+	function drainQueue() {
+	    if (draining) {
+	        return;
 	    }
-	  }
-
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error(
-	        'Minified exception occurred; use the non-minified dev environment ' +
-	        'for the full error message and additional helpful warnings.'
-	      );
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(
-	        'Invariant Violation: ' +
-	        format.replace(/%s/g, function() { return args[argIndex++]; })
-	      );
+	    draining = true;
+	    var currentQueue;
+	    var len = queue.length;
+	    while(len) {
+	        currentQueue = queue;
+	        queue = [];
+	        var i = -1;
+	        while (++i < len) {
+	            currentQueue[i]();
+	        }
+	        len = queue.length;
 	    }
-
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
+	    draining = false;
+	}
+	process.nextTick = function (fun) {
+	    queue.push(fun);
+	    if (!draining) {
+	        setTimeout(drainQueue, 0);
+	    }
 	};
 
-	module.exports = invariant;
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	// TODO(shtylman)
+	process.cwd = function () { return '/' };
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function() { return 0; };
 
 
 /***/ },

@@ -93,6 +93,13 @@
 	background-color: #fff;
 }
 
+.GridStyle__head___2E1A4.GridStyle__fixed___212TL {
+	position: fixed;
+	top: 0;
+	z-index: 999;
+	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 0.36);
+}
+
 .GridStyle__options___3Xxx3 {
 	position: absolute;
 	right: 32px;
@@ -253,6 +260,31 @@
 	height: 56px;
 }
 
+.GridStyle__footer-btn___7vPwC {
+	width: 56px;
+	height: 56px;
+	border-radius: 50%;
+	background-color: #3498DB;
+	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 0.36);
+	z-index: 999;
+	position: fixed;
+	right: 40px;
+	bottom: 16px;
+	display: none;
+	color: #fff;
+}
+
+.GridStyle__footer-btn___7vPwC:hover {
+	background-color: #2E88C5;
+	cursor: pointer;
+}
+
+.GridStyle__footer-btn___7vPwC i {
+	position: absolute;
+	top: 30%;
+	left: 30%;
+}
+
 .GridStyle__ul___7Ryif {
 	margin: 0;
 	padding: 0;
@@ -274,6 +306,10 @@
 	color: hsla(0, 0%, 0%, 0.56);
 	font-size: 13px;
 	line-height: 56px;
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	    -ms-user-select: none;
+	        user-select: none;
 }
 
 .GridStyle__footer___3SKuL .GridStyle__li___Y2ezh .GridStyle__caret___2WrVL {
