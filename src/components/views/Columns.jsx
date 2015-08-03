@@ -18,7 +18,7 @@ export default class ColumnsView extends React.Component {
 	}
 
 	componentDidMount() {
-		window.addEventListener("scroll", _.debounce(this._handleScroll, 100));
+		window.addEventListener("scroll", _.debounce(this._handleScroll, 50));
 		let columns = this.refs.columns.getDOMNode();
 
 		this.setState({

@@ -39,4 +39,17 @@ let dispatch = (element, action, payload, evt) => {
 
 utils.dispatch = dispatch;
 
+let scrollToTop = (duration) => {
+    let scrollStep = -window.scrollY / (duration / 15),
+        scrollInterval = window.setInterval(() => {
+        if (window.scrollY !== 0) {
+            window.scrollBy(0, scrollStep);
+        } else {
+            clearInterval(scrollInterval);
+        }
+    }, 15);
+};
+
+utils.scrollToTop = scrollToTop;
+
 export default utils;

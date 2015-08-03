@@ -268,10 +268,26 @@
 	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 0.36);
 	z-index: 999;
 	position: fixed;
-	right: 40px;
 	bottom: 16px;
-	display: none;
+	opacity: 0;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
 	color: #fff;
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.footer-btn.visible,
+.footer-btn-options-list-child.visible {
+	opacity: 1;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
 }
 
 .footer-btn:hover {
@@ -283,6 +299,47 @@
 	position: absolute;
 	top: 30%;
 	left: 30%;
+}
+
+.footer-btn-options {
+	position: fixed;
+	bottom: 86px;
+}
+
+.footer-btn-options-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.footer-btn-options-list-child {
+	width: 46px;
+	height: 46px;
+	border-radius: 50%;
+	background-color: #f2f2f2;
+	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 0.36);
+	z-index: 999;
+	opacity: 0;
+	margin-bottom: 10px;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+	color: hsla(0, 0%, 0%, 0.87);
+	cursor: pointer;
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.footer-btn-options-list-child:hover {
+	background-color: #f9f9f9;
+}
+
+.footer-btn-options-list-child i {
+	padding: 10px;
 }
 
 .ul {

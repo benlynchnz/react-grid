@@ -4,6 +4,7 @@ import Store from "../store";
 import Actions from "../actions";
 import styles from "../../GridStyle.css";
 import RowsPerPage from "./RowsPerPage.jsx";
+import FooterButtons from "./FooterButtons.jsx";
 
 export default class FooterView extends React.Component {
 
@@ -15,38 +16,30 @@ export default class FooterView extends React.Component {
 
 		this._onClick = this._onClick.bind(this);
 		this._onRowsPerPageClick = this._onRowsPerPageClick.bind(this);
-		this._handleScroll = this._handleScroll.bind(this);
+		this._showFooterBtn = this._showFooterBtn.bind(this);
 	}
 
 	componentWillMount() {
 		Store.addChangeListener(this._onChange.bind(this));
 	}
 
-	componentDidMount() {
-		const windowHeight = window.innerHeight;
-
-		window.addEventListener("scroll", _.debounce(this._handleScroll, 100));
-
-		let footer = this.refs.footer.getDOMNode();
-
-		console.log(windowHeight);
-		console.log(footer.offsetTop);
-		this.refs["footer-btn"].getDOMNode().style.display = "block";
+	componentDidUpdate() {
+		if (this.refs.footer) {
+			this._showFooterBtn();
+		}
 	}
 
 	componentWillUnmount() {
 		Store.addRemoveListener(this._onChange.bind(this));
 	}
 
-	_handleScroll() {
-		let footer = this.refs.footer.getDOMNode();
+	_showFooterBtn() {
+		let footer = this.refs.footer.getDOMNode(),
+			bounds = footer.getBoundingClientRect(),
+			btnWrapper = this.refs["footer-btn-wrapper"].getDOMNode();
 
-		console.log(footer.getBoundingClientRect().top);
-
-		if ((footer.getBoundingClientRect().top + footer.offsetHeight) >= window.innerHeight) {
-			this.refs["footer-btn"].getDOMNode().style.display = "block";
-		} else {
-			this.refs["footer-btn"].getDOMNode().style.display = "none";
+		if ((bounds.top + footer.offsetHeight) >= window.innerHeight) {
+			React.render(<FooterButtons footerEl={footer} paging={Store.getOptions()} count={Store.getTotalCount()} />, btnWrapper);
 		}
 	}
 
@@ -83,18 +76,24 @@ export default class FooterView extends React.Component {
 			cursor: "pointer"
 		};
 
+		if (!this.state || !this.state.paging_to) {
+			return <div></div>;
+		}
+
 		return (
-			<div className={styles.footer} ref="footer">
-				<div className={styles["footer-btn"]} ref="footer-btn"><i className="material-icons">more_vert</i></div>
-				<div id="rows-per-page" className={styles["rows-per-page"]}></div>
-				<ul className={styles.ul}>
-					<li className={styles.li}>Rows per page:</li>
-					<li className={styles.li} style={rowsStyle} onClick={this._onRowsPerPageClick} ><b>{this.state.rows_per_page}</b></li>
-					<li className={styles.li} onClick={this._onRowsPerPageClick}><i className="material-icons">arrow_drop_down</i></li>
-					<li className={styles.li}>{this.state.paging_from} - {this.state.paging_to} of {Store.getTotalCount()}</li>
-					<li className={styles.li} data-direction="back" onClick={this._onClick}><i className="material-icons">chevron_left</i></li>
-					<li className={styles.li} data-direction="forward" onClick={this._onClick}><i className="material-icons">chevron_right</i></li>
-				</ul>
+			<div>
+				<div className={styles.footer} ref="footer">
+					<div id="rows-per-page" className={styles["rows-per-page"]}></div>
+					<ul className={styles.ul}>
+						<li className={styles.li}>Rows per page:</li>
+						<li className={styles.li} style={rowsStyle} onClick={this._onRowsPerPageClick} ><b>{this.state.rows_per_page}</b></li>
+						<li className={styles.li} onClick={this._onRowsPerPageClick}><i className="material-icons">arrow_drop_down</i></li>
+						<li className={styles.li}>{this.state.paging_from} - {this.state.paging_to} of {Store.getTotalCount()}</li>
+						<li className={styles.li} data-direction="back" onClick={this._onClick}><i className="material-icons">chevron_left</i></li>
+						<li className={styles.li} data-direction="forward" onClick={this._onClick}><i className="material-icons">chevron_right</i></li>
+					</ul>
+				</div>
+				<div ref="footer-btn-wrapper"></div>
 			</div>
 		);
 	}
