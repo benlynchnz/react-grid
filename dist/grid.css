@@ -290,6 +290,14 @@
     -webkit-transition: opacity .25s ease-in-out;
 }
 
+.GridStyle__footer-btn___7vPwC.GridStyle__hide___3ejx6,
+.GridStyle__footer-btn-options-list-child___mWjVq.GridStyle__hide___3ejx6 {
+	opacity: 0;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+}
+
 .GridStyle__footer-btn___7vPwC:hover {
 	background-color: #2E88C5;
 	cursor: pointer;

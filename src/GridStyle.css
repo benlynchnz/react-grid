@@ -290,6 +290,14 @@
     -webkit-transition: opacity .25s ease-in-out;
 }
 
+.footer-btn.hide,
+.footer-btn-options-list-child.hide {
+	opacity: 0;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+}
+
 .footer-btn:hover {
 	background-color: #2E88C5;
 	cursor: pointer;

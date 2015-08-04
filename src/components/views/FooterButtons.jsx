@@ -28,28 +28,19 @@ export default class FooterButtons extends React.Component {
 
     componentDidUpdate() {
         if (this.state.showItems) {
-            let list = this.refs.items.getDOMNode(),
-                items = list.getElementsByTagName('li');
-
-            items = Array.prototype.map.call(items, (item) => {
-                return item;
-            }).reverse();
-
-            items.forEach((item, i) => {
-                if (i === 0) {
-                    item.classList.add(styles.visible);
-                } else {
-                    _.delay(() => {
-                        item.classList.add(styles.visible);
-                    }, (i * 25));
-                }
-            });
+            this._animateButtons(true);
         }
     }
 
     _updateFooterBtn() {
 		let footer = this.props.footerEl,
-			bounds = this.props.footerEl.getBoundingClientRect();
+			bounds = this.props.footerEl.getBoundingClientRect(),
+            isVisible = this.state.showItems;
+
+        if (isVisible) {
+            this._animateButtons();
+            return;
+        }
 
 		if ((bounds.top + footer.offsetHeight) >= window.innerHeight) {
             this.setState({ visible: true });
@@ -58,13 +49,45 @@ export default class FooterButtons extends React.Component {
 		}
 	}
 
+    _animateButtons(show) {
+        if (!this.refs.items) {
+            this.setState({ showItems: true });
+            return;
+        }
+
+        let list = this.refs.items.getDOMNode(),
+            items = list.getElementsByTagName('li'),
+            animateClass = styles.hide;
+
+        items = Array.prototype.map.call(items, (item) => {
+            return item;
+        });
+
+        if (show) {
+            items.reverse();
+            animateClass = styles.visible;
+        }
+
+        items.forEach((item, i) => {
+            _.delay(() => {
+                item.classList.add(animateClass);
+            }, (i * 75));
+        });
+
+        if (!show) {
+            _.delay(() => {
+                this.setState({ showItems: false });
+            }, 500);
+        }
+    }
+
     _onClick() {
-        this.setState({ showItems: !this.state.showItems });
+        this._animateButtons(!this.state.showItems);
     }
 
     _onScrollTop() {
         utils.scrollToTop(100);
-        this.setState({ showItems: false });
+        this._animateButtons();
     }
 
     _onPagingClick(e) {
