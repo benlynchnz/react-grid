@@ -29,6 +29,7 @@ export default (col, row) => {
         case "link":
             return cellA(col, row);
         case "image":
+            console.log(col, row);
             return cellImg(col, row);
         case "datetime":
             return cellDatetime(col, row);

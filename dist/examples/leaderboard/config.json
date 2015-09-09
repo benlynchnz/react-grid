@@ -1,0 +1,48 @@
+{
+	"title": "Driver Leaderboard",
+	"rows_per_page": 10,
+	"paging_options": [5, 10, 20, 50, 100, 250],
+	"show_paging": true,
+	"show_datepicker": false,
+	"request": {},
+	"columns": [
+		{
+			"id": "star_url",
+			"index": 2,
+			"name": "Rating",
+			"sortable": false,
+			"ascending": false,
+			"style": {
+				"width": 30
+			},
+			"type": {
+				"name": "image",
+				"src": "star_url"
+			}
+		},
+		{
+			"id": "display_name",
+			"index": 1,
+			"name": "Name",
+			"sortable": true,
+			"ascending": true,
+			"allow_search": true,
+			"weight": 0,
+			"type": {
+				"name": "string"
+			}
+		},
+		{
+			"id": "rank",
+			"index": 0,
+			"name": "Rank",
+			"weight": 1,
+			"sortable": true,
+			"ascending": true,
+			"allow_search": true,
+			"type": {
+				"name": "string"
+			}
+		}
+	]
+}
