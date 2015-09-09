@@ -2,16 +2,11 @@
 	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 0.36);
 }
 
-.table {
-}
-
-.body {
-}
-
 .loading-wrapper {
 	background-color: #fff;
 	min-height: 100px;
     text-align: center;
+	font-family: "Roboto" sans-serif;
 }
 
 .body .row:not(.group):first-child {
@@ -55,17 +50,20 @@
 	line-height: 48px;
 	overflow: hidden;
 	white-space: nowrap;
+	font-family: "Roboto" sans-serif;
 	text-overflow: ellipsis;
 }
 
 .cell a {
 	color: #2E88C5;
 	text-decoration: none;
+	font-family: "Roboto" sans-serif;
 }
 
 .group .cell {
 	font-weight: 500;
 	font-size: 15px;
+	font-family: "Roboto" sans-serif;
 	color: hsla(0, 0%, 0%, 0.87);
 }
 
@@ -79,6 +77,7 @@
 	color: hsla(0, 0%, 0%, 0.54);
 	font-size: 12px;
 	line-height: 56px;
+	font-family: "Roboto" sans-serif;
 	-webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -363,6 +362,7 @@
 	color: hsla(0, 0%, 0%, 0.56);
 	font-size: 13px;
 	line-height: 56px;
+	font-family: "Roboto" sans-serif;
 }
 
 .footer .li {
@@ -372,6 +372,7 @@
 	font-size: 13px;
 	line-height: 56px;
 	user-select: none;
+	font-family: "Roboto" sans-serif;
 }
 
 .footer .li .caret {
@@ -416,6 +417,7 @@
 	padding: 0 15px;
 	color: hsla(0, 0%, 0%, 0.87);
 	font-weight: 400;
+	font-family: "Roboto" sans-serif;
 	float: none;
 	cursor: pointer;
 	margin: 0;
@@ -432,6 +434,7 @@
 	font-weight: 400;
 	text-align: left;
 	font-size: 14px;
+	font-family: "Roboto" sans-serif;
 	padding: 0 15px;
 	background-color: #fff;
 }
@@ -464,6 +467,7 @@
 	margin: 0;
 	font-weight: 500;
 	font-size: 28px;
+	font-family: "Roboto" sans-serif;
 	color: hsla(0, 0%, 0%, 0.87);
 	text-align: left;
 }
@@ -472,6 +476,7 @@
 	color: hsla(0, 0%, 0%, 0.56);
 	font-weight: 500;
 	font-size: 18px;
+	font-family: "Roboto" sans-serif;
 	text-align: left;
 }
 
@@ -523,6 +528,7 @@
 
 .input {
 	font-size: 18px;
+	font-family: "Roboto" sans-serif;
 	padding: 10px 10px 10px 5px;
 	display: block;
 	background-color: transparent;
