@@ -534,7 +534,17 @@ _Store.dispatchToken = AppDispatcher.register((payload) => {
 			if (_rows.length) {
 				pushData(payload.data.body);
 			} else {
-				_rows = payload.data.body;
+				try {
+					let data = JSON.parse(payload.data.text);
+					if (data) {
+						_rows = data;
+					}
+				}
+				catch(e) {
+					if (payload.data.body) {
+						_rows = payload.data.body;
+					}
+				}
 			}
 
 			// _rows = payload.data.body;
