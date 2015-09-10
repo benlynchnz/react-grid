@@ -21,14 +21,25 @@ try {
 	window.CustomEvent = CustomEvent;
 }
 
-import DatePicker from './grid.jsx';
+import Grid from './grid.jsx';
+
+let renderHandler = () => {
+	let reactComp = document.getElementsByTagName('react-grid'),
+		classComp = document.getElementsByClassName('react-grid');
+
+	Array.prototype.forEach.call(reactComp, (el) => {
+	    React.render(<Grid element={el}/>, el);
+	});
+
+	Array.prototype.forEach.call(classComp, (el) => {
+	    React.render(<Grid element={el}/>, el);
+	});
+};
 
 if (typeof document !== 'undefined') {
-	var renderToElements = document.getElementsByTagName('react-grid');
-
-	Array.prototype.forEach.call(renderToElements, (el) => {
-	    React.render(<DatePicker element={el}/>, el);
-	});
+	renderHandler();
 }
 
-export default DatePicker;
+document.addEventListener('react-grid:render', renderHandler);
+
+export default Grid;

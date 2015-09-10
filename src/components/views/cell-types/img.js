@@ -1,8 +1,9 @@
 'use strict';
 
 export default (col, row) => {
+
     let props = col.type.props || {},
-    src = row[col.type.src];
+    src = row.data[col.id];
 
     props.href = row[col.type.href];
 
