@@ -431,9 +431,10 @@ class Store extends EventEmitter {
 						return;
 					}
 
-					let field = item[col.id].toLowerCase();
+					let field = item[col.id];
 
-					if (field.indexOf(q) !== -1) {
+					if (typeof field === "string" && field.indexOf(q) !== -1) {
+						// field = field.toLowerCase();
 						if (!_.findWhere(matches, { data: item })) {
 							matches.push({
 								is_group: false,

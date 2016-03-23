@@ -772,9 +772,10 @@ return /******/ (function(modules) { // webpackBootstrap
 									return;
 								}
 
-								var field = item[col.id].toLowerCase();
+								var field = item[col.id];
 
-								if (field.indexOf(q) !== -1) {
+								if (typeof field === "string" && field.indexOf(q) !== -1) {
+									// field = field.toLowerCase();
 									if (!_.findWhere(matches, { data: item })) {
 										matches.push({
 											is_group: false,
@@ -898,8 +899,6 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 					}
 				}
-
-				console.log(_rows);
 
 				// _rows = payload.data.body;
 
@@ -1352,7 +1351,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _RowJsx2 = _interopRequireDefault(_RowJsx);
 
-	var _RowGroupedJsx = __webpack_require__(18);
+	var _RowGroupedJsx = __webpack_require__(19);
 
 	var _RowGroupedJsx2 = _interopRequireDefault(_RowGroupedJsx);
 
@@ -1423,7 +1422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
 
-	var _RowsPerPageJsx = __webpack_require__(19);
+	var _RowsPerPageJsx = __webpack_require__(18);
 
 	var _RowsPerPageJsx2 = _interopRequireDefault(_RowsPerPageJsx);
 
@@ -1958,7 +1957,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _flux = __webpack_require__(28);
+	var _flux = __webpack_require__(29);
 
 	exports['default'] = new _flux.Dispatcher();
 	module.exports = exports['default'];
@@ -2009,11 +2008,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _superagent = __webpack_require__(30);
+	var _superagent = __webpack_require__(31);
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _q = __webpack_require__(29);
+	var _q = __webpack_require__(30);
 
 	var _q2 = _interopRequireDefault(_q);
 
@@ -2213,6 +2212,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _string2 = _interopRequireDefault(_string);
 
+	var _function = __webpack_require__(28);
+
+	var _function2 = _interopRequireDefault(_function);
+
 	var _GridStyleCss = __webpack_require__(11);
 
 	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
@@ -2225,9 +2228,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return str;
 	};
 
-	var createMarkup = function createMarkup(el, position) {
+	var createMarkup = function createMarkup(el, position, col, row) {
 	    return {
-	        __html: highlight(el, position.start, position.end)
+	        __html: (0, _function2["default"])(col, row)
 	    };
 	};
 
@@ -2242,6 +2245,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return (0, _datetime2["default"])(col, row);
 	        case "number":
 	            return (0, _number2["default"])(col, row);
+	        case "function":
+	            return React.createElement("div", { dangerouslySetInnerHTML: createMarkup(null, null, col, row) });
 	        case "string":
 	            if (col.type.src) {
 	                return (0, _string2["default"])(col, row);
@@ -2392,91 +2397,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _GridStyleCss = __webpack_require__(11);
-
-	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
-
-	var _cellTypesIndex = __webpack_require__(16);
-
-	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
-
-	var RowGroupedView = (function (_React$Component) {
-		function RowGroupedView(props) {
-			_classCallCheck(this, RowGroupedView);
-
-			_get(Object.getPrototypeOf(RowGroupedView.prototype), 'constructor', this).call(this, props);
-		}
-
-		_inherits(RowGroupedView, _React$Component);
-
-		_createClass(RowGroupedView, [{
-			key: 'render',
-			value: function render() {
-
-				if (!this.props.group) {
-					return React.createElement('div', null);
-				}
-
-				var genRowClass = function genRowClass(col) {
-					var classes = [_GridStyleCss2['default'].row];
-					classes.push(_GridStyleCss2['default'].group);
-
-					return classes.join(' ');
-				};
-
-				var genClass = function genClass(col) {
-					var classes = [_GridStyleCss2['default'].cell];
-					classes.push(_GridStyleCss2['default'].group);
-
-					return classes.join(' ');
-				};
-
-				var col = _store2['default'].getColumn(this.props.group.id),
-				    row = this.props.row;
-
-				return React.createElement(
-					'div',
-					{ key: col.id, className: genRowClass() },
-					React.createElement(
-						'div',
-						{ className: _GridStyleCss2['default'].cell },
-						(0, _cellTypesIndex2['default'])(col, row)
-					)
-				);
-			}
-		}]);
-
-		return RowGroupedView;
-	})(React.Component);
-
-	exports['default'] = RowGroupedView;
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
 	var _actions = __webpack_require__(3);
 
 	var _actions2 = _interopRequireDefault(_actions);
@@ -2562,6 +2482,91 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(React.Component);
 
 	exports['default'] = RowsPerPageView;
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _GridStyleCss = __webpack_require__(11);
+
+	var _GridStyleCss2 = _interopRequireDefault(_GridStyleCss);
+
+	var _cellTypesIndex = __webpack_require__(16);
+
+	var _cellTypesIndex2 = _interopRequireDefault(_cellTypesIndex);
+
+	var RowGroupedView = (function (_React$Component) {
+		function RowGroupedView(props) {
+			_classCallCheck(this, RowGroupedView);
+
+			_get(Object.getPrototypeOf(RowGroupedView.prototype), 'constructor', this).call(this, props);
+		}
+
+		_inherits(RowGroupedView, _React$Component);
+
+		_createClass(RowGroupedView, [{
+			key: 'render',
+			value: function render() {
+
+				if (!this.props.group) {
+					return React.createElement('div', null);
+				}
+
+				var genRowClass = function genRowClass(col) {
+					var classes = [_GridStyleCss2['default'].row];
+					classes.push(_GridStyleCss2['default'].group);
+
+					return classes.join(' ');
+				};
+
+				var genClass = function genClass(col) {
+					var classes = [_GridStyleCss2['default'].cell];
+					classes.push(_GridStyleCss2['default'].group);
+
+					return classes.join(' ');
+				};
+
+				var col = _store2['default'].getColumn(this.props.group.id),
+				    row = this.props.row;
+
+				return React.createElement(
+					'div',
+					{ key: col.id, className: genRowClass() },
+					React.createElement(
+						'div',
+						{ className: _GridStyleCss2['default'].cell },
+						(0, _cellTypesIndex2['default'])(col, row)
+					)
+				);
+			}
+		}]);
+
+		return RowGroupedView;
+	})(React.Component);
+
+	exports['default'] = RowGroupedView;
 	;
 	module.exports = exports['default'];
 
@@ -2838,6 +2843,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(SearchView, [{
 	        key: "_onBlur",
 	        value: function _onBlur(e) {
+	            if (!e.target) {
+	                return;
+	            }
+
 	            if (!e || !e.target.value) {
 	                this.props.li.style.visibility = "visible";
 	                React.unmountComponentAtNode(this.props.el);
@@ -3369,7 +3378,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _numeral = __webpack_require__(32);
+	var _numeral = __webpack_require__(33);
 
 	var _numeral2 = _interopRequireDefault(_numeral);
 
@@ -3416,6 +3425,36 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports["default"] = function (col, row) {
+
+	  switch (row.data.stars) {
+	    case 5:
+	      return "<i class=\"material-icons\" style=\"color: rgb(241, 196, 24); font-size:35px;line-height:45px;\">&#xE838;&#xE838;&#xE838;&#xE838;&#xE838;</i>";
+	    case 4:
+	      return "<i class=\"material-icons\" style=\"color: rgb(241, 196, 24); font-size:35px;line-height:45px;\">&#xE838;&#xE838;&#xE838;&#xE838;&#xE83A;</i>";
+	    case 3:
+	      return "<i class=\"material-icons\" style=\"color: rgb(241, 196, 24); font-size:35px;line-height:45px;\">&#xE838;&#xE838;&#xE838;&#xE83A;&#xE83A;</i>";
+	    case 2:
+	      return "<i class=\"material-icons\" style=\"color: rgb(241, 196, 24); font-size:35px;line-height:45px;\">&#xE838;&#xE838;&#xE83A;&#xE83A;&#xE83A;</i>";
+	    case 1:
+	      return "<i class=\"material-icons\" style=\"color: rgb(241, 196, 24); font-size:35px;line-height:45px;\">&#xE838;&#xE83A;&#xE83A;&#xE83A;&#xE83A;</i>";
+	    case 0:
+	      return "<i class=\"material-icons\" style=\"color: rgb(241, 196, 24); font-size:35px;line-height:45px;\">&#xE83A;&#xE83A;&#xE83A;&#xE83A;&#xE83A;</i>";
+	  }
+	};
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/**
 	 * Copyright (c) 2014-2015, Facebook, Inc.
 	 * All rights reserved.
@@ -3425,11 +3464,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(31)
+	module.exports.Dispatcher = __webpack_require__(32)
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process, setImmediate) {// vim:ts=4:sts=4:sw=4:
@@ -5481,18 +5520,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	});
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33), __webpack_require__(34).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(34), __webpack_require__(35).setImmediate))
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Emitter = __webpack_require__(36);
-	var reduce = __webpack_require__(37);
+	var Emitter = __webpack_require__(37);
+	var reduce = __webpack_require__(38);
 
 	/**
 	 * Root reference for iframes.
@@ -6613,7 +6652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -6630,7 +6669,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	var invariant = __webpack_require__(35);
+	var invariant = __webpack_require__(36);
 
 	var _lastID = 1;
 	var _prefix = 'ID_';
@@ -6869,7 +6908,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -7554,7 +7593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// shim for using process in browser
@@ -7618,10 +7657,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(38).nextTick;
+	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(39).nextTick;
 	var apply = Function.prototype.apply;
 	var slice = Array.prototype.slice;
 	var immediateIds = {};
@@ -7697,10 +7736,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(34).setImmediate, __webpack_require__(34).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(35).setImmediate, __webpack_require__(35).clearImmediate))
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7759,7 +7798,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -7929,7 +7968,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -7958,7 +7997,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// shim for using process in browser

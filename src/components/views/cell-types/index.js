@@ -3,6 +3,7 @@ import cellImg from "./img";
 import cellDatetime from "./datetime";
 import cellNumber from "./number";
 import cellString from "./string";
+import cellFunction from "./function";
 import styles from "../../../GridStyle.css";
 
 let highlight = (element, start, end) => {
@@ -17,9 +18,9 @@ let highlight = (element, start, end) => {
     return str;
 };
 
-let createMarkup = (el, position) => {
+let createMarkup = (el, position, col, row) => {
     return {
-        __html: highlight(el, position.start, position.end)
+        __html: cellFunction(col, row)
     };
 };
 
@@ -34,6 +35,8 @@ export default (col, row) => {
             return cellDatetime(col, row);
         case "number":
             return cellNumber(col, row);
+        case "function":
+            return <div dangerouslySetInnerHTML={createMarkup(null, null, col, row)} />;
         case "string":
             if (col.type.src) {
                 return cellString(col, row);

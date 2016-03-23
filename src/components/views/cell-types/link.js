@@ -1,5 +1,3 @@
-'use strict';
-
 import styles from '../../../GridStyle.css';
 
 let highlight = (element, start, end) => {

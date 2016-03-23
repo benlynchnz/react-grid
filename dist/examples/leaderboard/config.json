@@ -7,7 +7,7 @@
 	"request": {},
 	"columns": [
 		{
-			"id": "star_url",
+			"id": "stars",
 			"index": 2,
 			"name": "Rating",
 			"sortable": false,
@@ -16,8 +16,7 @@
 				"width": 30
 			},
 			"type": {
-				"name": "image",
-				"src": "star_url"
+				"name": "function"
 			}
 		},
 		{

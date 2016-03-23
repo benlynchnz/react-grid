@@ -15,6 +15,10 @@ export default class SearchView extends React.Component {
     }
 
     _onBlur(e) {
+        if (!e.target) {
+          return;
+        }
+        
         if (!e || !e.target.value) {
             this.props.li.style.visibility = "visible";
             React.unmountComponentAtNode(this.props.el);
